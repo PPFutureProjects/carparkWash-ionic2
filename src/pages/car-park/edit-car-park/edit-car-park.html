@@ -1,0 +1,76 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Edit Car park</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <h2>Add another car par</h2>
+  <form [formGroup]="carParkForm">
+    <ion-list>
+      <ion-item>
+        <ion-label floating>Car Park Name</ion-label>
+        <ion-input required type="text"
+                   formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.name">
+        {{ formErrors.name }}
+      </ion-item>
+
+      <ion-item (tap)="pickCarParkPicture()">
+        <ion-label class="lbl-pick-picture">
+          Click to pick a Picture<span class="mandatory">*</span>
+        </ion-label>
+        <ion-avatar item-right>
+          <img *ngIf="carParkToEdit?.picture" [src]="carParkToEdit.picture">
+          <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
+        </ion-avatar>
+      </ion-item>
+
+      <ion-item *ngIf="carParkToEdit.cardinalPart === undefined">
+        <ion-select required placeholder="Cardinal Part"
+                   formControlName="cardinalPart">
+          <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
+          <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
+          <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
+          <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="carParkToEdit.area === undefined">
+        <ion-label floating>Area</ion-label>
+        <ion-input required type="text"
+                   formControlName="area"></ion-input>
+      </ion-item>
+      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.area">
+        {{ formErrors.area }}
+      </ion-item>
+
+      <ion-item>
+        <ion-label floating>Address</ion-label>
+        <ion-input required type="text"
+                   formControlName="address"></ion-input>
+      </ion-item>
+      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.address">
+        {{ formErrors.address }}
+      </ion-item>
+
+    </ion-list>
+  </form>
+
+  <ion-item no-lines class="btns-dialog">
+    <button ion-button clear large (tap)="cancel()">
+      Cancel
+    </button>
+    <button ion-button clear large
+            [disabled]="carParkForm.invalid"
+            (tap)="carParkForm.valid && save()">
+      Save
+    </button>
+  </ion-item>
+
+</ion-content>

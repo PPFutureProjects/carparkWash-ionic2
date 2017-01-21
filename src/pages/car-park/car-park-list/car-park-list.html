@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Car parks</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+<ion-list>
+  <div style="display: flex; flex-direction: row; justify-content: space-around;margin: 20px;">
+    <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+  <!--</div>-->
+  <!--<div class="center-element">-->
+    <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
+  </div>
+
+  <ion-item class="no-car-park-yet" *ngIf="carParks?.length === 0">
+    <h2>Select a filter for car parks</h2>
+  </ion-item>
+
+  <swiper [config]="configCarousel">
+    <div class="swiper-wrapper">
+      <app-car-park-item class="swiper-slide" *ngFor="let carPark of carParks" [carPark]="carPark"></app-car-park-item>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next" *ngIf="carParks?.length > 4"></div>
+    <div class="swiper-button-prev" *ngIf="carParks?.length > 4"></div>
+  </swiper>
+
+</ion-list>
+
+</ion-content>

@@ -1,0 +1,157 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Profile</ion-title>
+    <ion-buttons end>
+      <button ion-button clear large *ngIf="!editMode"
+              (tap)="toggleEditMode(true)">
+        <ion-icon><i class="material-icons">mode_edit</i></ion-icon>
+        Edit Profile
+      </button>
+      <button ion-button clear large icon-only *ngIf="editMode"
+              (tap)="toggleEditMode(false)">
+        <ion-icon><i class="material-icons">cancel</i></ion-icon>
+      </button>
+      <button ion-button clear large icon-only style="
+    margin-left: 10px;" *ngIf="editMode"
+              [disabled]="!profileForm.valid"
+              (tap)="profileForm.valid && save()">
+        <ion-icon><i class="material-icons">check_circle</i></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <form [formGroup]="profileForm" class="center-form-items">
+      <div class="form-style">
+        <div style="display: flex; flex-direction: row">
+          <ion-item>
+            <ion-label floating>Name</ion-label>
+            <ion-input required type="text"
+                       formControlName="name"
+                       [disabled]="!editMode"
+                       value="{{user.name}}"></ion-input>
+          </ion-item>
+          <ion-item class="alert alert-danger" *ngIf="formErrors.name">
+            {{ formErrors.name }}
+          </ion-item>
+
+          <ion-item>
+            <ion-label floating>Email</ion-label>
+            <ion-input required type="email"
+                       formControlName="email"
+                       [disabled]="!editMode"
+                       value="{{user.email}}"></ion-input>
+          </ion-item>
+          <ion-item class="alert alert-danger" *ngIf="formErrors.email">
+            {{ formErrors.email }}
+          </ion-item>
+        </div>
+
+        <div style="display: flex; flex-direction: row">
+          <ion-item>
+            <ion-label floating>Address</ion-label>
+            <ion-input required type="email"
+                       formControlName="address"
+                       [disabled]="!editMode"
+                       value="{{user.address}}"></ion-input>
+          </ion-item>
+          <ion-item class="alert alert-danger" *ngIf="formErrors.address">
+            {{ formErrors.address }}
+          </ion-item>
+
+          <ion-item>
+            <ion-label floating>Phone Number</ion-label>
+            <ion-input required type="number"
+                       formControlName="phoneNumber"
+                       [disabled]="!editMode"
+                       value="{{user.phoneNumber}}"></ion-input>
+          </ion-item>
+          <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
+            {{ formErrors.phoneNumber }}
+          </ion-item>
+        </div>
+
+        <!--TODO move this to setting-->
+        <!--<ion-item *ngIf="user.provider === 'email'">-->
+        <!--<md-input type="password" disabled="true" value="******" placeholder="Password"-->
+        <!--(click)="editMode && changePassword()">-->
+        <!--</md-input>-->
+        <!--</ion-item>-->
+      </div>
+    </form>
+
+    <br>
+    <!------------ Client's cars list ------------>
+    <div *ngIf="user.profile === profileTypeEnum.client">
+      <swiper [config]="configCarousel" *ngIf="user.cars.length > 1">
+        <div class="swiper-wrapper">
+          <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
+                        [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next" *ngIf="user.cars.length > 4"></div>
+        <div class="swiper-button-prev" *ngIf="user.cars.length > 4"></div>
+      </swiper>
+      <div class="center-element" *ngIf="user.cars.length === 1">
+        <app-car-item class="swiper-slide"
+                      [car]="user.cars[0]" (removed)="updateUserFromDatabase()"></app-car-item>
+      </div>
+    </div>
+
+    <!------------ Manager's car parks list ------------>
+    <div *ngIf="user.profile === profileTypeEnum.manager">
+      <swiper [config]="configCarousel" *ngIf="user.carParks.length > 1">
+        <div class="swiper-wrapper">
+          <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
+                             [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next" *ngIf="user.carParks?.length > 4"></div>
+        <div class="swiper-button-prev" *ngIf="user.carParks?.length > 4"></div>
+      </swiper>
+      <div class="center-element" *ngIf="user.carParks.length === 1">
+        <app-car-park-item class="swiper-slide"
+                           [carPark]="user.carParks[0]" (removed)="updateUserFromDatabase()"></app-car-park-item>
+      </div>
+    </div>
+
+    <!------------ Cleaner car parks to select then select a car to wahs ------------>
+    <div *ngIf="user.profile === profileTypeEnum.cleaner">
+      <swiper [config]="configCarousel" *ngIf="allCarParks?.length > 1">
+        <div class="swiper-wrapper">
+          <app-car-park-item class="swiper-slide" *ngFor="let carPark of allCarParks"
+                             [carPark]="carPark"></app-car-park-item>
+        </div>
+        <!-- Add Pagination -->
+        <div class="swiper-pagination"></div>
+        <!-- Add Arrows -->
+        <div class="swiper-button-next" *ngIf="allCarParks?.length > 4"></div>
+        <div class="swiper-button-prev" *ngIf="allCarParks?.length > 4"></div>
+      </swiper>
+      <div class="center-element" *ngIf="allCarParks?.length === 1">
+        <app-car-park-item class="swiper-slide"
+                           [carPark]="allCarParks[0]"></app-car-park-item>
+      </div>
+    </div>
+
+  </ion-list>
+
+  <!--<div class="corner-bottom-right">-->
+  <ion-fab bottom right (tap)="add()"
+           *ngIf="user.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
+    <button ion-fab mini>
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+  <!--</div>-->
+
+</ion-content>

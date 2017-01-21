@@ -1,0 +1,42 @@
+<ion-card>
+  <ion-card-header>{{carPark?.name}}</ion-card-header>
+
+  <img *ngIf="carPark.picture" [src]="carPark.picture">
+
+  <ion-card-content>
+    <ion-item>Address: {{carPark.address}}</ion-item>
+    <ion-item>Cardinal Part: {{carPark.cardinalPart}}</ion-item>
+    <ion-item>Area: {{carPark.area}}</ion-item>
+    <ion-item *ngIf="carPark.unlocked !== 0">Last unlocked date:</ion-item>
+    <ion-item *ngIf="carPark.unlocked !== 0">{{carPark.unlocked | date}}</ion-item>
+    <ion-item *ngIf="carPark.unlocked === 0">Never unlocked</ion-item>
+    <ion-item *ngIf="currentUser.profile === profileTypeEnum.manager && isUnlocked()">
+      Already Unlocked for today
+    </ion-item>
+    <!--<ion-item>number places: {{carPark.nbPlaces}}</ion-item>-->
+    <!--<ion-item>number free places: {{carPark.nbFreePlaces}}</ion-item>-->
+
+    <ion-row class="btn-action-layout" *ngIf="!isSelected">
+      <button ion-button clear (tap)="select()"
+              *ngIf="currentUser.profile === profileTypeEnum.cleaner">
+        Cars in
+      </button>
+      <!-- Client should see car park only if he clicked on subscribe of his car -->
+      <button ion-button clear (tap)="subscribeWashService()"
+              *ngIf="currentUser.profile === profileTypeEnum.client">
+        Subscribe
+      </button>
+      <!--to 30 weekdays washing system-->
+      <button ion-button clear (tap)="unlock()"
+              *ngIf="currentUser.profile === profileTypeEnum.manager && !isUnlocked()">
+        Unlock
+      </button>
+    </ion-row>
+    <ion-row *ngIf="!isSelected && currentUser.profile === profileTypeEnum.manager">
+      <button ion-button clear color="dark" (tap)="edit()">Edit</button>
+      <button ion-button clear color="dark" (tap)="remove()">Remove</button>
+    </ion-row>
+
+  </ion-card-content>
+
+</ion-card>

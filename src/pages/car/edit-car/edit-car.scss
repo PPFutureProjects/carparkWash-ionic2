@@ -1,0 +1,25 @@
+
+page-add-car {
+
+  .override-background-preview {
+    max-width: 300px;
+    max-height: 300px;
+  }
+
+  .loading-picture {
+    position: relative;
+    left: -25px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .lbl-indent {
+    position: relative;
+    left: -25px;
+  }
+
+  .mandatory {
+    color: red;
+  }
+
+}

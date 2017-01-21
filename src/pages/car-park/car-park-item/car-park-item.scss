@@ -1,0 +1,18 @@
+
+app-car-park-item {
+
+  .btn-action-layout {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  ion-item {
+    min-height: 25px !important;
+  }
+
+  ion-item ion-label {
+    margin: 0px !important;
+  }
+
+}

@@ -1,0 +1,30 @@
+<h2>Filter car parks by areas</h2>
+
+<ion-list>
+  <ion-item class="center-input">
+    <ion-select placeholder="Cardinal Part"
+               (onClose)="getAreasByPart()"
+               [(ngModel)]="selectedCarParkFilter.cardinalPart">
+      <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
+      <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
+      <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
+      <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item class="center-input" *ngIf="areasPart?.length > 0">
+    <!--<ion-input type="text" placeholder="Area" style="z-index: 5;"-->
+              <!--[(ngModel)]="areaFilter" (keyup)="filterAreas()"></ion-input>-->
+    <ion-select placeholder="Area"
+               #selectOptionArea [(ngModel)]="selectedCarParkFilter.area">
+      <ion-option *ngFor="let area of areasPart" value={{area}}>{{area | camelCase}}</ion-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item no-lines>
+    <button ion-button color="primary"
+            [disabled]="selectedCarParkFilter.cardinalPart === undefined"
+            (click)="filterCarParks()">Filter Car Parks
+    </button>
+  </ion-item>
+</ion-list>

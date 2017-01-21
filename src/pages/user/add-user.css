@@ -1,0 +1,49 @@
+
+:host {
+  overflow: auto;
+}
+
+.title {
+  font-weight: bold;
+}
+
+.center-input >>> div {
+  justify-content: center;
+}
+
+.list-style {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.override-picture-preview {
+  max-width: 300px;
+  max-height: 200px;
+}
+
+.picture-position {
+  position: relative;
+  left: 200px;
+}
+
+.loading-picture {
+  position: relative;
+  left: -25px;
+  width: 25px;
+  height: 25px;
+}
+
+.lbl-indent {
+  position: relative;
+  left: -25px;
+}
+
+.lbl-pick-picture {
+  position: relative;
+  left: 140px;
+}
+
+.mandatory {
+  color: red;
+}

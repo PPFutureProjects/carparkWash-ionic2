@@ -1,0 +1,15 @@
+
+page-car-park-list {
+
+  .no-car-park-yet /deep/ .md-list-item {
+    justify-content: center;
+    margin-top: 50px;
+  }
+
+  .center-element {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+}
