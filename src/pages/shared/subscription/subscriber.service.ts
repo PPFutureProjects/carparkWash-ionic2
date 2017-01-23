@@ -49,11 +49,20 @@ export class SubscriberService extends ServiceUtils {
       updates['users/' + car.userUid + '/' + subCarPath] = subscriptionModel;
       updates[subCarPath] = subscriptionModel;
 
-      let subCarParkPath = 'carParks/' + carPark.id + '/subscriptions/' + car.id;
-      updates['users/' + carPark.userUid + '/' + subCarParkPath] = subscriptionModel;
-      updates[subCarParkPath] = subscriptionModel;
+      let subCarParkPath = carPark.id + '/subscriptions/' + car.id;
+      updates['users/carParks/' + carPark.userUid + '/' + subCarParkPath] = subscriptionModel;
+      updates['carParks/' + carPark.cardinalPart + '/' + carPark.area + '/' + subCarParkPath] = subscriptionModel;
 
-      return this.refDatabase.update(updates);
+      return this.refDatabase.update(updates)
+        .then(() => {
+          //TODO to test
+          car.subscription = subscriptionModel;
+          if (carPark.subscriptions) {
+            carPark.subscriptions.push(subscriptionModel);
+          } else {
+            carPark.subscriptions = [subscriptionModel];
+          }
+        });
     });
   }
 
@@ -63,10 +72,8 @@ export class SubscriberService extends ServiceUtils {
     tomorrow.setHours(0, 0, 0, 0);
     carPark.unlocked = tomorrow.getTime();
     let updates = {};
-    let carParkPath = 'carParks/' + carPark.id;
-    updates['users/' + carPark.userUid + '/' + carParkPath] = carPark;
-    updates[carParkPath] = carPark;
-
+    updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = carPark;
+    updates['carParks/' + carPark.cardinalPart + '/' + carPark.area + '/' + carPark.id] = carPark;
     return this.refDatabase.update(updates);
   }
 
@@ -79,10 +86,9 @@ export class SubscriberService extends ServiceUtils {
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subCarParkPath = 'carParks/' + subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
-    updates['users/' + subscription.managerUid + '/' + subCarParkPath] = dayCleanerModel;
-    updates[subCarParkPath] = dayCleanerModel;
-
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
+    updates['users/' + subscription.managerUid + '/carParks/' + '/' + subDayPath] = dayCleanerModel;
+    updates['carParks/' + subscription.carParkCardinalPart + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);
   }
 
@@ -98,10 +104,9 @@ export class SubscriberService extends ServiceUtils {
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
     updates[subCarPath] = dayCleanerModel;
 
-    let subCarParkPath = 'carParks/' + subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
-    updates['users/' + subscription.managerUid + '/' + subCarParkPath] = dayCleanerModel;
-    updates[subCarParkPath] = dayCleanerModel;
-
+    let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
+    updates['users/' + subscription.managerUid + '/carParks/' + subDayPath] = dayCleanerModel;
+    updates['carParks/' + subscription.carParkCardinalPart + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
     return this.refDatabase.update(updates);
   }
 }

@@ -16,12 +16,12 @@ export class CarParkListPage extends AbstractPage {
   selectedCar: CarModel;
   carParks: Array<CarParkModel>;
   configCarousel = {
-    slidesPerView: 4,
+    slidesPerView: 1,
     //slidesPerColumn: 3,
     spaceBetween: 30,
     //grabCursor: true,
-    centeredSlides: false,
-    //loop: true,
+    centeredSlides: true,
+    loop: true,
     //autoplay: 5000,
     //autoplayDisableOnInteraction: false,
     paginationClickable: true,
@@ -38,7 +38,7 @@ export class CarParkListPage extends AbstractPage {
     this.selectedCar = this.carService.selectedCar;
   }
 
-  ngOnInit() {
+  ionViewWillEnter() {
     //if (!this.selectedCar) {
     //  this.router.navigate(['']);
     //} else {

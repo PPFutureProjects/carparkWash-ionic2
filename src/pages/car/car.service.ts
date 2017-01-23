@@ -52,7 +52,8 @@ export class CarService extends ServiceUtils {
   }
 
   getByCarPark(carPark: CarParkModel) {
-    return this.refDatabase.child('carParks').child(carPark.id).child('subscriptions').once('value')
+    return this.refDatabase.child('carParks').child(carPark.cardinalPart).child(carPark.area)
+      .child(carPark.id).child('subscriptions').once('value')
       .then(snapshot => this.arrayFromObject(snapshot.val()));
   }
 }

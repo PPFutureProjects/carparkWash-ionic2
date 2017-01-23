@@ -25,7 +25,11 @@ export class CarParkModel {
   //nbFreePlaces: number;
 
   constructor() {
+    this.name = '';
+    this.picture = '';
     this.address = '';
+    this.area = '';
+    //this.cardinalPart = undefined;
     // if unlocked: client can subscribe his selectedCar for a wash
     this.unlocked = 0;
     //this.parkPlaces = new Array<ParkPlaceModel>();

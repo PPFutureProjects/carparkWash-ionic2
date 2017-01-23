@@ -9,26 +9,23 @@
 
 <ion-content padding>
 
-  <ion-list>
-    <app-car-park-item [carPark]="selectedCarPark" isSelected="true"></app-car-park-item>
+  <app-car-park-item [carPark]="selectedCarPark" isSelected="true"></app-car-park-item>
 
-    <ion-item class="no-car-park-yet" *ngIf="!subscriptions || subscriptions.length === 0">
-      <h2>No car has subscribed yet</h2>
-    </ion-item>
+  <ion-item class="no-car-park-yet" *ngIf="subscriptions?.length === 0">
+    <h2>No car has subscribed yet</h2>
+  </ion-item>
 
-    <swiper [config]="configCarousel">
-      <div class="swiper-wrapper">
-        <!--TODO each car has it's subscription, passing cars here is possible-->
-        <app-car-item class="swiper-slide"
-                      *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
-      </div>
-      <!-- Add Pagination -->
-      <div class="swiper-pagination"></div>
-      <!-- Add Arrows -->
-      <div class="swiper-button-next" *ngIf="carParks?.length > 4"></div>
-      <div class="swiper-button-prev" *ngIf="carParks?.length > 4"></div>
-    </swiper>
-
-  </ion-list>
+  <swiper [config]="configCarousel">
+    <div class="swiper-wrapper">
+      <!--TODO each car has it's subscription, passing cars here is possible-->
+      <app-car-item class="swiper-slide"
+                    *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next" *ngIf="carParks?.length > 4"></div>
+    <div class="swiper-button-prev" *ngIf="carParks?.length > 4"></div>
+  </swiper>
 
 </ion-content>

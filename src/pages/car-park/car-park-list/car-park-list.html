@@ -8,11 +8,10 @@
 </ion-header>
 
 <ion-content padding>
-<ion-list>
   <div style="display: flex; flex-direction: row; justify-content: space-around;margin: 20px;">
     <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
-  <!--</div>-->
-  <!--<div class="center-element">-->
+    <!--</div>-->
+    <!--<div class="center-element">-->
     <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
   </div>
 
@@ -31,6 +30,5 @@
     <div class="swiper-button-prev" *ngIf="carParks?.length > 4"></div>
   </swiper>
 
-</ion-list>
 
 </ion-content>

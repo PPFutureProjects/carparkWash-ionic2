@@ -1,0 +1,44 @@
+
+page-add-user {
+
+  .title {
+    font-weight: bold;
+  }
+
+  .override-select-padding {
+    padding: 0px 5px 0px 0px;
+  }
+
+  .override-select-height {
+    min-height: 6rem;
+
+    .select-text, .select-text {
+      align-self: center;
+    }
+
+    .select-text, .select-icon {
+      align-self: center;
+    }
+  }
+
+  .loading-picture {
+    position: relative;
+    left: -25px;
+    width: 25px;
+    height: 25px;
+  }
+
+  .lbl-indent {
+    position: relative;
+    left: -25px;
+  }
+
+  .lbl-pick-picture {
+    margin-right: 60px;
+  }
+
+  .mandatory {
+    color: red;
+  }
+
+}

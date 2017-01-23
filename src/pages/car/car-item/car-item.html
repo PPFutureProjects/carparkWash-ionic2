@@ -1,16 +1,16 @@
-<ion-card>
+<ion-card *ngIf="initDone">
   <ion-card-header>{{car?.brandModel}} - {{car?.licencePlateNumber}}</ion-card-header>
 
   <ion-card-content>
     <ion-item>Colour: {{car?.colour}}</ion-item>
     <ion-item>Type: {{car?.type}}</ion-item>
-    <ion-item *ngIf="subscription">Current subscription date:</ion-item>
+    <ion-item *ngIf="subscription">Subscription date:</ion-item>
     <ion-item *ngIf="subscription">{{subscription?.dateSubscription | date}}</ion-item>
     <ion-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
-      Waiting for a cleaner to wash
+      Waiting to be washed
     </ion-item>
     <ion-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.washed">
-      Washed and clean by {{subscription?.days[dayIndex].cleanerName}}
+      Washed by {{subscription?.days[dayIndex].cleanerName}}
     </ion-item>
     <ion-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.washed">
       on {{subscription?.days[dayIndex].washDate | date:'short'}}
@@ -24,7 +24,7 @@
       <button ion-button clear (tap)="selectToWash()"
               *ngIf="currentUser?.profile === profileTypeEnum.client
               && car?.subscription
-              && isUnlocked()
+              && carParkSubscribedIsUnlocked
               && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested">
         Book to wash
       </button>

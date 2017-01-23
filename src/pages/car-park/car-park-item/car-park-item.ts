@@ -27,6 +27,7 @@ export class CarParkItemComponent extends AbstractPage {
   currentUser: UserModel;
   profileTypeEnum = ProfileTypeEnum;
   @Input() carPark: CarParkModel;
+  @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
 
   private loadingOptions: LoadingOptions;

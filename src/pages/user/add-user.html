@@ -3,173 +3,169 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Add User or Manager</ion-title>
+    <ion-title>Add Manager or Cleaner</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <ion-list class="list-style">
 
-    <h3 class="center-text">Add Manager or cleaner account</h3>
-
-    <form [formGroup]="signUpForm">
-      <ion-item class="center-input">
-        <ion-select placeholder="Connect with" required
-                    [ngModelOptions]="{standalone: true}"
-                    [(ngModel)]="connectEmailNoFacebook">
-          <ion-option value="true">Email & Password</ion-option>
-          <ion-option value="false">Facebook</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
-        <ion-label floating>Email</ion-label>
-        <ion-input required type="text"
-                   formControlName="email"
-                   [(ngModel)]="userModel.email"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.email">
-        {{ signUpFormErrors.email }}
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
-        <ion-label floating>Password</ion-label>
-        <ion-input required type="password"
-                   formControlName="password"
-                   [(ngModel)]="password"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.password">
-        {{ signUpFormErrors.password }}
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
-        <ion-label floating>Confirm Password</ion-label>
-        <ion-input required type="password"
-                   formControlName="confirmPassword"
-                   [(ngModel)]="confirmPassword"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.confirmPassword">
-        {{ signUpFormErrors.confirmPassword }}
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook === 'true'">
-        <ion-label floating>Name</ion-label>
-        <ion-input required type="text"
-                   formControlName="name"
-                   [(ngModel)]="userModel.name"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="signUpFormErrors.name">
-        {{ signUpFormErrors.name }}
-      </ion-item>
-    </form>
-
-    <form [formGroup]="userInfoForm">
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
-        <ion-label floating>Address</ion-label>
-        <ion-input required type="text"
-                   formControlName="address"
-                   [(ngModel)]="userModel.address"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="userInfoFormErrors.address">
-        {{ userInfoFormErrors.address }}
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
-        <ion-label floating>Phone Number</ion-label>
-        <ion-input required type="text"
-                   formControlName="phoneNumber"
-                   [(ngModel)]="userModel.phoneNumber"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="userInfoFormErrors.phoneNumber">
-        {{ userInfoFormErrors.phoneNumber }}
-      </ion-item>
-
-      <ion-item class="center-input" *ngIf="connectEmailNoFacebook !== undefined">
-        <!--[dividerColor]="userInfoFormErrors.profile?'accent':'primary'"-->
-        <ion-select placeholder="Profile" required
-                    formControlName="profile"
-                    [(ngModel)]="userModel.profile">
-          <!--<ion-option value={{profileTypeEnum.client}}>Client</ion-option>-->
-          <ion-option value={{profileTypeEnum.manager}}>Car park Manager</ion-option>
-          <ion-option value={{profileTypeEnum.cleaner}}>Cleaner</ion-option>
-        </ion-select>
-      </ion-item>
-    </form>
-
-    <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileTypeEnum.manager">
-      <h2 class="center-text">Add the first car park</h2>
-      <ion-item class="center-input">
-        <ion-label floating>Car park Name</ion-label>
-        <ion-input required type="text"
-                   formControlName="carParkName"
-                   [(ngModel)]="carParkModel.name"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.name">
-        {{ carParkFormErrors.name }}
-      </ion-item>
-
-      <ion-item (tap)="pickCarParkPicture()">
-        <ion-label class="lbl-pick-picture">
-          Click to pick a Picture<span class="mandatory">*</span>
-        </ion-label>
-        <ion-avatar item-right>
-          <img *ngIf="carParkToEdit?.picture" [src]="carParkToEdit.picture">
-          <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
-        </ion-avatar>
-      </ion-item>
-
-      <ion-item class="center-input">
-        <ion-select required placeholder="Cardinal Part"
-                    formControlName="cardinalPart"
-                    [(ngModel)]="carParkModel.cardinalPart">
-          <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
-          <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
-          <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
-          <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item class="center-input">
-        <ion-label floating>Area</ion-label>
-        <ion-input required type="text"
-                   formControlName="area"
-                   [(ngModel)]="carParkModel.area"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.area">
-        {{ carParkFormErrors.area }}
-      </ion-item>
-
-      <ion-item class="center-input">
-        <ion-label floating>Car park Address</ion-label>
-        <ion-input required type="text"
-                   formControlName="address"
-                   [(ngModel)]="carParkModel.address"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.address">
-        {{ carParkFormErrors.address }}
-      </ion-item>
-      <!--<ion-item class="center-input">-->
-      <!--<ion-input type="number" required-->
-      <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
-      <!--placeholder="Number of parks"-->
-      <!--formControlName="nbPlaces"-->
-      <!--[(ngModel)]="carParkModel.nbPlaces"></ion-input>-->
-      <!--</ion-item>-->
-      <!--<ion-item class="center-input alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">-->
-      <!--{{ carParkFormErrors.nbPlaces }}-->
-      <!--</ion-item>-->
-    </form>
-
-    <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileTypeEnum.cleaner">
-    </form>
-
-    <ion-item class="center-input">
-      <button ion-button block large padding
-              [disabled]="!areInputsValid()"
-              (click)="areInputsValid()&& createAccount()">Create {{userModel.profile}}
-      </button>
+  <form [formGroup]="signUpForm">
+    <ion-item>
+      <ion-label>Connect With</ion-label>
+      <ion-select required class="override-select-height override-select-padding" [ngModelOptions]="{standalone: true}"
+                  [(ngModel)]="connectEmailNoFacebook">
+        <ion-option value="true">Email & Password</ion-option>
+        <ion-option value="false">Facebook</ion-option>
+      </ion-select>
     </ion-item>
 
-  </ion-list>
+    <ion-item *ngIf="connectEmailNoFacebook === 'true'">
+      <ion-label floating>Email</ion-label>
+      <ion-input required type="text"
+                 formControlName="email"
+                 [(ngModel)]="userModel.email"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="signUpFormErrors.email">
+      {{ signUpFormErrors.email }}
+    </ion-item>
+
+    <ion-item *ngIf="connectEmailNoFacebook === 'true'">
+      <ion-label floating>Password</ion-label>
+      <ion-input required type="password"
+                 formControlName="password"
+                 [(ngModel)]="password"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="signUpFormErrors.password">
+      {{ signUpFormErrors.password }}
+    </ion-item>
+
+    <ion-item *ngIf="connectEmailNoFacebook === 'true'">
+      <ion-label floating>Confirm Password</ion-label>
+      <ion-input required type="password"
+                 formControlName="confirmPassword"
+                 [(ngModel)]="confirmPassword"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="signUpFormErrors.confirmPassword">
+      {{ signUpFormErrors.confirmPassword }}
+    </ion-item>
+
+    <ion-item *ngIf="connectEmailNoFacebook === 'true'">
+      <ion-label floating>Name</ion-label>
+      <ion-input required type="text"
+                 formControlName="name"
+                 [(ngModel)]="userModel.name"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="signUpFormErrors.name">
+      {{ signUpFormErrors.name }}
+    </ion-item>
+  </form>
+
+  <form [formGroup]="userInfoForm">
+    <ion-item *ngIf="connectEmailNoFacebook !== undefined">
+      <ion-label floating>Address</ion-label>
+      <ion-input required type="text"
+                 formControlName="address"
+                 [(ngModel)]="userModel.address"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="userInfoFormErrors.address">
+      {{ userInfoFormErrors.address }}
+    </ion-item>
+
+    <ion-item *ngIf="connectEmailNoFacebook !== undefined">
+      <ion-label floating>Phone Number</ion-label>
+      <ion-input required type="text"
+                 formControlName="phoneNumber"
+                 [(ngModel)]="userModel.phoneNumber"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="userInfoFormErrors.phoneNumber">
+      {{ userInfoFormErrors.phoneNumber }}
+    </ion-item>
+
+    <ion-item *ngIf="connectEmailNoFacebook !== undefined">
+      <ion-label>Account Type</ion-label>
+      <ion-select required class="override-select-height override-select-padding"
+                  formControlName="profile"
+                  [(ngModel)]="userModel.profile">
+        <!--<ion-option value={{profileTypeEnum.client}}>Client</ion-option>-->
+        <ion-option value={{profileTypeEnum.manager}}>Car park Manager</ion-option>
+        <ion-option value={{profileTypeEnum.cleaner}}>Cleaner</ion-option>
+      </ion-select>
+    </ion-item>
+  </form>
+
+  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileTypeEnum.manager">
+    <br>
+    <h2>Add the first car park</h2>
+    <ion-item>
+      <ion-label floating>Car park Name</ion-label>
+      <ion-input required type="text"
+                 formControlName="carParkName"
+                 [(ngModel)]="carParkModel.name"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.name">
+      {{ carParkFormErrors.name }}
+    </ion-item>
+
+
+    <ion-item (tap)="pickCarParkPicture()">
+      <ion-label class="lbl-pick-picture">
+        Click to pick a Picture<span class="mandatory">*</span>
+      </ion-label>
+      <ion-avatar item-right>
+        <img *ngIf="carParkToEdit?.picture" [src]="carParkToEdit.picture">
+        <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
+      </ion-avatar>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Cardinal Part</ion-label>
+      <ion-select required class="override-select-height override-select-padding"
+                  formControlName="cardinalPart"
+                  [(ngModel)]="carParkModel.cardinalPart">
+        <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
+        <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
+        <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
+        <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Area</ion-label>
+      <ion-input required type="text"
+                 formControlName="area"
+                 [(ngModel)]="carParkModel.area"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.area">
+      {{ carParkFormErrors.area }}
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Car park Address</ion-label>
+      <ion-input required type="text"
+                 formControlName="address"
+                 [(ngModel)]="carParkModel.address"></ion-input>
+    </ion-item>
+    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.address">
+      {{ carParkFormErrors.address }}
+    </ion-item>
+    <!--<ion-item>-->
+    <!--<ion-input type="number" required-->
+    <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
+    <!--placeholder="Number of parks"-->
+    <!--formControlName="nbPlaces"-->
+    <!--[(ngModel)]="carParkModel.nbPlaces"></ion-input>-->
+    <!--</ion-item>-->
+    <!--<ion-item class="alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">-->
+    <!--{{ carParkFormErrors.nbPlaces }}-->
+    <!--</ion-item>-->
+  </form>
+
+  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileTypeEnum.cleaner">
+  </form>
+
+  <button ion-button block large padding
+          [disabled]="!areInputsValid()"
+          (click)="areInputsValid()&& createAccount()">Create {{userModel.profile}}
+  </button>
 
 </ion-content>

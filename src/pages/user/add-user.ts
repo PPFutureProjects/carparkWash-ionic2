@@ -12,7 +12,7 @@ import { AbstractPage } from '../shared/abstract.page';
 import { GlobalValidator } from '../shared/validator/global.validator';
 
 @Component({
-  selector: 'app-add-user',
+  selector: 'page-add-user',
   templateUrl: 'add-user.html',
 })
 export class AddUserPage extends AbstractPage {
@@ -20,8 +20,8 @@ export class AddUserPage extends AbstractPage {
   connectEmailNoFacebook: 'true' | 'false';
   userModel = new UserModel();
   carParkModel = new CarParkModel();
-  password: string;
-  confirmPassword: string;
+  password: string = '';
+  confirmPassword: string = '';
 
   profileTypeEnum = ProfileTypeEnum;
   cardinalPartEnum = CardinalPartEnum;

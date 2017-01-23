@@ -48,24 +48,19 @@ export class CarParkService extends ServiceUtils {
   getAll(): firebase.Promise<Array<CarParkModel>> {
     return this.refDatabase.child('carParks').once('value')
       .then(snapshot => {
-        return this.refDatabase.child('carParks').once('value')
-          .then(snapshot => {
-            return this.arrayFromObject(snapshot.val())
-              .map(carParkCardinalPart => {
-                return this.arrayFromObject(carParkCardinalPart)
-                  .map(carParkArea => this.arrayFromObject(carParkArea))
-                  .reduce((result, value) => result.concat(value), [])
-              })
-              .reduce((result, value) => result.concat(value), [])
-          });
-
+        return this.arrayFromObject(snapshot.val())
+          .map(carparcsTreeByCardinal =>
+            this.arrayFromObject(carparcsTreeByCardinal)
+              .reduce((result, value) => result.concat(value), []))
+          .reduce((result, value) => result.concat(value), [])
+          .map((carparcObject: CarParkModel) => this.arrayFromObject(carparcObject)[0]);
       });
   }
 
   getBySubscription(subscriptionModel: SubscriptionModel): firebase.Promise<CarParkModel> {
     return this.refDatabase.child('carParks').child(subscriptionModel.carParkCardinalPart)
       .child(subscriptionModel.carParkArea).child(subscriptionModel.carParkId).once('value')
-      .then(snapshot => snapshot.val()[subscriptionModel.carParkId]);
+      .then(snapshot => snapshot.val());
   }
 
   getByAreas(areaOrCardinalPart: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {

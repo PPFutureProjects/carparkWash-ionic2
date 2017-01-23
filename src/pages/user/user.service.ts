@@ -8,6 +8,8 @@ import { CarModel } from '../car/car.model';
 import { CarParkModel } from '../car-park/car-park.model';
 import { ProfileTypeEnum } from '../shared/profile-type.enum';
 import { ServiceUtils } from '../shared/service.utils';
+import { Facebook } from 'ionic-native';
+import { LoadingController } from 'ionic-angular';
 
 
 @Injectable()
@@ -18,7 +20,7 @@ export class UserService extends ServiceUtils {
 
   private currentUser: UserModel;
 
-  constructor(public userReady: UserReady) {
+  constructor(public userReady: UserReady, public loadingCtrl: LoadingController) {
     super();
     this.refDatabase = firebase.database().ref();
     this.refStorageUsers = firebase.storage().ref('users');
@@ -31,7 +33,7 @@ export class UserService extends ServiceUtils {
       return new Promise((resolve, reject) => {
         return firebase.auth().onAuthStateChanged(resolve, reject)
       }).then((user: firebase.User) => {
-        if(!user) {
+        if (!user) {
           return null;
           //throw {code: 'auth/user-not-found', message: 'Incorrect email or password'};
         }
@@ -83,40 +85,47 @@ export class UserService extends ServiceUtils {
    * @returns {firebase.Thenable<any>}
    */
   facebookLogin(userModel?: UserModel, carParkModel?: CarParkModel) {
-    let provider = new firebase.auth.FacebookAuthProvider();
-    provider.addScope('user_birthday');
-    provider.addScope('user_location');
-    provider.setCustomParameters({
-      'display': 'popup'
-    });
-    return firebase.auth().signInWithPopup(provider).then(result => {
-      // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-      let token = result.credential.accessToken;
-      let userFb = new UserModel();
-      userFb.uid = result.user.uid;
-      userFb.provider = 'facebook';
-      userFb.name = result.user.displayName;
-      userFb.email = result.user.email;
-      userFb.address = result.user.location ? result.user.location : '';
-      if (userModel) {
-        userFb.address ? '' : userFb.address = userModel.address;
-        userFb.phoneNumber = userModel.phoneNumber;
-        userFb.profile = userModel.profile;
-        return this.createUserModel(userFb, carParkModel);
-      } else {
-        // client login/sign up with facebook
-        userFb.profile = ProfileTypeEnum.client;
-        return this.getCurrent(false, userFb);
-      }
-    }).catch((error: any) => {
-      // Handle Errors here.
-      let errorCode = error.code;
-      let errorMessage = error.message;
-      // The email of the user's account used.
-      let email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      let credential = error.credential;
-      throw error;
+    return Facebook.login(['public_profile', 'email', 'user_birthday', 'user_location']).then(userDataFb => {
+      let loading = this.loadingCtrl.create({
+        content: 'Loading',
+        spinner: 'crescent',
+        showBackdrop: false
+      });
+      loading.present();
+      console.log("fb native auth success: ", userDataFb);
+      let facebookCredential = firebase.auth.FacebookAuthProvider
+        .credential(userDataFb.authResponse.accessToken);
+      return firebase.auth().signInWithCredential(facebookCredential).then(result => {
+        console.log("firebase auth success: ", result);
+        loading.dismissAll();
+
+        let userFb = new UserModel();
+        userFb.uid = result.uid;
+        userFb.provider = 'facebook';
+        userFb.name = result.displayName;
+        userFb.email = result.email;
+        userFb.address = result.location ? result.location : '';
+        if (userModel) {
+          userFb.address ? '' : userFb.address = userModel.address;
+          userFb.phoneNumber = userModel.phoneNumber;
+          userFb.profile = userModel.profile;
+          return this.createUserModel(userFb, carParkModel);
+        } else {
+          // client login/sign up with facebook
+          userFb.profile = ProfileTypeEnum.client;
+          return this.getCurrent(false, userFb);
+        }
+      }, err => {
+        loading.dismissAll();
+        // Handle Errors here.
+        //let errorCode = err.code;
+        //let errorMessage = err.message;
+        // The email of the user's account used.
+        //let email = err.email;
+        // The firebase.auth.AuthCredential type that was used.
+        //let credential = err.credential;
+        throw err;
+      });
     });
   }
 

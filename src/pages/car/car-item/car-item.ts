@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
 import { CarModel } from '../car.model';
 import { CarService } from '../car.service';
 import { UserService } from '../../user/user.service';
@@ -25,13 +25,15 @@ import { EditCarPage } from '../edit-car/edit-car';
   selector: 'app-car-item',
   templateUrl: 'car-item.html',
 })
-export class CarItemComponent extends AbstractPage {
+export class CarItemComponent extends AbstractPage implements AfterContentInit {
 
   currentUser: UserModel;
   carParkSubscribed: CarParkModel;
+  carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
   profileTypeEnum = ProfileTypeEnum;
   washStateEnum = WashStateEnum;
+  initDone: boolean = true;
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
   @Input() isSelected: boolean;
@@ -57,30 +59,27 @@ export class CarItemComponent extends AbstractPage {
       });
   }
 
-  ionViewWillEnter() {
-    //if (!this.car && !this.subscription) {
-    //  this.router.navigate(['']);
-    //} else {
+  ngAfterContentInit() {
     if (this.subscription) {
+      this.initDone = false;
       this.car = this.subscription.car;
-      this.carParkService.getBySubscription(this.subscription)
-        .then(carPark => this.carParkSubscribed = carPark);
+      this.carParkService.getBySubscription(this.subscription).then(carPark => {
+        this.carParkSubscribed = carPark;
+        this.setIsSubscribedCarParkUnlocked();
+        this.initDone = true;
+      });
+      this.initDone = false;
     } else if (this.car.subscription) {
       this.subscription = this.car.subscription;
-      this.carParkService.getBySubscription(this.car.subscription)
-        .then(carPark => this.carParkSubscribed = carPark);
+      this.carParkService.getBySubscription(this.car.subscription).then(carPark => {
+        this.carParkSubscribed = carPark;
+        this.setIsSubscribedCarParkUnlocked();
+        this.initDone = true;
+      });
     }
     if (this.subscription) {
       this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
     }
-    //}
-  }
-
-  isUnlocked() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    return this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
   }
 
   selectToSubscribe() {
@@ -142,23 +141,27 @@ export class CarItemComponent extends AbstractPage {
           handler: () => {
             let loading = this.loadingCtrl.create(this.loadingOptions);
             loading.present();
-            this.carService.remove(this.car)
-              .then(data => {
-                loading.dismissAll();
-                this.removed.emit(true);
-                console.log(data);
-                this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastError');
-              })
-              .catch(err => {
-                loading.dismissAll();
-                console.log(err);
-                this.showToast(`Could not remove the car ${this.car.licencePlateNumber}, please contact admin`,
-                  'toastError');
-              });
+            this.carService.remove(this.car).then(data => {
+              loading.dismissAll();
+              this.removed.emit(true);
+              console.log(data);
+              this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastError');
+            }).catch(err => {
+              loading.dismissAll();
+              console.log(err);
+              this.showToast(`Could not remove the car ${this.car.licencePlateNumber}, please contact admin`,
+                'toastError');
+            });
           }
         }
       ]
     }).present();
   }
 
+  private setIsSubscribedCarParkUnlocked() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    this.carParkSubscribedIsUnlocked = this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
+  }
 }

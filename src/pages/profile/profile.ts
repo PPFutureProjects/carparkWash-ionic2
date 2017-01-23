@@ -16,7 +16,7 @@ import { EditCarParkPage } from '../car-park/edit-car-park/edit-car-park';
 import { GlobalValidator } from '../shared/validator/global.validator';
 
 @Component({
-  selector: 'app-profile',
+  selector: 'page-profile',
   templateUrl: 'profile.html',
 })
 export class ProfilePage extends AbstractPage {
@@ -38,7 +38,7 @@ export class ProfilePage extends AbstractPage {
     spaceBetween: 30,
     //grabCursor: true,
     centeredSlides: false,
-    //loop: true,
+    loop: true,
     // autoplay: 5000,
     // autoplayDisableOnInteraction false,
     paginationClickable: true,

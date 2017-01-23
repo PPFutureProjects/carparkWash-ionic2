@@ -29,13 +29,13 @@ export class MyApp {
           if (user.profile === ProfileTypeEnum.admin) {
             this.pages = [
               {title: 'Profile', component: ProfilePage},
+              //{ title: 'Ssetting', component: Setting },
+              {title: 'Add Manager/Cleaner', component: AddUserPage},
               {title: 'Disconnect', component: LoginPage}
             ];
           } else {
             this.pages = [
               {title: 'Profile', component: ProfilePage},
-              //{ title: 'Ssetting', component: Setting },
-              {title: 'Add Manager/Cleaner', component: AddUserPage},
               {title: 'Disconnect', component: LoginPage}
             ];
           }

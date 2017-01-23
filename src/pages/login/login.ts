@@ -127,14 +127,11 @@ export class LoginPage extends AbstractPage {
 
   loginFacebook() {
     console.log('loginFacebook');
-    //let loading = this.loadingCtrl.create(this.loadingOptions);
     this.userService.facebookLogin().then((data) => {
-      //loading.dismissAll();
       this.navCtrl.setRoot(ProfilePage);
       this.menuCtr.enable(true);
       this.showToast('Log in Success', 'toastInfo');
     }).catch((err: firebase.FirebaseError) => {
-      //loading.dismissAll();
       console.error(err);
       let errMsg = 'Log in Fail';
       switch (err.code) {
@@ -158,7 +155,6 @@ export class LoginPage extends AbstractPage {
         .then(() => {
           loading.dismissAll();
           this.navCtrl.setRoot(ProfilePage);
-          ;
           this.menuCtr.enable(true);
           this.showToast('Sign Up Success', 'toastInfo');
         })

@@ -3,53 +3,50 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Edit Car</ion-title>
+    <ion-title>Add/Edit Car</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <h2>Add another car to your collection</h2>
-  <P class="center-text">Please, no Lorries, Vans or Larger vehicles </P>
+  <P>Please, no Lorries, Vans or Larger vehicles </P>
 
   <form [formGroup]="carForm">
-    <ion-list>
-      <ion-item>
-        <ion-label floating>Licence Plate Number</ion-label>
-        <ion-input required type="text"
-                   formControlName="licencePlateNumber"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
-        {{ formErrors.licencePlateNumber }}
-      </ion-item>
+    <ion-item>
+      <ion-label floating>Licence Plate Number</ion-label>
+      <ion-input required type="text"
+                 formControlName="licencePlateNumber"></ion-input>
+    </ion-item>
+    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
+      {{ formErrors.licencePlateNumber }}
+    </ion-item>
 
-      <ion-item>
-        <ion-label>Type</ion-label>
-        <ion-select formControlName="carType">>
-          <ion-option value="regular">Regular</ion-option>
-          <ion-option value="suv">SUV</ion-option>
-        </ion-select>
-      </ion-item>
+    <ion-item>
+      <ion-label>Type</ion-label>
+      <ion-select formControlName="carType">>
+        <ion-option value="regular">Regular</ion-option>
+        <ion-option value="suv">SUV</ion-option>
+      </ion-select>
+    </ion-item>
 
-      <ion-item>
-        <ion-label floating>Brand & Model</ion-label>
-        <ion-input required type="text"
-                   formControlName="brandModel"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
-        {{ formErrors.brandModel }}
-      </ion-item>
+    <ion-item>
+      <ion-label floating>Brand & Model</ion-label>
+      <ion-input required type="text"
+                 formControlName="brandModel"></ion-input>
+    </ion-item>
+    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
+      {{ formErrors.brandModel }}
+    </ion-item>
 
-      <ion-item>
-        <ion-label floating>Colour</ion-label>
-        <ion-input required type="text"
-                   formControlName="colour"></ion-input>
-      </ion-item>
-      <ion-item class="center-input alert alert-danger" *ngIf="formErrors.colour">
-        {{ formErrors.colour }}
-      </ion-item>
+    <ion-item>
+      <ion-label floating>Colour</ion-label>
+      <ion-input type="text"
+                 formControlName="colour"></ion-input>
+    </ion-item>
+    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.colour">
+      {{ formErrors.colour }}
+    </ion-item>
 
-    </ion-list>
   </form>
 
   <ion-item no-lines class="btns-dialog">
