@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { UserModel } from '../user/user.model';
+import { UserModel } from '../../user/user.model';
 import { CarParkModel } from './car-park.model';
-import { ServiceUtils } from '../shared/service.utils';
-import { CardinalPart } from './car-park-filter/cardinal-part-enum';
-import { CarParkFilterModel } from './car-park-filter/car-park-filter.model';
-import { SubscriptionModel } from '../shared/subscription/subscription.model';
+import { ServiceUtils } from '../../shared/service.utils';
+import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
+import { SubscriptionModel } from '../../shared/subscription/subscription.model';
+import { Region } from '../car-park-filter/region.enum';
 
 @Injectable()
 export class CarParkService extends ServiceUtils {
@@ -21,7 +21,7 @@ export class CarParkService extends ServiceUtils {
   remove(carPark: CarParkModel) {
     let updates = {};
     updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = null;
-    updates['carParks/' + carPark.cardinalPart + '/' + carPark.area.toLowerCase() + '/' + carPark.id] = null;
+    updates['carParks/' + carPark.region + '/' + carPark.area.toLowerCase() + '/' + carPark.id] = null;
     return this.refDatabase.update(updates);
   }
 
@@ -31,17 +31,17 @@ export class CarParkService extends ServiceUtils {
 
     let updates = {};
     updates['users/' + newCarPark.userUid + '/carParks/' + newCarPark.id] = newCarPark;
-    updates['carParks/' + newCarPark.cardinalPart + '/' + newCarPark.area.toLowerCase() + '/' + newCarPark.id] = newCarPark;
-    updates['areas/' + newCarPark.cardinalPart + '/' + newCarPark.area.toLowerCase()] = true;
+    updates['carParks/' + newCarPark.region + '/' + newCarPark.area.toLowerCase() + '/' + newCarPark.id] = newCarPark;
+    updates['areas/' + newCarPark.region + '/' + newCarPark.area.toLowerCase()] = true;
     return this.refDatabase.update(updates);
   }
 
   update(updateCarPark: CarParkModel) {
     let updates = {};
     updates['users/' + updateCarPark.userUid + '/carParks/' + updateCarPark.id] = updateCarPark;
-    // Only admin can change cardinalPart or area from firebase console
-    updates['carParks/' + updateCarPark.cardinalPart + '/' + updateCarPark.area.toLowerCase() + '/' + updateCarPark.id] = updateCarPark;
-    updates['areas/' + updateCarPark.cardinalPart + '/' + updateCarPark.area.toLowerCase()] = true;
+    // Only admin can change region or area from firebase console
+    updates['carParks/' + updateCarPark.region + '/' + updateCarPark.area.toLowerCase() + '/' + updateCarPark.id] = updateCarPark;
+    updates['areas/' + updateCarPark.region + '/' + updateCarPark.area.toLowerCase()] = true;
     return this.refDatabase.update(updates);
   }
 
@@ -49,8 +49,8 @@ export class CarParkService extends ServiceUtils {
     return this.refDatabase.child('carParks').once('value')
       .then(snapshot => {
         return this.arrayFromObject(snapshot.val())
-          .map(carparcsTreeByCardinal =>
-            this.arrayFromObject(carparcsTreeByCardinal)
+          .map(carparcsTreeByRegion=>
+            this.arrayFromObject(carparcsTreeByRegion)
               .reduce((result, value) => result.concat(value), []))
           .reduce((result, value) => result.concat(value), [])
           .map((carparcObject: CarParkModel) => this.arrayFromObject(carparcObject)[0]);
@@ -58,28 +58,28 @@ export class CarParkService extends ServiceUtils {
   }
 
   getBySubscription(subscriptionModel: SubscriptionModel): firebase.Promise<CarParkModel> {
-    return this.refDatabase.child('carParks').child(subscriptionModel.carParkCardinalPart)
+    return this.refDatabase.child('carParks').child(subscriptionModel.carParkRegion)
       .child(subscriptionModel.carParkArea).child(subscriptionModel.carParkId).once('value')
       .then(snapshot => snapshot.val());
   }
 
-  getByAreas(areaOrCardinalPart: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {
-    console.log(areaOrCardinalPart);
-    if (areaOrCardinalPart.area) {
-      return this.refDatabase.child('carParks').child(areaOrCardinalPart.cardinalPart).child(areaOrCardinalPart.area).once('value')
+  getByAreas(areaOrRegion: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {
+    console.log(areaOrRegion);
+    if (areaOrRegion.area) {
+      return this.refDatabase.child('carParks').child(areaOrRegion.region).child(areaOrRegion.area).once('value')
         .then(snapshot => this.arrayFromObject(snapshot.val()));
     } else {
-      return this.refDatabase.child('carParks').child(areaOrCardinalPart.cardinalPart).once('value')
+      return this.refDatabase.child('carParks').child(areaOrRegion.region).once('value')
         .then(snapshot => {
           return this.arrayFromObject(snapshot.val())
-            .map(carParkCardinalPart => this.arrayFromObject(carParkCardinalPart))
+            .map(carParkRegion => this.arrayFromObject(carParkRegion))
             .reduce((result, value) => result.concat(value), [])
         });
     }
   }
 
-  getAreasByCardinalPart(cardinalPart: CardinalPart) {
-    return this.refDatabase.child('areas').child(cardinalPart).once('value')
+  getAreasByRegion(region: Region) {
+    return this.refDatabase.child('areas').child(region).once('value')
       .then(snapshot => Object.keys(snapshot.val() ? snapshot.val() : []));
   }
 

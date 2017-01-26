@@ -26,92 +26,50 @@
 <ion-content padding>
   <form [formGroup]="profileForm" class="center-form-items">
     <div class="form-style">
-      <ion-row>
-        <ion-item>
-          <ion-label floating>Name</ion-label>
-          <ion-input required type="text"
-                     formControlName="name"
-                     [disabled]="!editMode"
-                     value="{{user.name}}"></ion-input>
-        </ion-item>
-        <ion-item class="alert alert-danger" *ngIf="formErrors.name">
-          {{ formErrors.name }}
-        </ion-item>
+      <ion-item>
+        <ion-label floating>Name</ion-label>
+        <ion-input required type="text"
+                   formControlName="name"
+                   [disabled]="!editMode"
+                   value="{{user.name}}"></ion-input>
+      </ion-item>
+      <ion-item class="alert alert-danger" *ngIf="formErrors.name">
+        {{ formErrors.name }}
+      </ion-item>
 
-        <ion-item>
-          <ion-label floating>Email</ion-label>
-          <ion-input required type="email"
-                     formControlName="email"
-                     [disabled]="!editMode"
-                     value="{{user.email}}"></ion-input>
-        </ion-item>
-        <ion-item class="alert alert-danger" *ngIf="formErrors.email">
-          {{ formErrors.email }}
-        </ion-item>
-      </ion-row>
+      <ion-item>
+        <ion-label floating>Email</ion-label>
+        <ion-input required type="email"
+                   formControlName="email"
+                   [disabled]="!editMode"
+                   value="{{user.email}}"></ion-input>
+      </ion-item>
+      <ion-item class="alert alert-danger" *ngIf="formErrors.email">
+        {{ formErrors.email }}
+      </ion-item>
 
-      <ion-row>
-        <ion-item>
-          <ion-label floating>Address</ion-label>
-          <ion-input required type="email"
-                     formControlName="address"
-                     [disabled]="!editMode"
-                     value="{{user.address}}"></ion-input>
-        </ion-item>
-        <ion-item class="alert alert-danger" *ngIf="formErrors.address">
-          {{ formErrors.address }}
-        </ion-item>
+      <ion-item>
+        <ion-label floating>Address</ion-label>
+        <ion-input required type="email"
+                   formControlName="address"
+                   [disabled]="!editMode"
+                   value="{{user.address}}"></ion-input>
+      </ion-item>
+      <ion-item class="alert alert-danger" *ngIf="formErrors.address">
+        {{ formErrors.address }}
+      </ion-item>
 
-        <ion-item>
-          <ion-label floating>Phone Number</ion-label>
-          <ion-input required type="number"
-                     formControlName="phoneNumber"
-                     [disabled]="!editMode"
-                     value="{{user.phoneNumber}}"></ion-input>
-        </ion-item>
-        <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
-          {{ formErrors.phoneNumber }}
-        </ion-item>
-      </ion-row>
-
-      <!--TODO move this to setting-->
-      <!--<ion-item *ngIf="user.provider === 'email'">-->
-      <!--<md-input type="password" disabled="true" value="******" placeholder="Password"-->
-      <!--(click)="editMode && changePassword()">-->
-      <!--</md-input>-->
-      <!--</ion-item>-->
+      <ion-item>
+        <ion-label floating>Phone Number</ion-label>
+        <ion-input required type="number"
+                   formControlName="phoneNumber"
+                   [disabled]="!editMode"
+                   value="{{user.phoneNumber}}"></ion-input>
+      </ion-item>
+      <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
+        {{ formErrors.phoneNumber }}
+      </ion-item>
     </div>
   </form>
-
-  <br>
-  <swiper [config]="configCarousel" *ngIf="user.profile">
-    <!------------ Client's cars list ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.client">
-      <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
-                    [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
-    </div>
-    <!------------ Manager's car parks list ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.manager">
-      <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
-                         [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
-    </div>
-    <!------------ Cleaner car parks to select then select a car to wahs ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.cleaner">
-      <app-car-park-item class="swiper-slide" *ngFor="let carPark of allCarParks"
-                         [carPark]="carPark"></app-car-park-item>
-    </div>
-    <!-- Add Pagination -->
-    <div class="swiper-pagination"></div>
-    <!-- Add Arrows -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-  </swiper>
-
-  <ion-fab bottom right (tap)="add()"
-           *ngIf="user.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
-    <button ion-fab mini>
-      <ion-icon name="add"></ion-icon>
-    </button>
-  </ion-fab>
 
 </ion-content>

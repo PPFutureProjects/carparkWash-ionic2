@@ -4,9 +4,9 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { UserModel } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarModel } from '../car/car.model';
-import { CarParkModel } from '../car-park/car-park.model';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { CarModel, SilhouettePictureEnum } from '../car/shared/car.model';
+import { CarParkModel } from '../car-park/shared/car-park.model';
+import { ProfileEnum } from '../shared/profile.enum';
 import {
   LoadingOptions,
   LoadingController,
@@ -15,8 +15,8 @@ import {
   ToastController,
   AlertController
 } from 'ionic-angular';
-import { ProfilePage } from '../profile/profile';
 import { AbstractPage } from '../shared/abstract.page';
+import { HomePage } from '../home/home';
 import { GlobalValidator } from '../shared/validator/global.validator';
 
 @Component({
@@ -32,7 +32,8 @@ export class LoginPage extends AbstractPage {
   confirmPassword: string = '';
   isOnLogin = true;
 
-  profileTypeEnum = ProfileTypeEnum;
+  profileEnum = ProfileEnum;
+  silhouettePictureTypeEnum = SilhouettePictureEnum;
   loginForm: FormGroup;
   loginFormErrors = {
     email: '',
@@ -54,16 +55,6 @@ export class LoginPage extends AbstractPage {
     brandModel: '',
     colour: ''
   };
-  carParkForm: FormGroup;
-  carParkFormErrors = {
-    name: '',
-    address: '',
-    cardinalPart: '',
-    area: '',
-    //nbPlaces: ''
-  };
-  cleanerForm: FormGroup;
-  cleanerFormErrors = {};
 
   private loadingOptions: LoadingOptions;
 
@@ -74,7 +65,7 @@ export class LoginPage extends AbstractPage {
 
     super(toastCtrl);
     this.userModel = new UserModel();
-    this.userModel.profile = ProfileTypeEnum.client;
+    this.userModel.profile = ProfileEnum.client;
     this.buildForms();
     this.menuCtr.enable(false);
     this.loadingOptions = {
@@ -92,7 +83,7 @@ export class LoginPage extends AbstractPage {
         loading.dismissAll();
         if (isAuth) {
           this.menuCtr.enable(true);
-          this.navCtrl.setRoot(ProfilePage);
+          this.navCtrl.setRoot(HomePage);
         } else {
           this.buildForms();
         }
@@ -113,7 +104,7 @@ export class LoginPage extends AbstractPage {
       loading.present();
       this.userService.login(this.userModel, this.password).then(() => {
         loading.dismissAll();
-        this.navCtrl.setRoot(ProfilePage);
+        this.navCtrl.setRoot(HomePage);
         this.menuCtr.enable(true);
         this.showToast('Log in Success', 'toastInfo');
       }).catch(err => {
@@ -128,7 +119,7 @@ export class LoginPage extends AbstractPage {
   loginFacebook() {
     console.log('loginFacebook');
     this.userService.facebookLogin().then((data) => {
-      this.navCtrl.setRoot(ProfilePage);
+      this.navCtrl.setRoot(HomePage);
       this.menuCtr.enable(true);
       this.showToast('Log in Success', 'toastInfo');
     }).catch((err: firebase.FirebaseError) => {
@@ -154,7 +145,7 @@ export class LoginPage extends AbstractPage {
       this.userService.create(this.userModel, this.password, this.carParkModel, this.carModel)
         .then(() => {
           loading.dismissAll();
-          this.navCtrl.setRoot(ProfilePage);
+          this.navCtrl.setRoot(HomePage);
           this.menuCtr.enable(true);
           this.showToast('Sign Up Success', 'toastInfo');
         })
@@ -181,7 +172,9 @@ export class LoginPage extends AbstractPage {
                       }).catch(err => {
                         loading.dismissAll();
                         console.log(err);
-                        this.showToast('Error Sending Verification email, please contact admin', 'toastError');
+                        this.showToast(
+                          'Error Sending Verification email, please contact admin',
+                          'toastError');
                       });
                     }
                   },
@@ -224,9 +217,12 @@ export class LoginPage extends AbstractPage {
   private buildCarForm() {
     this.carForm = this.formBuilder.group({
       licencePlateNumber: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthLicencePlateNumber),
-        Validators.maxLength(this.messageService.maxLengthLicencePlateNumber)])],
-      brandModel: ['', Validators.maxLength(this.messageService.maxLengthBrandModel)],
+        Validators.minLength(
+          this.messageService.minLengthLicencePlateNumber),
+        Validators.maxLength(
+          this.messageService.maxLengthLicencePlateNumber)])],
+      brandModel: ['', Validators.maxLength(
+        this.messageService.maxLengthBrandModel)],
       colour: ['', Validators.maxLength(this.messageService.maxLengthCarColour)]
     });
     this.carForm.valueChanges.subscribe(data => {
@@ -236,22 +232,29 @@ export class LoginPage extends AbstractPage {
   }
 
   private buildSignUpForm() {
-    this.signUpForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required,
-        GlobalValidator.mailFormat,
-        Validators.maxLength(this.messageService.maxLengthEmail)])],
-      name: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthName),
-        Validators.maxLength(this.messageService.maxLengthName)])],
-      password: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthPassword),
-        Validators.maxLength(this.messageService.maxLengthPassword)])],
-      confirmPassword: ['', Validators.required],
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
-    });
+    this.signUpForm = this.formBuilder.group(
+      {
+        email: ['', Validators.compose(
+          [Validators.required,
+            GlobalValidator.mailFormat,
+            Validators.maxLength(this.messageService.maxLengthEmail)
+          ])],
+        name: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthName),
+            Validators.maxLength(this.messageService.maxLengthName)])],
+        password: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthPassword),
+            Validators.maxLength(this.messageService.maxLengthPassword)])],
+        confirmPassword: ['', Validators.required],
+        address: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthAddress),
+            Validators.maxLength(this.messageService.maxLengthAddress)])],
+        phoneNumber: ['', Validators.pattern(
+          /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
+      });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
     });
@@ -260,10 +263,11 @@ export class LoginPage extends AbstractPage {
   }
 
   private buildLoginForm() {
-    this.loginForm = this.formBuilder.group({
-      email: ['', Validators.required],
-      password: ['', Validators.required]
-    });
+    this.loginForm = this.formBuilder.group(
+      {
+        email: ['', Validators.required],
+        password: ['', Validators.required]
+      });
     this.loginForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.loginForm, this.loginFormErrors);
     });

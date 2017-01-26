@@ -17,13 +17,13 @@
 
 .toastInfo div {
   background: #327eff !important;
-  border-radius: 20px 20px 0px 0px !important;
+  border-radius: 5px 5px 0px 0px !important;
   text-align: center;
 }
 
 .toastError div {
   background: #ff4409 !important;
-  border-radius: 20px 20px 0px 0px !important;
+  border-radius: 5px 5px 0px 0px !important;
   text-align: center;
 }
 
@@ -44,14 +44,18 @@
 
 .alert {
   white-space: pre-line;
-  //margin-bottom: 20px;
   margin-top: 5px;
   border: 2px solid transparent;
   border-radius: 10px;
+  padding: 5px;
 }
 
 .alert .md-list-item {
   height: inherit;
+}
+
+.alert ion-label{
+  white-space: normal;
 }
 
 .alert-danger {

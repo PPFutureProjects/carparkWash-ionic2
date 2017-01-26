@@ -1,6 +1,6 @@
-import { CarModel } from '../car/car.model';
-import { ProfileType } from '../shared/profile-type.enum';
-import { CarParkModel } from '../car-park/car-park.model';
+import { CarModel } from '../car/shared/car.model';
+import { CarParkModel } from '../car-park/shared/car-park.model';
+import { ProfileType } from '../shared/profile.enum';
 
 export class UserModel {
 
@@ -26,3 +26,11 @@ export class UserModel {
   }
 
 }
+
+export type Provider = 'email' | 'facebook';
+
+export const ProviderEnum = {
+  email: 'email' as Provider,
+  facebook: 'facebook' as Provider,
+};
+

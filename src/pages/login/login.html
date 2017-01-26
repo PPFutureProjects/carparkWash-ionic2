@@ -96,11 +96,11 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Type</ion-label>
+      <ion-label>Silhouette Picture</ion-label>
       <ion-select class="override-select-height" [ngModelOptions]="{standalone: true}"
-                  [(ngModel)]="carModel.type">
-        <ion-option value="regular">Regular</ion-option>
-        <ion-option value="suv">SUV</ion-option>
+                  [(ngModel)]="carModel.silhouettePicture">
+        <ion-option value="{{silhouettePictureTypeEnum.SEDAN}}">{{silhouettePictureTypeEnum.SEDAN}}</ion-option>
+        <ion-option value="{{silhouettePictureTypeEnum.SUV}}">{{silhouettePictureTypeEnum.SUV}}</ion-option>
       </ion-select>
     </ion-item>
 

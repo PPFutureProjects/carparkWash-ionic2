@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
-import { UserModel } from './user.model';
+import { UserModel, ProviderEnum } from './user.model';
 import { UserReady } from './user-notifier';
-import { CarModel } from '../car/car.model';
-import { CarParkModel } from '../car-park/car-park.model';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { CarModel } from '../car/shared/car.model';
+import { CarParkModel } from '../car-park/shared/car-park.model';
+import { ProfileEnum } from '../shared/profile.enum';
 import { ServiceUtils } from '../shared/service.utils';
 import { Facebook } from 'ionic-native';
 import { LoadingController } from 'ionic-angular';
@@ -42,9 +42,6 @@ export class UserService extends ServiceUtils {
           if (this.currentUser === null) {
             return this.createUserModel(userFb);
           } else {
-            if (this.currentUser.provider) {
-
-            }
             this.currentUser.cars = this.arrayFromObject(this.currentUser.cars);
             this.currentUser.carParks = this.arrayFromObject(this.currentUser.carParks);
             this.userReady.notify(true);
@@ -101,7 +98,7 @@ export class UserService extends ServiceUtils {
 
         let userFb = new UserModel();
         userFb.uid = result.uid;
-        userFb.provider = 'facebook';
+        userFb.provider = ProviderEnum.facebook;
         userFb.name = result.displayName;
         userFb.email = result.email;
         userFb.address = result.location ? result.location : '';
@@ -112,7 +109,7 @@ export class UserService extends ServiceUtils {
           return this.createUserModel(userFb, carParkModel);
         } else {
           // client login/sign up with facebook
-          userFb.profile = ProfileTypeEnum.client;
+          userFb.profile = ProfileEnum.client;
           return this.getCurrent(false, userFb);
         }
       }, err => {
@@ -132,7 +129,7 @@ export class UserService extends ServiceUtils {
   create(user: UserModel, password: string, carPark?: CarParkModel, car?: CarModel) {
     return firebase.auth().createUserWithEmailAndPassword(user.email, password).then(() => {
       user.uid = firebase.auth().currentUser.uid;
-      user.provider = 'email';
+      user.provider = ProviderEnum.email;
       return this.createUserModel(user, carPark, car)
         .then(() => this.sentEmailVerification())
         .catch((err: any) => {
@@ -157,19 +154,19 @@ export class UserService extends ServiceUtils {
     let updates = {};
     // Creation user login with facebook is always a client without a car
     //if (user.profile === undefined) {}
-    if (user.profile === ProfileTypeEnum.client && car) {
+    if (user.profile === ProfileEnum.client && car) {
       let newCarId = this.refDatabase.child('cars').push().key;
       car.userUid = user.uid;
       car.id = newCarId;
       updates['cars/' + newCarId] = car;
       updates['users/' + user.uid + '/cars/' + newCarId] = car;
-    } else if (user.profile === ProfileTypeEnum.manager) {
+    } else if (user.profile === ProfileEnum.manager) {
       let newCarParkId = this.refDatabase.child('carParks').push().key;
       carPark.userUid = user.uid;
       carPark.id = newCarParkId;
       //carPark.nbFreePlaces = carPark.nbPlaces;
-      updates['carParks/' + carPark.cardinalPart + '/' + carPark.area.toLowerCase() + '/' + newCarParkId] = carPark;
-      updates['areas/' + carPark.cardinalPart + '/' + carPark.area.toLowerCase()] = true;
+      updates['carParks/' + carPark.region + '/' + carPark.area.toLowerCase() + '/' + newCarParkId] = carPark;
+      updates['areas/' + carPark.region + '/' + carPark.area.toLowerCase()] = true;
       updates['users/' + user.uid + '/carParks/' + newCarParkId] = carPark;
     }
 
@@ -177,7 +174,7 @@ export class UserService extends ServiceUtils {
       return this.refDatabase.update(updates).then(() => {
         car ? user.cars = [car] : '';
         carPark ? user.carParks = [carPark] : '';
-        if (!this.currentUser || this.currentUser.profile !== ProfileTypeEnum.admin) {
+        if (!this.currentUser || this.currentUser.profile !== ProfileEnum.admin) {
           this.currentUser = user;
           this.userReady.notify(true);
         }
@@ -199,8 +196,9 @@ export class UserService extends ServiceUtils {
     return firebase.auth().signOut();
   }
 
-  updatePassword(newPassword: string) {
-    return firebase.auth().currentUser.updatePassword(newPassword);
+  updatePassword(updatePassword: {new: string, old: string}) {
+    return this.login(this.currentUser, updatePassword.old)
+      .then(() => firebase.auth().currentUser.updatePassword(updatePassword.new));
   }
 
   /**
@@ -221,6 +219,7 @@ export class UserService extends ServiceUtils {
     //userInfo.phoneNumber = user.phoneNumber;
     //userInfo.address = user.address;
     return this.refDatabase.child('users').child(user.uid).update(userInfo)
+      .then(() => this.updateUserAuthEmail(user))
       .then(() => this.currentUser = user);
   }
 
@@ -242,10 +241,9 @@ export class UserService extends ServiceUtils {
    */
   private updateUserAuthEmail(user: UserModel) {
     if (firebase.auth().currentUser.email !== user.email) {
-      return firebase.auth().currentUser.updateEmail(user.email)
-        .then(() => this.updateUserInfo(user));
+      return firebase.auth().currentUser.updateEmail(user.email);
     } else {
-      return this.updateUserInfo(user);
+      return Promise.resolve(user);
     }
   }
 }

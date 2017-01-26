@@ -1,25 +1,20 @@
-import { Component, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
-import { CarModel } from '../car.model';
-import { CarService } from '../car.service';
-import { UserService } from '../../user/user.service';
-import { UserModel } from '../../user/user.model';
-import { ProfileTypeEnum } from '../../shared/profile-type.enum';
-import { SubscriberService } from '../../shared/subscription/subscriber.service';
-import { SubscriptionModel } from '../../shared/subscription/subscription.model';
-import { CarParkModel } from '../../car-park/car-park.model';
-import { CarParkService } from '../../car-park/car-park.service';
-import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
-import { AbstractPage } from '../../shared/abstract.page';
+import {Component, Input, Output, EventEmitter, AfterContentInit} from '@angular/core';
+import {CarModel} from '../shared/car.model';
+import {CarService} from '../shared/car.service';
+import {UserService} from '../../user/user.service';
+import {UserModel} from '../../user/user.model';
+import {ProfileEnum} from '../../shared/profile.enum';
+import {SubscriberService} from '../../shared/subscription/subscriber.service';
+import {SubscriptionModel} from '../../shared/subscription/subscription.model';
+import {CarParkModel} from '../../car-park/shared/car-park.model';
+import {CarParkService} from '../../car-park/shared/car-park.service';
+import {WashStateEnum} from '../../shared/subscription/wash-state.enum';
+import {AbstractPage} from '../../shared/abstract.page';
 import {
-  ToastController,
-  LoadingController,
-  LoadingOptions,
-  NavController,
-  AlertController,
-  ModalController
+  ToastController, LoadingController, LoadingOptions, NavController, AlertController, ModalController
 } from 'ionic-angular';
-import { CarParkListPage } from '../../car-park/car-park-list/car-park-list';
-import { EditCarPage } from '../edit-car/edit-car';
+import {CarParkListPage} from '../../car-park/car-park-list/car-park-list';
+import {EditCarPage} from '../edit-car/edit-car';
 
 @Component({
   selector: 'app-car-item',
@@ -31,7 +26,7 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
   carParkSubscribed: CarParkModel;
   carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
-  profileTypeEnum = ProfileTypeEnum;
+  profileEnum = ProfileEnum;
   washStateEnum = WashStateEnum;
   initDone: boolean = true;
   @Input() car: CarModel;
@@ -41,9 +36,7 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
 
   private loadingOptions: LoadingOptions;
 
-  constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService,
-              public subscriberService: SubscriberService, public toastCtrl: ToastController, public modalCtrl: ModalController,
-              public loadingCtrl: LoadingController, public navCtrl: NavController, public alertCtrl: AlertController) {
+  constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService, public modalCtrl: ModalController, public subscriberService: SubscriberService, public toastCtrl: ToastController, public loadingCtrl: LoadingController, public navCtrl: NavController, private alertCtrl: AlertController) {
 
     super(toastCtrl);
     this.loadingOptions = {
@@ -94,7 +87,6 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
         console.error(err);
         this.showToast('Fatal Error, please contact admin', 'toastError');
       });
-
   }
 
   selectAsWashed() {
@@ -116,7 +108,7 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
           .then(() => {
             this.car = updatedCar;
             loading.dismissAll();
-            this.showToast(`Updating ${this.car.licencePlateNumber} success`, 'toastError');
+            this.showToast(`${this.car.licencePlateNumber} successfully updated`, 'toastError');
           })
           .catch(err => {
             loading.dismissAll();
@@ -130,31 +122,27 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
 
   remove() {
     this.alertCtrl.create({
-      title: 'Confirmation of deletion',
-      message: `Are you sure to remove this ${this.car.licencePlateNumber} ?`,
-      buttons: [
-        {
-          text: 'Cancel'
-        },
-        {
-          text: 'OK',
-          handler: () => {
-            let loading = this.loadingCtrl.create(this.loadingOptions);
-            loading.present();
-            this.carService.remove(this.car).then(data => {
-              loading.dismissAll();
-              this.removed.emit(true);
-              console.log(data);
-              this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastError');
-            }).catch(err => {
-              loading.dismissAll();
-              console.log(err);
-              this.showToast(`Could not remove the car ${this.car.licencePlateNumber}, please contact admin`,
-                'toastError');
-            });
-          }
+      title: 'CONFIRM DELETION',
+      message: `Are you sure you would like to delete ${this.car.licencePlateNumber} ?`,
+      buttons: [{
+        text: 'Cancel'
+      }, {
+        text: 'OK', handler: () => {
+          let loading = this.loadingCtrl.create(this.loadingOptions);
+          loading.present();
+          this.carService.remove(this.car).then(data => {
+            loading.dismissAll();
+            this.removed.emit(true);
+            console.log(data);
+            this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastError');
+          }).catch(err => {
+            loading.dismissAll();
+            console.log(err);
+            this.showToast(`Could not remove the car ${this.car.licencePlateNumber}, please contact admin`,
+              'toastError');
+          });
         }
-      ]
+      }]
     }).present();
   }
 

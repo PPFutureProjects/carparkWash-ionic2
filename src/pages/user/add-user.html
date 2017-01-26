@@ -3,7 +3,7 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Add Manager or Cleaner</ion-title>
+    <ion-title>Create Manager/Cleaner account</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -87,13 +87,13 @@
                   formControlName="profile"
                   [(ngModel)]="userModel.profile">
         <!--<ion-option value={{profileTypeEnum.client}}>Client</ion-option>-->
-        <ion-option value={{profileTypeEnum.manager}}>Car park Manager</ion-option>
-        <ion-option value={{profileTypeEnum.cleaner}}>Cleaner</ion-option>
+        <ion-option value="{{profileEnum.manager}}">Car park Manager</ion-option>
+        <ion-option value="{{profileEnum.cleaner}}">Cleaner</ion-option>
       </ion-select>
     </ion-item>
   </form>
 
-  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileTypeEnum.manager">
+  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileEnum.manager">
     <br>
     <h2>Add the first car park</h2>
     <ion-item>
@@ -118,14 +118,15 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Cardinal Part</ion-label>
+      <ion-label>Region</ion-label>
       <ion-select required class="override-select-height override-select-padding"
-                  formControlName="cardinalPart"
-                  [(ngModel)]="carParkModel.cardinalPart">
-        <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
-        <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
-        <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
-        <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
+                  formControlName="region"
+                  [(ngModel)]="carParkModel.region">
+        <ion-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</ion-option>
+        <ion-option value="{{regionEnum.east}}">{{regionEnum.east | camelCase}}</ion-option>
+        <ion-option value="{{regionEnum.north}}">{{regionEnum.north | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</ion-option>
       </ion-select>
     </ion-item>
 
@@ -160,7 +161,7 @@
     <!--</ion-item>-->
   </form>
 
-  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileTypeEnum.cleaner">
+  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileEnum.cleaner">
   </form>
 
   <button ion-button block large padding

@@ -22,10 +22,10 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Type</ion-label>
-      <ion-select formControlName="carType">>
-        <ion-option value="regular">Regular</ion-option>
-        <ion-option value="suv">SUV</ion-option>
+      <ion-label>Silhouette Picture</ion-label>
+      <ion-select formControlName="silhouettePicture">
+        <ion-option value="{{silhouettePictureEnum.SEDAN}}">{{silhouettePictureEnum.SEDAN | camelCase}}</ion-option>
+        <ion-option value="{{silhouettePictureEnum.SUV}}">{{silhouettePictureEnum.SUV | camelCase}}</ion-option>
       </ion-select>
     </ion-item>
 

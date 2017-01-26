@@ -6,8 +6,10 @@ import { ProfilePage } from '../pages/profile/profile';
 import { AddUserPage } from '../pages/user/add-user';
 import { FirebaseService } from '../pages/shared/firebase-service';
 import { UserService } from '../pages/user/user.service';
-import { ProfileTypeEnum } from '../pages/shared/profile-type.enum';
+import { ProfileEnum } from '../pages/shared/profile.enum';
 import { UserReady } from '../pages/user/user-notifier';
+import { SettingPage } from '../pages/setting/setting';
+import { HomePage } from '../pages/home/home';
 
 @Component({
   templateUrl: 'app.html'
@@ -26,16 +28,20 @@ export class MyApp {
     this.userReady.notifySource$.subscribe(() => {
       this.userService.getCurrent().then(user => {
         if (user) {
-          if (user.profile === ProfileTypeEnum.admin) {
+          if (user.profile === ProfileEnum.admin) {
             this.pages = [
+              {title: 'Home', component: HomePage},
               {title: 'Profile', component: ProfilePage},
+              {title: 'Setting', component: SettingPage},
               //{ title: 'Ssetting', component: Setting },
               {title: 'Add Manager/Cleaner', component: AddUserPage},
               {title: 'Disconnect', component: LoginPage}
             ];
           } else {
             this.pages = [
+              {title: 'Home', component: HomePage},
               {title: 'Profile', component: ProfilePage},
+              {title: 'Setting', component: SettingPage},
               {title: 'Disconnect', component: LoginPage}
             ];
           }

@@ -1,6 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+
 export class GlobalValidator {
 
   static samePasswordValidation = {};
@@ -36,7 +37,7 @@ export class GlobalValidator {
       .map((valueChanges: Subscription) => valueChanges.unsubscribe());
   }
 
-  static mailFormat(control: FormControl): ValidationResult {
+  static mailFormat(control: FormControl) {
 
     var EMAIL_REGEXP = /^[a-z0-9!#$%&'*+\/=?^_`{|}~.-]+@[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/i;
 
@@ -48,6 +49,3 @@ export class GlobalValidator {
 
 }
 
-export interface ValidationResult {
-  [key: string]: boolean;
-}

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { ToastController } from 'ionic-angular';
-import { CarService } from '../../car/car.service';
-import { CarModel } from '../../car/car.model';
-import { CarParkModel } from '../../car-park/car-park.model';
-import { CarParkService } from '../../car-park/car-park.service';
+import { CarService } from '../shared/car.service';
+import { CarModel } from '../shared/car.model';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
+import { CarParkService } from '../../car-park/shared/car-park.service';
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
 import { AbstractPage } from '../../shared/abstract.page';
 

@@ -28,20 +28,19 @@
       </ion-avatar>
     </ion-item>
 
-    <ion-item>
-      <ion-select required placeholder="Cardinal Part"
-                  formControlName="cardinalPart">
-        <ion-option value={{cardinalPartEnum.north}}>North</ion-option>
-        <ion-option value={{cardinalPartEnum.south}}>South</ion-option>
-        <ion-option value={{cardinalPartEnum.east}}>East</ion-option>
-        <ion-option value={{cardinalPartEnum.west}}>West</ion-option>
+    <ion-item *ngIf="carParkToEdit?.region === undefined">
+      <ion-select required placeholder="Region" formControlName="region">
+        <ion-option value={{regionEnum.central}}>{{regionEnum.central | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.east}}>{{regionEnum.east | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.north}}>{{regionEnum.north | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</ion-option>
+        <ion-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</ion-option>
       </ion-select>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="carParkToEdit?.area === ''">
       <ion-label floating>Area</ion-label>
-      <ion-input required type="text"
-                 formControlName="area"></ion-input>
+      <ion-input required type="text" formControlName="area"></ion-input>
     </ion-item>
     <ion-item class="alert alert-danger" *ngIf="formErrors.area">
       {{ formErrors.area }}

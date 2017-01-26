@@ -34,6 +34,11 @@ export class ValidationMessageService {
       'minlength': this.minLength('Password', this.minLengthPassword),
       'maxlength': this.maxLength('Password', this.maxLengthPassword)
     },
+    'oldPassword': {
+      'required': this.required('Old Password'),
+      'minlength': this.minLength('Old Password', this.minLengthPassword),
+      'maxlength': this.maxLength('Old Password', this.maxLengthPassword)
+    },
     'confirmPassword': {
       'required': this.required('Confirm Password'),
       'notMatch': this.match('Confirm Password', 'Password')
@@ -43,8 +48,8 @@ export class ValidationMessageService {
       'minlength': this.minLength('Address', this.minLengthAddress),
       'maxlength': this.maxLength('Address', this.maxLengthAddress)
     },
-    'cardinalPart': {
-      'required': this.required('Cardinal Part'),
+    'region': {
+      'required': this.required('Region'),
     },
     'area': {
       'required': this.required('Area'),

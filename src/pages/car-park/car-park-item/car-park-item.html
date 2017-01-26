@@ -5,18 +5,21 @@
 
   <ion-card-content>
     <ion-item>Address: {{carPark.address}}</ion-item>
-    <ion-item>Cardinal Part: {{carPark.cardinalPart}}</ion-item>
+    <ion-item>Region: {{carPark.region}}</ion-item>
     <ion-item>Area: {{carPark.area}}</ion-item>
-    <ion-item *ngIf="carPark.unlocked !== 0">Last unlocked date:</ion-item>
-    <ion-item *ngIf="carPark.unlocked !== 0">{{carPark.unlocked | date}}</ion-item>
-    <ion-item *ngIf="carPark.unlocked === 0">Never unlocked</ion-item>
-    <ion-item *ngIf="currentUser.profile === profileTypeEnum.manager && isUnlocked()">
-      Already Unlocked for today
-    </ion-item>
+    <!--<ion-item *ngIf="carPark.unlocked !== 0">Last unlocked date:</ion-item>-->
+    <!--<ion-item *ngIf="carPark.unlocked !== 0">{{carPark.unlocked | date}}</ion-item>-->
+    <!--<ion-item *ngIf="carPark.unlocked === 0">Never unlocked</ion-item>-->
+    <!--<ion-item *ngIf="currentUser.profile === profileTypeEnum.manager && isCarParkUnlocked">-->
+      <!--Already Unlocked for today-->
+    <!--</ion-item>-->
     <!--<ion-item>number places: {{carPark.nbPlaces}}</ion-item>-->
     <!--<ion-item>number free places: {{carPark.nbFreePlaces}}</ion-item>-->
 
-    <ion-row class="btn-action-layout" *ngIf="!isSelected">
+    <ion-row class="btn-action-layout" *ngIf="!isSelected
+              && ((currentUser.profile === profileTypeEnum.cleaner)
+                  || (currentUser.profile === profileTypeEnum.client)
+                  || (currentUser.profile === profileTypeEnum.manager && !isCarParkUnlocked))">
       <button ion-button clear (tap)="select()"
               *ngIf="currentUser.profile === profileTypeEnum.cleaner">
         Cars in
@@ -26,9 +29,8 @@
               *ngIf="currentUser.profile === profileTypeEnum.client">
         Subscribe
       </button>
-      <!--to 30 weekdays washing system-->
       <button ion-button clear (tap)="unlock()"
-              *ngIf="currentUser.profile === profileTypeEnum.manager && !isUnlocked()">
+              *ngIf="currentUser.profile === profileTypeEnum.manager && !isCarParkUnlocked">
         Unlock
       </button>
     </ion-row>

@@ -2,19 +2,19 @@ import { Component } from '@angular/core';
 import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
 import { ImagePickerOptions, ImagePicker } from 'ionic-native';
 import { UserModel } from './user.model';
-import { ProfileTypeEnum } from '../shared/profile-type.enum';
+import { ProfileEnum } from '../shared/profile.enum';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from './user.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarParkModel } from '../car-park/car-park.model';
-import { CardinalPartEnum } from '../car-park/car-park-filter/cardinal-part-enum';
+import { CarParkModel } from '../car-park/shared/car-park.model';
 import { AbstractPage } from '../shared/abstract.page';
+import { RegionEnum } from '../car-park/car-park-filter/region.enum';
 import { GlobalValidator } from '../shared/validator/global.validator';
 
 @Component({
-  selector: 'page-add-user',
-  templateUrl: 'add-user.html',
-})
+             selector: 'page-add-user',
+             templateUrl: 'add-user.html',
+           })
 export class AddUserPage extends AbstractPage {
 
   connectEmailNoFacebook: 'true' | 'false';
@@ -23,8 +23,8 @@ export class AddUserPage extends AbstractPage {
   password: string = '';
   confirmPassword: string = '';
 
-  profileTypeEnum = ProfileTypeEnum;
-  cardinalPartEnum = CardinalPartEnum;
+  profileEnum = ProfileEnum;
+  regionEnum = RegionEnum;
   signUpForm: FormGroup;
   signUpFormErrors = {
     email: '',
@@ -61,7 +61,6 @@ export class AddUserPage extends AbstractPage {
     };
     this.userModel = new UserModel();
     this.buildForms();
-    //this.toolbarService.title('Create Manager/Cleaner account');
   }
 
   ionViewWillEnter() {
@@ -95,8 +94,8 @@ export class AddUserPage extends AbstractPage {
   areInputsValid() {
     return this.userInfoForm.valid
       && ((this.connectEmailNoFacebook && this.signUpForm.valid) || !this.connectEmailNoFacebook)
-      && ((this.userModel.profile === ProfileTypeEnum.cleaner && this.cleanerForm.valid)
-      || (this.userModel.profile === ProfileTypeEnum.manager && this.carParkForm.valid))
+      && ((this.userModel.profile === ProfileEnum.cleaner && this.cleanerForm.valid)
+      || (this.userModel.profile === ProfileEnum.manager && this.carParkForm.valid))
   }
 
   private createWithFacebook() {
@@ -154,19 +153,23 @@ export class AddUserPage extends AbstractPage {
   }
 
   private buildCarParkForm() {
-    this.carParkForm = this.formBuilder.group({
-      carParkName: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthCarParkName),
-        Validators.maxLength(this.messageService.maxLengthCarParkName)])],
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      cardinalPart: ['', Validators.required],
-      area: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthName),
-        Validators.maxLength(this.messageService.maxLengthName)])],
-      //nbPlaces: ['', Validators.pattern('^[0-9]+$')]
-    });
+    this.carParkForm = this.formBuilder.group(
+      {
+        carParkName: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthCarParkName),
+            Validators.maxLength(this.messageService.maxLengthCarParkName)])],
+        address: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthAddress),
+            Validators.maxLength(this.messageService.maxLengthAddress)])],
+        region: ['', Validators.required],
+        area: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthName),
+            Validators.maxLength(this.messageService.maxLengthName)])],
+        //nbPlaces: ['', Validators.pattern('^[0-9]+$')]
+      });
     this.carParkForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.carParkForm, this.carParkFormErrors);
     });
@@ -174,18 +177,27 @@ export class AddUserPage extends AbstractPage {
   }
 
   private buildSignUpForm() {
-    this.signUpForm = this.formBuilder.group({
-      email: ['', Validators.compose([Validators.required,
-        GlobalValidator.mailFormat,
-        Validators.maxLength(this.messageService.maxLengthEmail)])],
-      name: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthName),
-        Validators.maxLength(this.messageService.maxLengthName)])],
-      password: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthPassword),
-        Validators.maxLength(this.messageService.maxLengthPassword)])],
-      confirmPassword: ['', Validators.required],
-    });
+    this.signUpForm = this.formBuilder.group(
+      {
+        email: ['', Validators.compose(
+          [Validators.required,
+            GlobalValidator.mailFormat,
+            Validators.maxLength(
+              this.messageService.maxLengthEmail)])],
+        name: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(
+              this.messageService.minLengthName),
+            Validators.maxLength(
+              this.messageService.maxLengthName)])],
+        password: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(
+              this.messageService.minLengthPassword),
+            Validators.maxLength(
+              this.messageService.maxLengthPassword)])],
+        confirmPassword: ['', Validators.required],
+      });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
     });
@@ -194,13 +206,18 @@ export class AddUserPage extends AbstractPage {
   }
 
   private buildUserInfoForm() {
-    this.userInfoForm = this.formBuilder.group({
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
-      profile: ['', Validators.required]
-    });
+    this.userInfoForm = this.formBuilder.group(
+      {
+        address: ['', Validators.compose(
+          [Validators.required,
+            Validators.minLength(
+              this.messageService.minLengthAddress),
+            Validators.maxLength(
+              this.messageService.maxLengthAddress)])],
+        phoneNumber: ['', Validators.pattern(
+          /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)],
+        profile: ['', Validators.required]
+      });
     this.userInfoForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.userInfoForm, this.userInfoFormErrors);
     });
@@ -208,10 +225,11 @@ export class AddUserPage extends AbstractPage {
   }
 
   private buildCleanerForm() {
-    this.cleanerForm = this.formBuilder.group({
-      //email: ['', Validators.required],
-      //password: ['', Validators.required]
-    });
+    this.cleanerForm = this.formBuilder.group(
+      {
+        //email: ['', Validators.required],
+        //password: ['', Validators.required]
+      });
     this.cleanerForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
     });

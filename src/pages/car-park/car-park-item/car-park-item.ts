@@ -1,11 +1,11 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CarParkModel } from '../car-park.model';
-import { CarParkService } from '../car-park.service';
+import { CarParkModel } from '../shared/car-park.model';
+import { CarParkService } from '../shared/car-park.service';
 import { UserService } from '../../user/user.service';
 import { UserModel } from '../../user/user.model';
 import { SubscriberService } from '../../shared/subscription/subscriber.service';
-import { CarService } from '../../car/car.service';
-import { ProfileTypeEnum } from '../../shared/profile-type.enum';
+import { CarService } from '../../car/shared/car.service';
+import { ProfileEnum } from '../../shared/profile.enum';
 import { AbstractPage } from '../../shared/abstract.page';
 import {
   ToastController,
@@ -25,7 +25,8 @@ import { EditCarParkPage } from '../edit-car-park/edit-car-park';
 export class CarParkItemComponent extends AbstractPage {
 
   currentUser: UserModel;
-  profileTypeEnum = ProfileTypeEnum;
+  isCarParkUnlocked: boolean;
+  profileTypeEnum = ProfileEnum;
   @Input() carPark: CarParkModel;
   @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
@@ -52,11 +53,15 @@ export class CarParkItemComponent extends AbstractPage {
       });
   }
 
-  //ngOnInit() {
+  ngAfterContentInit() {
   //  if (!this.carPark) {
   //    this.router.navigate(['']);
   //  }
-  //}
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
+  }
 
   select() {
     this.carParkService.selectedCarPark = this.carPark;
@@ -75,16 +80,9 @@ export class CarParkItemComponent extends AbstractPage {
           this.showToast('Fatal Error, please contact admin', 'toastError');
         });
     } else {
-      console.error('can\'t subscribe to an undefined car');
+      console.error('Can\'t subscribe to an undefined car');
       this.showToast('Fatal Error, please contact admin', 'toastError');
     }
-  }
-
-  isUnlocked() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    return this.carPark.unlocked === today.getTime();
   }
 
   unlock() {
@@ -106,12 +104,12 @@ export class CarParkItemComponent extends AbstractPage {
           .then(() => {
             this.carPark = updatedCarPark;
             loading.dismissAll();
-            this.showToast('Updating selected carpark success', 'toastInfo');
+            this.showToast(`The car ${this.carPark.name} was updated successfully`, 'toastInfo');
           })
           .catch(err => {
             loading.dismissAll();
             console.error(err);
-            this.showToast('Fail to update carpark', 'toastError');
+            this.showToast(`Fail to update ${this.carPark.name}`, 'toastError');
           });
       }
     });
@@ -120,8 +118,8 @@ export class CarParkItemComponent extends AbstractPage {
 
   remove() {
     this.alertCtrl.create({
-      title: 'Confirmation of deletion',
-      message: `Are you sure to remove this ${this.carPark.name} ?`,
+      title: 'CONFIRM DELETION',
+      message: `Are you sure you would like to delete ${this.carPark.name} ?`,
       buttons: [
         {
           text: 'Cancel'
@@ -135,7 +133,7 @@ export class CarParkItemComponent extends AbstractPage {
               this.removed.emit(true);
               loading.dismissAll();
               console.log(data);
-              this.showToast(`The Carpark ${this.carPark.name} was removed successfully`, 'toastInfo');
+              this.showToast(`The carpark ${this.carPark.name} was removed successfully`, 'toastInfo');
             }).catch(err => {
               loading.dismissAll();
               console.log(err);

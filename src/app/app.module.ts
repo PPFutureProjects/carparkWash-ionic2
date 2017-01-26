@@ -12,15 +12,17 @@ import { ValidationMessageService } from '../pages/shared/validator/validation-m
 import { FirebaseService } from '../pages/shared/firebase-service';
 import { UserReady } from '../pages/user/user-notifier';
 import { SubscriberService } from '../pages/shared/subscription/subscriber.service';
-import { CarParkService } from '../pages/car-park/car-park.service';
-import { CarService } from '../pages/car/car.service';
+import { CarParkService } from '../pages/car-park/shared/car-park.service';
+import { CarService } from '../pages/car/shared/car.service';
 import { UserService } from '../pages/user/user.service';
-import { ChangePasswordPage } from '../pages/change-password/change-password';
+import { ChangePasswordPage } from '../pages/setting/change-password/change-password';
 import { EditCarParkPage } from '../pages/car-park/edit-car-park/edit-car-park';
 import { EditCarPage } from '../pages/car/edit-car/edit-car';
 import { CarListPage } from '../pages/car/car-list/car-list';
 import { CarParkListPage } from '../pages/car-park/car-park-list/car-park-list';
 import { AddUserPage } from '../pages/user/add-user';
+import { SettingPage } from '../pages/setting/setting';
+import { HomePage } from '../pages/home/home';
 
 @NgModule({
   declarations: [
@@ -34,6 +36,8 @@ import { AddUserPage } from '../pages/user/add-user';
     EditCarPage,
     ChangePasswordPage,
     EditCarParkPage,
+    SettingPage,
+    HomePage,
 
     CarItemComponent,
     CarParkItemComponent,
@@ -57,6 +61,8 @@ import { AddUserPage } from '../pages/user/add-user';
     EditCarPage,
     EditCarParkPage,
     ChangePasswordPage,
+    SettingPage,
+    HomePage,
   ],
   providers: [
     UserService,

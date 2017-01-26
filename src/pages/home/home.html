@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Carpark Wash System</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <app-car-park-filter *ngIf="user.profile === profileTypeEnum.cleaner"
+    (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+
+  <swiper [config]="configCarousel" *ngIf="user.profile">
+    <!------------ Client's cars list ------------>
+    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.client">
+      <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
+                    [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
+    </div>
+    <!------------ Manager's car parks list ------------>
+    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.manager">
+      <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
+                         [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
+    </div>
+    <!------------ Cleaner car parks to select then select a car to wahs ------------>
+    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.cleaner">
+      <app-car-park-item class="swiper-slide" *ngFor="let carPark of carParks"
+                         [carPark]="carPark"></app-car-park-item>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+  </swiper>
+
+  <ion-fab bottom right (tap)="add()"
+           *ngIf="user.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
+    <button ion-fab mini>
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+</ion-content>

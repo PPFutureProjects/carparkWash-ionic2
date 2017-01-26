@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastController, ViewController, NavParams } from 'ionic-angular';
 import { ImagePicker, ImagePickerOptions } from 'ionic-native';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
-import { CarParkModel } from '../car-park.model';
-import { CardinalPartEnum } from '../car-park-filter/cardinal-part-enum';
+import { CarParkModel } from '../shared/car-park.model';
 import { AbstractPage } from '../../shared/abstract.page';
+import { RegionEnum } from '../car-park-filter/region.enum';
 
 @Component({
   selector: 'page-add-car',
@@ -17,17 +17,17 @@ export class EditCarParkPage extends AbstractPage { //PickImageAbstract
   carParkToEdit: CarParkModel;
   isPictureLoading = false;
 
-  cardinalPartEnum = CardinalPartEnum;
+  regionEnum = RegionEnum;
   carParkForm: FormGroup;
   formErrors = {
     name: '',
-    cardinalPart: '',
+    region: '',
     area: '',
     address: '',
     //nbPlaces: ''
   };
 
-  constructor( private formBuilder: FormBuilder, public viewCtrl: ViewController, public params: NavParams,
+  constructor(private formBuilder: FormBuilder, public viewCtrl: ViewController, public params: NavParams,
               public messageService: ValidationMessageService, public toastCtrl: ToastController) {
 
     super(toastCtrl);
@@ -64,29 +64,30 @@ export class EditCarParkPage extends AbstractPage { //PickImageAbstract
   save() {
     this.carParkToEdit.name = this.carParkForm.value.name;
     this.carParkToEdit.address = this.carParkForm.value.address;
-    this.carParkToEdit.cardinalPart = this.carParkForm.value.cardinalPart;
+    this.carParkToEdit.region = this.carParkForm.value.region;
     this.carParkToEdit.area = this.carParkForm.value.area;
     //this.carParkToEdit.nbPlaces = this.carParkForm.value.nbPlaces;
     this.viewCtrl.dismiss(this.carParkToEdit)
   }
 
   private buildForm() {
-    this.carParkForm = this.formBuilder.group({
-      name: [this.carParkToEdit.name,
-        Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthName),
-          Validators.maxLength(this.messageService.maxLengthName)])],
-      cardinalPart: [this.carParkToEdit.cardinalPart, Validators.required],
-      area: [this.carParkToEdit.area,
-        Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthName),
-          Validators.maxLength(this.messageService.maxLengthName)])],
-      address: [this.carParkToEdit.address,
-        Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthAddress),
-          Validators.maxLength(this.messageService.maxLengthAddress)])],
-      //nbPlaces: [this.carParkToEdit.nbPlaces],
-    });
+    this.carParkForm = this.formBuilder.group(
+      {
+        name: [this.carParkToEdit.name, Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthName),
+            Validators.maxLength(this.messageService.maxLengthName)])],
+        region: [this.carParkToEdit.region, Validators.required],
+        area: [this.carParkToEdit.area, Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthName),
+            Validators.maxLength(this.messageService.maxLengthName)])],
+        address: [this.carParkToEdit.address, Validators.compose(
+          [Validators.required,
+            Validators.minLength(this.messageService.minLengthAddress),
+            Validators.maxLength(this.messageService.maxLengthAddress)])],
+        //nbPlaces: [this.carParkToEdit.nbPlaces],
+      });
   }
 
 }

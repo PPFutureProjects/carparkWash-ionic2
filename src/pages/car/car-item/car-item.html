@@ -3,7 +3,7 @@
 
   <ion-card-content>
     <ion-item>Colour: {{car?.colour}}</ion-item>
-    <ion-item>Type: {{car?.type}}</ion-item>
+    <ion-item>Silhouette Picture: {{car?.silhouettePicture}}</ion-item>
     <ion-item *ngIf="subscription">Subscription date:</ion-item>
     <ion-item *ngIf="subscription">{{subscription?.dateSubscription | date}}</ion-item>
     <ion-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
@@ -16,25 +16,32 @@
       on {{subscription?.days[dayIndex].washDate | date:'short'}}
     </ion-item>
 
-    <ion-row class="btn-action-layout" *ngIf="!isSelected">
+    <ion-row class="btn-action-layout" *ngIf="!isSelected
+                  && ((currentUser?.profile === profileEnum.client && !car?.subscription)
+              || (currentUser?.profile === profileEnum.client
+                  && car?.subscription
+                  && carParkSubscribedIsUnlocked
+                  && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested)
+              || (currentUser?.profile === profileEnum.cleaner
+                  && subscription?.days[dayIndex].washStatus === washStateEnum.toWash))">
       <button ion-button clear (tap)="selectToSubscribe()"
-              *ngIf="currentUser?.profile === profileTypeEnum.client && !car?.subscription">
+              *ngIf="currentUser?.profile === profileEnum.client && !car?.subscription">
         Subscribe for 30 days
       </button>
       <button ion-button clear (tap)="selectToWash()"
-              *ngIf="currentUser?.profile === profileTypeEnum.client
+              *ngIf="currentUser?.profile === profileEnum.client
               && car?.subscription
               && carParkSubscribedIsUnlocked
               && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested">
         Book to wash
       </button>
       <button ion-button clear (tap)="selectAsWashed()"
-              *ngIf="currentUser?.profile === profileTypeEnum.cleaner
+              *ngIf="currentUser?.profile === profileEnum.cleaner
                   && subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
         Select as Washed
       </button>
     </ion-row>
-    <ion-row *ngIf="!isSelected && currentUser?.profile === profileTypeEnum.client">
+    <ion-row *ngIf="!isSelected && currentUser?.profile === profileEnum.client">
       <button ion-button clear color="dark" (tap)="edit(false)">Edit</button>
       <button ion-button clear color="dark" (tap)="remove(false)">Remove</button>
     </ion-row>

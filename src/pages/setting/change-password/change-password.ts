@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { ViewController } from 'ionic-angular';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { GlobalValidator } from '../shared/validator/global.validator';
+import { ValidationMessageService } from '../../shared/validator/validation-message.service';
+import { GlobalValidator } from '../../shared/validator/global.validator';
 
 @Component({
   selector: 'page-change-password',
@@ -10,10 +10,12 @@ import { GlobalValidator } from '../shared/validator/global.validator';
 })
 export class ChangePasswordPage {
 
-  newPassword: string;
-  confirmNewPassword: string;
+  oldPassword: string = '';
+  newPassword: string = '';
+  confirmNewPassword: string = '';
   passwordForm: FormGroup;
   formErrors = {
+    oldPassword: '',
     password: '',
     confirmPassword: ''
   };
@@ -22,6 +24,9 @@ export class ChangePasswordPage {
               private messageService: ValidationMessageService) {
 
     this.passwordForm = formBuilder.group({
+      oldPassword: ['', Validators.compose([Validators.required,
+        Validators.minLength(this.messageService.minLengthPassword),
+        Validators.maxLength(this.messageService.maxLengthPassword)])],
       password: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthPassword),
         Validators.maxLength(this.messageService.maxLengthPassword)])],
@@ -45,7 +50,7 @@ export class ChangePasswordPage {
   }
 
   save() {
-    this.viewCtrl.dismiss(this.newPassword);
+    this.viewCtrl.dismiss({new: this.newPassword, old: this.oldPassword});
   }
 
 }

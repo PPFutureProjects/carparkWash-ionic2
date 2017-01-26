@@ -1,8 +1,8 @@
-import { CardinalPart } from './cardinal-part-enum';
+import { Region } from './region.enum';
 
 export class CarParkFilterModel {
 
-  cardinalPart: CardinalPart;
+  region: Region;
 
   area: string
 

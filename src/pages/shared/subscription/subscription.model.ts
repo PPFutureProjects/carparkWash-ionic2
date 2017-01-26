@@ -1,5 +1,5 @@
 import { WashStateEnum, WashState } from './wash-state.enum';
-import { CarModel } from '../../car/car.model';
+import { CarModel } from '../../car/shared/car.model';
 
 export class DayCleanerModel {
 
@@ -7,6 +7,7 @@ export class DayCleanerModel {
   washDate: number;
   cleanerUid: string;
   cleanerName: string;
+  carLotNumber: string;
   washStatus: WashState;
 
   constructor(id: number) {
@@ -19,11 +20,11 @@ export class DayCleanerModel {
 export class SubscriptionModel {
 
   carId: string;
-  car:CarModel;
+  car: CarModel;
   clientUid: string;
   managerUid: string;
   carParkId: string;
-  carParkCardinalPart: string;
+  carParkRegion: string;
   carParkArea: string;
   dateSubscription: number;
   // days contains 30 days
