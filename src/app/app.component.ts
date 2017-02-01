@@ -51,7 +51,10 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     if (page.component === null) {
-      cordova.InAppBrowser.open('https://services2.hdb.gov.sg/webapp/BN22CpkVcncy/BN22CpkInfoSearch.jsp', '_blank', 'location=yes');
+      if (cordova) {
+        cordova.InAppBrowser.open('https://services2.hdb.gov.sg/webapp/BN22CpkVcncy/BN22CpkInfoSearch.jsp', '_blank',
+          'location=yes');
+      }
     } else if (page.title == this.pages[this.pages.length - 1].title) {
       this.userService.logOut().then(() => this.nav.setRoot(page.component));
     } else {

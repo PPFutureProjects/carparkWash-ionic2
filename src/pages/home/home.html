@@ -10,7 +10,7 @@
 <ion-content padding>
 
   <ion-item no-lines class="announcement-wrapper" margin-bottom
-            *ngIf="user?.profile !== profileTypeEnum.admin && announcement !== ''">
+            *ngIf="user?.profile !== profileTypeEnum.admin && announcement">
     <ion-label class="announcement-animation">{{announcement}}</ion-label>
   </ion-item>
 
@@ -36,8 +36,14 @@
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
     <!-- Add Arrows -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"
+         *ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 4)
+             || (user.profile === profileTypeEnum.manager && user.carParks?.length > 4)
+             || (user.profile === profileTypeEnum.cleaner && carParks?.length > 4)"></div>
+    <div class="swiper-button-prev"
+         *ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 4)
+             || (user.profile === profileTypeEnum.manager && user.carParks?.length > 4)
+             || (user.profile === profileTypeEnum.cleaner && carParks?.length > 4)"></div>
   </swiper>
 
   <div *ngIf="user?.profile === profileTypeEnum.admin">

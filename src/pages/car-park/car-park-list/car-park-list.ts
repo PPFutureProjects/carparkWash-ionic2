@@ -49,7 +49,12 @@ export class CarParkListPage extends AbstractPage {
     //  this.router.navigate(['']);
     //} else {
     this.carParkService.getAll()
-      .then(carParks => this.carParks = carParks)
+      .then(carParks => {
+        this.carParks = carParks;
+        if (this.carParks.length === 0) {
+          this.showToast('No Car Parks added yet', 'toastError');
+        }
+      })
       .catch(err => {
         console.log(err);
         this.showToast('Error getting Car parks, please contact admin', 'toastError');
@@ -63,6 +68,9 @@ export class CarParkListPage extends AbstractPage {
     this.carParkService.getFiltered(carParkFilterModel)
       .then(carParks => {
         this.carParks = carParks;
+        if (this.carParks.length === 0) {
+          this.showToast('No Car Parks found', 'toastError');
+        }
         loading.dismissAll();
       })
       .catch(err => {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ViewController, NavParams } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
-import { CarModel, SilhouettePictureEnum } from '../shared/car.model';
+import { CarModel, CarTypeEnum } from '../shared/car.model';
 
 @Component({
   selector: 'page-add-car',
@@ -12,7 +12,7 @@ export class EditCarPage {
 
   carToEdit: CarModel;
 
-  silhouettePictureEnum = SilhouettePictureEnum;
+  carTypeEnum = CarTypeEnum;
   carForm: FormGroup;
   formErrors = {
     licencePlateNumber: '',
@@ -39,7 +39,7 @@ export class EditCarPage {
     this.carToEdit.licencePlateNumber = this.carForm.value.licencePlateNumber;
     this.carToEdit.brandModel = this.carForm.value.brandModel;
     this.carToEdit.colour = this.carForm.value.colour;
-    this.carToEdit.silhouettePicture = this.carForm.value.silhouettePicture;
+    this.carToEdit.type = this.carForm.value.carType;
     this.viewCtrl.dismiss(this.carToEdit);
   }
 
@@ -53,7 +53,7 @@ export class EditCarPage {
         Validators.maxLength(this.messageService.maxLengthBrandModel)],
       colour: [this.carToEdit.colour,
         Validators.maxLength(this.messageService.maxLengthCarColour)],
-      silhouettePicture: [this.carToEdit.silhouettePicture]
+      carType: [this.carToEdit.type]
     });
     this.carForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.carForm, this.formErrors));

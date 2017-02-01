@@ -13,7 +13,7 @@ export class HistoryService extends ServiceUtils {
 
   constructor() {
     super();
-    this.userNamesRef = firebase.database().ref('userNames');
+    this.userNamesRef = firebase.database().ref('clientNames');
     this.historySubscriptionRef = firebase.database().ref('historySubscription');
   }
 

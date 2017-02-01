@@ -12,7 +12,7 @@ import {
 import { UserModel } from '../user/user.model';
 import { UserService } from '../user/user.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { CarModel, SilhouettePictureEnum } from '../car/shared/car.model';
+import { CarModel, CarTypeEnum } from '../car/shared/car.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { ProfileEnum } from '../shared/profile.enum';
 import { AbstractPage } from '../shared/abstract.page';
@@ -33,7 +33,7 @@ export class LoginPage extends AbstractPage {
   isOnLogin = true;
 
   profileEnum = ProfileEnum;
-  silhouettePictureTypeEnum = SilhouettePictureEnum;
+  carTypeEnum = CarTypeEnum;
   loginForm: FormGroup;
   loginFormErrors = {
     email: '',
