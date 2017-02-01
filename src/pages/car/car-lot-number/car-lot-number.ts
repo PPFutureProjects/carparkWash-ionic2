@@ -1,7 +1,7 @@
-import { Component, OnInit } from "@angular/core";
-import { FormGroup, FormBuilder, Validators } from "@angular/forms";
-import { ValidationMessageService } from "../../shared/validator/validation-message.service";
-import { ViewController } from "ionic-angular";
+import { Component, OnInit } from '@angular/core';
+import { ViewController } from 'ionic-angular';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({
   selector: 'app-car-lot-number',

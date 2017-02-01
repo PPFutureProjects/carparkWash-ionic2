@@ -3,7 +3,6 @@ import { Facebook } from 'ionic-native';
 import { LoadingController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
-
 import { UserModel, ProviderEnum } from './user.model';
 import { UserReady } from './user-notifier';
 import { CarModel } from '../car/shared/car.model';

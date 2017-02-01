@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
+import { Observable } from 'rxjs';
 import { UserModel } from '../../user/user.model';
 import { CarParkModel } from './car-park.model';
 import { ServiceUtils } from '../../shared/service.utils';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
 import { SubscriptionModel } from '../../shared/subscription/subscription.model';
 import { Region } from '../car-park-filter/region.enum';
-import { Observable } from "rxjs";
 
 @Injectable()
 export class CarParkService extends ServiceUtils {

@@ -1,9 +1,8 @@
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-
-import { UserModel } from "../user/user.model";
-import { SubscriptionModel } from "../shared/subscription/subscription.model";
-import { ServiceUtils } from "../shared/service.utils";
+import { UserModel } from '../user/user.model';
+import { SubscriptionModel } from '../shared/subscription/subscription.model';
+import { ServiceUtils } from '../shared/service.utils';
 
 @Injectable()
 export class HistoryService extends ServiceUtils {

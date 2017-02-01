@@ -57,7 +57,6 @@ export class SubscriberService extends ServiceUtils {
       updates['historySubscription/' + car.userUid + '/' + subscriptionModel.id] = subscriptionModel;
       return this.refDatabase.update(updates)
         .then(() => {
-          //TODO to test
           car.subscription = subscriptionModel;
           if (carPark.subscriptions) {
             carPark.subscriptions.push(subscriptionModel);

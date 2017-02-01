@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LoadingOptions, ToastController, ModalController, LoadingController } from 'ionic-angular';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import * as Swiper from 'swiper';
 import { UserModel } from '../user/user.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
@@ -12,10 +13,9 @@ import { EditCarPage } from '../car/edit-car/edit-car';
 import { CarModel } from '../car/shared/car.model';
 import { EditCarParkPage } from '../car-park/edit-car-park/edit-car-park';
 import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.model';
-import { Region } from "../car-park/car-park-filter/region.enum";
-import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { ValidationMessageService } from "../shared/validator/validation-message.service";
-import { AnnouncementService } from "../shared/announcement.service";
+import { Region } from '../car-park/car-park-filter/region.enum';
+import { ValidationMessageService } from '../shared/validator/validation-message.service';
+import { AnnouncementService } from '../shared/announcement.service';
 
 @Component({
   selector: 'page-home',

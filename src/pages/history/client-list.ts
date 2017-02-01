@@ -1,8 +1,8 @@
-import { Component } from "@angular/core";
-import { NavController, NavParams } from "ionic-angular";
-import { HistoryService } from "./history.service";
-import { UserModel } from "../user/user.model";
-import { HistoryPage } from "./history";
+import { Component } from '@angular/core';
+import { NavController, NavParams } from 'ionic-angular';
+import { HistoryService } from './history.service';
+import { UserModel } from '../user/user.model';
+import { HistoryPage } from './history';
 
 @Component({
   selector: 'page-client-list',

@@ -1,12 +1,4 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CarParkModel } from '../shared/car-park.model';
-import { CarParkService } from '../shared/car-park.service';
-import { UserService } from '../../user/user.service';
-import { UserModel } from '../../user/user.model';
-import { SubscriberService } from '../../shared/subscription/subscriber.service';
-import { CarService } from '../../car/shared/car.service';
-import { ProfileEnum } from '../../shared/profile.enum';
-import { AbstractPage } from '../../shared/abstract.page';
 import {
   ToastController,
   NavController,
@@ -15,9 +7,17 @@ import {
   LoadingController,
   AlertController
 } from 'ionic-angular';
+import { CarParkModel } from '../shared/car-park.model';
+import { CarParkService } from '../shared/car-park.service';
+import { UserService } from '../../user/user.service';
+import { UserModel } from '../../user/user.model';
+import { SubscriberService } from '../../shared/subscription/subscriber.service';
+import { CarService } from '../../car/shared/car.service';
+import { ProfileEnum } from '../../shared/profile.enum';
+import { AbstractPage } from '../../shared/abstract.page';
 import { CarListPage } from '../../car/car-list/car-list';
 import { EditCarParkPage } from '../edit-car-park/edit-car-park';
-import { Region } from "../car-park-filter/region.enum";
+import { Region } from '../car-park-filter/region.enum';
 
 @Component({
   selector: 'app-car-park-item',

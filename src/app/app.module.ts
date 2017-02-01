@@ -23,10 +23,10 @@ import { CarParkListPage } from '../pages/car-park/car-park-list/car-park-list';
 import { AddUserPage } from '../pages/user/add-user';
 import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
-import { AnnouncementService } from "../pages/shared/announcement.service";
-import { HistoryPage } from "../pages/history/history";
-import { UserListPage } from "../pages/history/user-list";
-import { HistoryService } from "../pages/history/history.service";
+import { AnnouncementService } from '../pages/shared/announcement.service';
+import { HistoryPage } from '../pages/history/history';
+import { HistoryService } from '../pages/history/history.service';
+import { ClientListPage } from '../pages/history/client-list';
 
 @NgModule({
   declarations: [
@@ -43,7 +43,7 @@ import { HistoryService } from "../pages/history/history.service";
     SettingPage,
     HomePage,
     HistoryPage,
-    UserListPage,
+    ClientListPage,
 
     CarItemComponent,
     CarParkItemComponent,
@@ -70,7 +70,7 @@ import { HistoryService } from "../pages/history/history.service";
     SettingPage,
     HomePage,
     HistoryPage,
-    UserListPage,
+    ClientListPage,
   ],
   providers: [
     UserService,

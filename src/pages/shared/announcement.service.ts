@@ -1,5 +1,5 @@
 import * as firebase from 'firebase';
-import { ServiceUtils } from "./service.utils";
+import { ServiceUtils } from './service.utils';
 
 export class AnnouncementService extends ServiceUtils {
 

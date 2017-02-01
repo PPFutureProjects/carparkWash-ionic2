@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
 import { ImagePickerOptions, ImagePicker } from 'ionic-native';
 import { UserModel } from './user.model';
 import { ProfileEnum } from '../shared/profile.enum';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { UserService } from './user.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { CarParkModel } from '../car-park/shared/car-park.model';

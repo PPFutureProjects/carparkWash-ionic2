@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
-import { HistoryService } from "./history.service";
-import { UserModel } from "../user/user.model";
-import { SubscriptionModel } from "../shared/subscription/subscription.model";
+import { HistoryService } from './history.service';
+import { UserModel } from '../user/user.model';
+import { SubscriptionModel } from '../shared/subscription/subscription.model';
 
 @Component({
   selector: 'page-history',

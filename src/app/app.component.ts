@@ -10,7 +10,7 @@ import { ProfileEnum } from '../pages/shared/profile.enum';
 import { UserReady } from '../pages/user/user-notifier';
 import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
-import { UserListPage } from "../pages/history/user-list";
+import { ClientListPage } from '../pages/history/client-list';
 declare var cordova: any;
 
 @Component({
@@ -68,7 +68,7 @@ export class MyApp {
     ];
     if (isAdmin) {
       this.pages.push({title: 'Add Manager/Cleaner', component: AddUserPage});
-      this.pages.push({title: 'History Subscriptions', component: UserListPage});
+      this.pages.push({title: 'History Subscriptions', component: ClientListPage});
     }
     this.pages.push({title: 'Disconnect', component: LoginPage});
   }

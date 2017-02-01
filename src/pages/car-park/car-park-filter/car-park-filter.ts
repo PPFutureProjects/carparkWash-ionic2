@@ -1,11 +1,11 @@
-import { Component, EventEmitter, Output } from "@angular/core";
-import { ToastController, LoadingController, LoadingOptions } from "ionic-angular";
-import { CarParkService } from "../shared/car-park.service";
-import { CarParkFilterModel, FilterBy, FilterByEnum } from "./car-park-filter.model";
-import { AbstractPage } from "../../shared/abstract.page";
-import { RegionEnum } from "./region.enum";
-import { FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { ValidationMessageService } from "../../shared/validator/validation-message.service";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
+import { CarParkService } from '../shared/car-park.service';
+import { CarParkFilterModel, FilterBy, FilterByEnum } from './car-park-filter.model';
+import { AbstractPage } from '../../shared/abstract.page';
+import { RegionEnum } from './region.enum';
+import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 
 @Component({
   selector: 'app-car-park-filter',
