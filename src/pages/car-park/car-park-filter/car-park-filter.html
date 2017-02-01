@@ -1,29 +1,58 @@
-<h2>Filter car parks by areas</h2>
+<ion-card>
+  <ion-card-header>Filter Car Parks</ion-card-header>
 
-<ion-item class="center-input">
-  <ion-label>Region</ion-label>
-  <ion-select interface="action-sheet" (ionChange)="getAreasByPart()"
-              [(ngModel)]="selectedCarParkFilter.region">
-    <ion-option value={{regionEnum.central}}>{{regionEnum.central | camelCase}}</ion-option>
-    <ion-option value={{regionEnum.east}}>{{regionEnum.east | camelCase}}</ion-option>
-    <ion-option value={{regionEnum.north}}>{{regionEnum.north | camelCase}}</ion-option>
-    <ion-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</ion-option>
-    <ion-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</ion-option>
-  </ion-select>
-</ion-item>
+  <ion-card-content>
+    <ion-segment class="override-segment-height" [(ngModel)]="filterBy">
+      <ion-segment-button value="{{filterByEnum.code}}">By Code</ion-segment-button>
+      <ion-segment-button value="{{filterByEnum.area}}">By Area</ion-segment-button>
+    </ion-segment>
 
-<ion-item class="center-input" *ngIf="areasOfRegion?.length > 0">
-  <!--<ion-input type="text" placeholder="Area" style="z-index: 5;"-->
-  <!--[(ngModel)]="areaFilter" (keyup)="filterAreas()"></ion-input>-->
-  <ion-label>Area</ion-label>
-  <ion-select interface="action-sheet" [(ngModel)]="selectedCarParkFilter.area">
-    <ion-option *ngFor="let area of areasOfRegion" value={{area}}>{{area | camelCase}}</ion-option>
-  </ion-select>
-</ion-item>
+    <div [ngSwitch]="filterBy">
+      <form [formGroup]="codeFielterForm" *ngSwitchCase="filterByEnum.code">
+        <ion-list>
+          <ion-item>
+            <ion-label floating>Car park Code</ion-label>
+            <ion-input type="text" formControlName="carParkCode"
+                       [(ngModel)]="carParkFilter.code"></ion-input>
+          </ion-item>
+        </ion-list>
+      </form>
 
-<ion-item no-lines>
-  <button ion-button large color="primary"
-          [disabled]="selectedCarParkFilter.region === undefined"
-          (click)="filterCarParks()">Filter Car Parks
-  </button>
-</ion-item>
+      <form [formGroup]="areaFielterForm" *ngSwitchCase="filterByEnum.area">
+        <ion-list>
+          <ion-item margin-top>
+            <ion-label>Region</ion-label>
+            <ion-select interface="action-sheet" (ionChange)="getAreasByRegion()"
+                        formControlName="carParkRegion"
+                        [(ngModel)]="carParkFilter.region">
+              <ion-option value={{regionEnum.central}}>{{regionEnum.central | camelCase}}</ion-option>
+              <ion-option value={{regionEnum.east}}>{{regionEnum.east | camelCase}}</ion-option>
+              <ion-option value={{regionEnum.north}}>{{regionEnum.north | camelCase}}</ion-option>
+              <ion-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</ion-option>
+              <ion-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</ion-option>
+            </ion-select>
+          </ion-item>
+
+          <ion-item *ngIf="areasOfRegion?.length > 0">
+            <ion-label>Area</ion-label>
+            <ion-select interface="action-sheet"
+                        formControlName="carParkArea"
+                        [(ngModel)]="carParkFilter.area">
+              <ion-option *ngFor="let area of areasOfRegion" value={{area}}>{{area | camelCase}}</ion-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </form>
+    </div>
+
+    <ion-row>
+      <button ion-button large clear
+              [disabled]="filterBy === filterByEnum.code ? codeFielterForm.invalid : areaFielterForm.invalid"
+              (click)="(filterBy === filterByEnum.code ? codeFielterForm.valid : areaFielterForm.valid)
+              && filterCarParks()">
+        Filter Car Parks
+      </button>
+    </ion-row>
+
+  </ion-card-content>
+</ion-card>

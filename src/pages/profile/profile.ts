@@ -85,32 +85,23 @@ export class ProfilePage extends AbstractPage {
   }
 
   private buildProfileForm(isDisabled: boolean) {
-    this.profileForm = this.formBuilder.group(
-      {
-        email: [{value: this.user.email, disabled: isDisabled},
-          Validators.compose(
-            [Validators.required,
-              GlobalValidator.mailFormat,
-              Validators.maxLength(
-                this.messageService.maxLengthEmail)])],
-        name: [{value: this.user.name, disabled: isDisabled},
-          Validators.compose(
-            [Validators.required,
-              Validators.minLength(
-                this.messageService.minLengthName),
-              Validators.maxLength(
-                this.messageService.maxLengthName)])],
-        address: [{value: this.user.address, disabled: isDisabled},
-          Validators.compose(
-            [Validators.required,
-              Validators.minLength(
-                this.messageService.minLengthAddress),
-              Validators.maxLength(
-                this.messageService.maxLengthAddress)])],
-        phoneNumber: [{value: this.user.phoneNumber, disabled: isDisabled},
-          Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)
-        ],
-      });
+    this.profileForm = this.formBuilder.group({
+      email: [{value: this.user.email, disabled: isDisabled},
+        Validators.compose([Validators.required,
+          GlobalValidator.mailFormat,
+          Validators.maxLength(this.messageService.maxLengthEmail)])],
+      name: [{value: this.user.name, disabled: isDisabled},
+        Validators.compose([Validators.required,
+          Validators.minLength(this.messageService.minLengthName),
+          Validators.maxLength(this.messageService.maxLengthName)])],
+      address: [{value: this.user.address, disabled: isDisabled},
+        Validators.compose([Validators.required,
+          Validators.minLength(this.messageService.minLengthAddress),
+          Validators.maxLength(this.messageService.maxLengthAddress)])],
+      phoneNumber: [{value: this.user.phoneNumber, disabled: isDisabled},
+        Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)
+      ],
+    });
     this.profileForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.profileForm, this.formErrors));
     this.messageService.onValueChanged(this.profileForm, this.formErrors);

@@ -1,0 +1,29 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Car Selected To be washed</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <p>Enter the Car Park LOT Number</p>
+  <form [formGroup]="form">
+    <ion-item>
+      <ion-label floating>Car Park LOT Number</ion-label>
+      <ion-input required type="text" formControlName="carParkLotNumber"></ion-input>
+    </ion-item>
+    <ion-item no-lines *ngIf="formErrors.carParkLotNumber">
+      <div class="alert alert-danger">{{formErrors.carParkLotNumber}}</div>
+    </ion-item>
+  </form>
+
+  <ion-item no-lines class="btns-modal">
+    <button ion-button clear ()="cancel()">Cancel Changes</button>
+    <button  (tap)="save()">Save Password</button>
+    <button ion-button clear (tap)="cancel()">Cancel</button>
+    <button ion-button [disabled]="form.invalid"
+            (tap)="form.valid && select()">Select</button>
+  </ion-item>
+</ion-content>
+

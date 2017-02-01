@@ -10,6 +10,8 @@ import { ProfileEnum } from '../pages/shared/profile.enum';
 import { UserReady } from '../pages/user/user-notifier';
 import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
+import { UserListPage } from "../pages/history/user-list";
+declare var cordova: any;
 
 @Component({
   templateUrl: 'app.html'
@@ -23,28 +25,14 @@ export class MyApp {
 
   constructor(public platform: Platform, public firebaseService: FirebaseService,
               public userService: UserService, public userReady: UserReady) {
+
     this.initializeApp();
 
+    this.initPagesMenu();
     this.userReady.notifySource$.subscribe(() => {
       this.userService.getCurrent().then(user => {
         if (user) {
-          if (user.profile === ProfileEnum.admin) {
-            this.pages = [
-              {title: 'Home', component: HomePage},
-              {title: 'Profile', component: ProfilePage},
-              {title: 'Setting', component: SettingPage},
-              //{ title: 'Ssetting', component: Setting },
-              {title: 'Add Manager/Cleaner', component: AddUserPage},
-              {title: 'Disconnect', component: LoginPage}
-            ];
-          } else {
-            this.pages = [
-              {title: 'Home', component: HomePage},
-              {title: 'Profile', component: ProfilePage},
-              {title: 'Setting', component: SettingPage},
-              {title: 'Disconnect', component: LoginPage}
-            ];
-          }
+          this.initPagesMenu(user.profile === ProfileEnum.admin);
         }
       });
     });
@@ -59,13 +47,29 @@ export class MyApp {
     });
   }
 
-  openPage(page) {
+  openPage(page: {title: string, component: any}) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
-    if (page.title == this.pages[this.pages.length - 1].title) {
+    if (page.component === null) {
+      cordova.InAppBrowser.open('https://services2.hdb.gov.sg/webapp/BN22CpkVcncy/BN22CpkInfoSearch.jsp', '_blank', 'location=yes');
+    } else if (page.title == this.pages[this.pages.length - 1].title) {
       this.userService.logOut().then(() => this.nav.setRoot(page.component));
     } else {
       this.nav.setRoot(page.component);
     }
+  }
+
+  initPagesMenu(isAdmin: boolean = false) {
+    this.pages = [
+      {title: 'Home', component: HomePage},
+      {title: 'Profile', component: ProfilePage},
+      {title: 'Setting', component: SettingPage},
+      {title: 'Get Car Park Info', component: null}
+    ];
+    if (isAdmin) {
+      this.pages.push({title: 'Add Manager/Cleaner', component: AddUserPage});
+      this.pages.push({title: 'History Subscriptions', component: UserListPage});
+    }
+    this.pages.push({title: 'Disconnect', component: LoginPage});
   }
 }

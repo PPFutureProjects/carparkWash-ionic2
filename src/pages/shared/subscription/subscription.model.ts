@@ -5,9 +5,10 @@ export class DayCleanerModel {
 
   id: number;
   washDate: number;
+  washRequestDate: number;
   cleanerUid: string;
   cleanerName: string;
-  carLotNumber: string;
+  carParkLotNumber: string;
   washStatus: WashState;
 
   constructor(id: number) {
@@ -19,6 +20,7 @@ export class DayCleanerModel {
 
 export class SubscriptionModel {
 
+  id: string;
   carId: string;
   car: CarModel;
   clientUid: string;

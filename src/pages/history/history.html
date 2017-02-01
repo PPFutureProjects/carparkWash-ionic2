@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Subscriptions History</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-card>
+    <ion-card-title>Subscriptions List</ion-card-title>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let history of histories" (click)="selectHistory(history)">
+          <span>{{history.dateSubscription | date}}</span>
+          <span>{{history.car.licencePlateNumber}} - {{history.car.brandModel}}</span>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
+  <ion-card *ngIf="selectedHistory">
+    <ion-card-title>Subscription {{selectedHistory.dateSubscription | date}}</ion-card-title>
+    <ion-card-content>
+      <ion-list class="days-list">
+        <ion-item *ngFor="let day of selectedHistory.days">
+          <span>The day index: {{day.id}}</span>
+          <h3>Wash Status: {{day.washStatus | camelCase}}</h3>
+          <span *ngIf="day?.washRequestDate">Wash Request Time {{day.washRequestDate | date:'HH:mm:ss'}}</span>
+          <span *ngIf="day?.washDate">Wash time: {{day.washDate | date:'HH:mm:ss'}}</span>
+          <span *ngIf="day?.cleanerName">Cleaner Name: {{day.cleanerName}}</span>
+          <span *ngIf="day?.carParkLotNumber">Car Park Lot Number: {{day.carParkLotNumber}}</span>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

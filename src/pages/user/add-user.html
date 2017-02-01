@@ -12,7 +12,8 @@
   <form [formGroup]="signUpForm">
     <ion-item>
       <ion-label>Connect With</ion-label>
-      <ion-select required class="override-select-height override-select-padding" [ngModelOptions]="{standalone: true}"
+      <ion-select required class="override-select-height override-select-padding" interface="action-sheet"
+                  [ngModelOptions]="{standalone: true}"
                   [(ngModel)]="connectEmailNoFacebook">
         <ion-option value="true">Email & Password</ion-option>
         <ion-option value="false">Facebook</ion-option>
@@ -83,7 +84,7 @@
 
     <ion-item *ngIf="connectEmailNoFacebook !== undefined">
       <ion-label>Account Type</ion-label>
-      <ion-select required class="override-select-height override-select-padding"
+      <ion-select required class="override-select-height override-select-padding" interface="action-sheet"
                   formControlName="profile"
                   [(ngModel)]="userModel.profile">
         <!--<ion-option value={{profileTypeEnum.client}}>Client</ion-option>-->
@@ -119,7 +120,7 @@
 
     <ion-item>
       <ion-label>Region</ion-label>
-      <ion-select required class="override-select-height override-select-padding"
+      <ion-select required class="override-select-height override-select-padding" interface="action-sheet"
                   formControlName="region"
                   [(ngModel)]="carParkModel.region">
         <ion-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</ion-option>

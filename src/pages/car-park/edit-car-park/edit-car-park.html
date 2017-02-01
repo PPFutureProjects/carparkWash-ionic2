@@ -3,7 +3,7 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Add/Edit Car park</ion-title>
+    <ion-title>Add/Edit Car Park</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -12,10 +12,19 @@
     <ion-item>
       <ion-label floating>Car Park Name</ion-label>
       <ion-input required type="text"
-                 formControlName="name"></ion-input>
+                 formControlName="carParkName"></ion-input>
     </ion-item>
-    <ion-item class="alert alert-danger" *ngIf="formErrors.name">
-      {{ formErrors.name }}
+    <ion-item class="alert alert-danger" *ngIf="formErrors.carParkName">
+      {{ formErrors.carParkName }}
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Car Park Code</ion-label>
+      <ion-input required type="text"
+                 formControlName="carParkCode"></ion-input>
+    </ion-item>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.carParkCode">
+      {{ formErrors.carParkCode }}
     </ion-item>
 
     <ion-item (tap)="pickCarParkPicture()">
@@ -28,8 +37,8 @@
       </ion-avatar>
     </ion-item>
 
-    <ion-item *ngIf="carParkToEdit?.region === undefined">
-      <ion-select required placeholder="Region" formControlName="region">
+    <ion-item>
+      <ion-select required interface="action-sheet" placeholder="Region" formControlName="region">
         <ion-option value={{regionEnum.central}}>{{regionEnum.central | camelCase}}</ion-option>
         <ion-option value={{regionEnum.east}}>{{regionEnum.east | camelCase}}</ion-option>
         <ion-option value={{regionEnum.north}}>{{regionEnum.north | camelCase}}</ion-option>
@@ -38,7 +47,7 @@
       </ion-select>
     </ion-item>
 
-    <ion-item *ngIf="carParkToEdit?.area === ''">
+    <ion-item>
       <ion-label floating>Area</ion-label>
       <ion-input required type="text" formControlName="area"></ion-input>
     </ion-item>

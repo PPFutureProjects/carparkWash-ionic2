@@ -3,16 +3,21 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Carpark Wash System</ion-title>
+    <ion-title>Car Park Wash System</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <app-car-park-filter *ngIf="user.profile === profileTypeEnum.cleaner"
-    (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+  <ion-item no-lines class="announcement-wrapper" margin-bottom
+            *ngIf="user?.profile !== profileTypeEnum.admin && announcement !== ''">
+    <ion-label class="announcement-animation">{{announcement}}</ion-label>
+  </ion-item>
 
-  <swiper [config]="configCarousel" *ngIf="user.profile">
+  <app-car-park-filter *ngIf="user?.profile === profileTypeEnum.cleaner"
+                       (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+
+  <swiper [config]="configCarousel" *ngIf="user?.profile && user.profile !== profileTypeEnum.admin">
     <!------------ Client's cars list ------------>
     <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.client">
       <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
@@ -35,8 +40,21 @@
     <div class="swiper-button-prev"></div>
   </swiper>
 
+  <div *ngIf="user?.profile === profileTypeEnum.admin">
+    <form [formGroup]="announcementForm">
+      <ion-item>
+        <ion-label floating>Announcement</ion-label>
+        <ion-input type="text" formControlName="announcement"></ion-input>
+      </ion-item>
+    </form>
+    <ion-row>
+      <button ion-button block large clear padding (tap)="resetAnnouncement()">Reset</button>
+      <button ion-button block large clear padding (tap)="saveAnnouncement()">Save</button>
+    </ion-row>
+  </div>
+
   <ion-fab bottom right (tap)="add()"
-           *ngIf="user.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
+           *ngIf="user?.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
     <button ion-fab mini>
       <ion-icon name="add"></ion-icon>
     </button>

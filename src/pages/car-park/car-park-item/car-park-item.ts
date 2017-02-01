@@ -17,6 +17,7 @@ import {
 } from 'ionic-angular';
 import { CarListPage } from '../../car/car-list/car-list';
 import { EditCarParkPage } from '../edit-car-park/edit-car-park';
+import { Region } from "../car-park-filter/region.enum";
 
 @Component({
   selector: 'app-car-park-item',
@@ -54,13 +55,10 @@ export class CarParkItemComponent extends AbstractPage {
   }
 
   ngAfterContentInit() {
-  //  if (!this.carPark) {
-  //    this.router.navigate(['']);
-  //  }
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
+    //  if (!this.carPark) {
+    //    this.router.navigate(['']);
+    //  }
+    this.setIsCarParlUnlocked();
   }
 
   select() {
@@ -73,7 +71,8 @@ export class CarParkItemComponent extends AbstractPage {
       this.subscriberService.subscribe(this.carPark, this.carService.selectedCar)
         .then(() => {
           this.navCtrl.pop();
-          this.showToast(`the selected car is subscribed to the carpark ${this.carPark.name}`, 'toastInfo');
+          this.showToast(`the car ${this.carService.selectedCar.licencePlateNumber}
+                  is subscribed to the car park ${this.carPark.name}`, 'toastInfo');
         })
         .catch(err => {
           console.error(err);
@@ -87,7 +86,10 @@ export class CarParkItemComponent extends AbstractPage {
 
   unlock() {
     this.subscriberService.unlock(this.carPark)
-      .then(() => this.showToast(`the car park ${this.carPark.name} is unlocked`, 'toastInfo'))
+      .then(() => {
+        this.setIsCarParlUnlocked();
+        this.showToast(`the car park ${this.carPark.name} is unlocked`, 'toastInfo')
+      })
       .catch(err => {
         console.error(err);
         this.showToast('Fatal Error, please contact admin', 'toastError');
@@ -96,13 +98,13 @@ export class CarParkItemComponent extends AbstractPage {
 
   edit() {
     let editCarParkPage = this.modalCtrl.create(EditCarParkPage, {'carParkToEdit': this.carPark});
-    editCarParkPage.onDidDismiss((updatedCarPark: CarParkModel) => {
-      if (updatedCarPark) {
+    editCarParkPage.onDidDismiss((carParkToUpdate: {carpark: CarParkModel, region: Region, area: string}) => {
+      if (carParkToUpdate && carParkToUpdate.carpark) {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
-        this.carParkService.update(updatedCarPark)
+        this.carParkService.update(carParkToUpdate.carpark, carParkToUpdate.region, carParkToUpdate.area)
           .then(() => {
-            this.carPark = updatedCarPark;
+            this.carPark = carParkToUpdate.carpark;
             loading.dismissAll();
             this.showToast(`The car ${this.carPark.name} was updated successfully`, 'toastInfo');
           })
@@ -144,6 +146,13 @@ export class CarParkItemComponent extends AbstractPage {
         }
       ]
     }).present();
+  }
+
+  private setIsCarParlUnlocked() {
+    let today = new Date();
+    today.setHours(0, 0, 0, 0);
+    today.setDate(today.getDate() + 1);
+    this.isCarParkUnlocked = this.carPark.unlocked === today.getTime();
   }
 
 }

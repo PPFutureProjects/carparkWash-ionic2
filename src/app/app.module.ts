@@ -23,6 +23,10 @@ import { CarParkListPage } from '../pages/car-park/car-park-list/car-park-list';
 import { AddUserPage } from '../pages/user/add-user';
 import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
+import { AnnouncementService } from "../pages/shared/announcement.service";
+import { HistoryPage } from "../pages/history/history";
+import { UserListPage } from "../pages/history/user-list";
+import { HistoryService } from "../pages/history/history.service";
 
 @NgModule({
   declarations: [
@@ -38,6 +42,8 @@ import { HomePage } from '../pages/home/home';
     EditCarParkPage,
     SettingPage,
     HomePage,
+    HistoryPage,
+    UserListPage,
 
     CarItemComponent,
     CarParkItemComponent,
@@ -63,6 +69,8 @@ import { HomePage } from '../pages/home/home';
     ChangePasswordPage,
     SettingPage,
     HomePage,
+    HistoryPage,
+    UserListPage,
   ],
   providers: [
     UserService,
@@ -72,6 +80,8 @@ import { HomePage } from '../pages/home/home';
     UserReady,
     FirebaseService,
     ValidationMessageService,
+    AnnouncementService,
+    HistoryService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

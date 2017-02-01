@@ -11,12 +11,16 @@ export class ValidationMessageService {
   public maxLengthPassword = 20;
   public minLengthAddress = 5;
   public maxLengthAddress = 50;
+  public minLengthArea = 2;
+  public maxLengthArea = 20;
   public maxLengthBrandModel = 20;
   public minLengthLicencePlateNumber = 3;
   public maxLengthLicencePlateNumber = 10;
   public maxLengthCarColour = 20;
   public minLengthCarParkName = 3;
   public maxLengthCarParkName = 20;
+  public maxLengthCarParkCode = 10;
+  public maxLengthCarParkLotNumber = 15;
 
   validationMessages = {
     'email': {
@@ -33,6 +37,11 @@ export class ValidationMessageService {
       'required': this.required('Password'),
       'minlength': this.minLength('Password', this.minLengthPassword),
       'maxlength': this.maxLength('Password', this.maxLengthPassword)
+    },
+    'newPassword': {
+      'required': this.required('New Password'),
+      'minlength': this.minLength('New Password', this.minLengthPassword),
+      'maxlength': this.maxLength('New Password', this.maxLengthPassword)
     },
     'oldPassword': {
       'required': this.required('Old Password'),
@@ -81,6 +90,14 @@ export class ValidationMessageService {
       'required': this.required('Car park name'),
       'minlength': this.minLength('Car park name', this.minLengthCarParkName),
       'maxlength': this.maxLength('Car park name', this.maxLengthCarParkName)
+    },
+    'carParkCode': {
+      'required': this.required('Car park code'),
+      'maxlength': this.maxLength('Car park code', this.maxLengthCarParkCode)
+    },
+    'carParkLotNumber': {
+      'required': this.required('Car park Lot Number'),
+      'maxlength': this.maxLength('Car park Lot Number', this.maxLengthCarParkLotNumber)
     },
   };
 

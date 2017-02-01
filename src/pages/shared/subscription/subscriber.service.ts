@@ -51,8 +51,10 @@ export class SubscriberService extends ServiceUtils {
 
       let subCarParkPath = carPark.id + '/subscriptions/' + car.id;
       updates['users/' + carPark.userUid + '/carParks/' + subCarParkPath] = subscriptionModel;
-      updates['carParks/' + carPark.region + '/' + carPark.area + '/' + subCarParkPath] = subscriptionModel;
+      updates[this.carParkPrePAth(carPark) + '/' + subCarParkPath] = subscriptionModel;
 
+      subscriptionModel.id = this.refDatabase.child('historySubscription').child(car.userUid).push().key;
+      updates['historySubscription/' + car.userUid + '/' + subscriptionModel.id] = subscriptionModel;
       return this.refDatabase.update(updates)
         .then(() => {
           //TODO to test
@@ -74,13 +76,17 @@ export class SubscriberService extends ServiceUtils {
     let updates = {};
     updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = carPark;
     updates['carParks/' + carPark.region + '/' + carPark.area + '/' + carPark.id] = carPark;
+    updates[this.carParkPrePAth(carPark) + '/' + carPark.id] = carPark;
     return this.refDatabase.update(updates);
   }
 
-  selectToBeWashed(subscription: SubscriptionModel) {
+  selectToBeWashed(subscription: SubscriptionModel, carLotNumber: string) {
     let dayIndex = Math.round((new Date().getTime() - subscription.dateSubscription) / (1000 * 60 * 60 * 24));
     let dayCleanerModel = subscription.days[dayIndex];
+    dayCleanerModel.washRequestDate = new Date().getTime();
     dayCleanerModel.washStatus = WashStateEnum.toWash;
+    dayCleanerModel.carParkLotNumber = carLotNumber;
+
     let updates = {};
     let subCarPath = 'cars/' + subscription.car.id + '/subscription/days/' + dayIndex;
     updates['users/' + subscription.clientUid + '/' + subCarPath] = dayCleanerModel;
@@ -88,7 +94,9 @@ export class SubscriberService extends ServiceUtils {
 
     let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + '/' + subDayPath] = dayCleanerModel;
-    updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
+    updates[this.carParkPrePAth(subscription) + '/' + subDayPath] = dayCleanerModel;
+
+    updates['historySubscription/' + subscription.clientUid + '/' + subscription.id] = subscription;
     return this.refDatabase.update(updates);
   }
 
@@ -106,7 +114,17 @@ export class SubscriberService extends ServiceUtils {
 
     let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + subDayPath] = dayCleanerModel;
-    updates['carParks/' + subscription.carParkRegion + '/' + subscription.carParkArea + '/' + subDayPath] = dayCleanerModel;
+    updates[this.carParkPrePAth(subscription) + '/' + subDayPath] = dayCleanerModel;
+
+    updates['historySubscription/' + subscription.clientUid + '/' + subscription.id] = subscription;
     return this.refDatabase.update(updates);
+  }
+
+  private carParkPrePAth(carPark: SubscriptionModel | CarParkModel) {
+    if ((<SubscriptionModel>carPark).carParkRegion) {
+      return 'carParks/' + (<SubscriptionModel>carPark).carParkRegion + '/' + (<SubscriptionModel>carPark).carParkArea;
+    } else {
+      return 'carParks/' + (<CarParkModel>carPark).region + '/' + (<CarParkModel>carPark).area;
+    }
   }
 }

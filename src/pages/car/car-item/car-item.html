@@ -6,6 +6,9 @@
     <ion-item>Silhouette Picture: {{car?.silhouettePicture}}</ion-item>
     <ion-item *ngIf="subscription">Subscription date:</ion-item>
     <ion-item *ngIf="subscription">{{subscription?.dateSubscription | date}}</ion-item>
+    <ion-item *ngIf="subscription?.days[dayIndex].carParkLotNumber">
+      Car Park Lot Number: {{subscription?.days[dayIndex].carParkLotNumber}}
+    </ion-item>
     <ion-item *ngIf="subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
       Waiting to be washed
     </ion-item>
@@ -24,6 +27,7 @@
                   && subscription?.days[dayIndex].washStatus === washStateEnum.washNotRequested)
               || (currentUser?.profile === profileEnum.cleaner
                   && subscription?.days[dayIndex].washStatus === washStateEnum.toWash))">
+
       <button ion-button clear (tap)="selectToSubscribe()"
               *ngIf="currentUser?.profile === profileEnum.client && !car?.subscription">
         Subscribe for 30 days

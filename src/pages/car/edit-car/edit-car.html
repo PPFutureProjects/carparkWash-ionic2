@@ -23,7 +23,7 @@
 
     <ion-item>
       <ion-label>Silhouette Picture</ion-label>
-      <ion-select formControlName="silhouettePicture">
+      <ion-select interface="action-sheet" formControlName="silhouettePicture">
         <ion-option value="{{silhouettePictureEnum.SEDAN}}">{{silhouettePictureEnum.SEDAN | camelCase}}</ion-option>
         <ion-option value="{{silhouettePictureEnum.SUV}}">{{silhouettePictureEnum.SUV | camelCase}}</ion-option>
       </ion-select>
@@ -50,12 +50,8 @@
   </form>
 
   <ion-item no-lines class="btns-dialog">
-    <button ion-button clear large (tap)="cancel()">
-      Cancel
-    </button>
-    <button ion-button clear large
-            [disabled]="carForm.invalid"
-            (tap)="carForm.valid && save()">
+    <button ion-button clear large (tap)="cancel()">Cancel</button>
+    <button ion-button clear large [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
       Save
     </button>
   </ion-item>

@@ -1,20 +1,20 @@
-import {Component, Input, Output, EventEmitter, AfterContentInit} from '@angular/core';
-import {CarModel} from '../shared/car.model';
-import {CarService} from '../shared/car.service';
-import {UserService} from '../../user/user.service';
-import {UserModel} from '../../user/user.model';
-import {ProfileEnum} from '../../shared/profile.enum';
-import {SubscriberService} from '../../shared/subscription/subscriber.service';
-import {SubscriptionModel} from '../../shared/subscription/subscription.model';
-import {CarParkModel} from '../../car-park/shared/car-park.model';
-import {CarParkService} from '../../car-park/shared/car-park.service';
-import {WashStateEnum} from '../../shared/subscription/wash-state.enum';
-import {AbstractPage} from '../../shared/abstract.page';
+import { Component, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { CarModel } from '../shared/car.model';
+import { CarService } from '../shared/car.service';
+import { UserService } from '../../user/user.service';
+import { UserModel } from '../../user/user.model';
+import { ProfileEnum } from '../../shared/profile.enum';
+import { SubscriberService } from '../../shared/subscription/subscriber.service';
+import { SubscriptionModel } from '../../shared/subscription/subscription.model';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
+import { CarParkService } from '../../car-park/shared/car-park.service';
+import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
+import { AbstractPage } from '../../shared/abstract.page';
 import {
   ToastController, LoadingController, LoadingOptions, NavController, AlertController, ModalController
 } from 'ionic-angular';
-import {CarParkListPage} from '../../car-park/car-park-list/car-park-list';
-import {EditCarPage} from '../edit-car/edit-car';
+import { CarParkListPage } from '../../car-park/car-park-list/car-park-list';
+import { EditCarPage } from '../edit-car/edit-car';
 
 @Component({
   selector: 'app-car-item',
@@ -44,12 +44,15 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
       spinner: 'crescent',
       showBackdrop: false
     };
-    this.userService.getCurrent()
-      .then(user => this.currentUser = user)
-      .catch(err => {
-        console.error(err);
-        this.showToast('Fatal Error, please contact admin', 'toastError');
-      });
+    // this.currentUser = this.userService.getIfSet();
+    // if (!this.currentUser) {
+      this.userService.getCurrent()
+        .then(user => this.currentUser = user)
+        .catch(err => {
+          console.error(err);
+          this.showToast('Fatal Error, please contact admin', 'toastError');
+        });
+    // }
   }
 
   ngAfterContentInit() {
@@ -61,8 +64,8 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
         this.setIsSubscribedCarParkUnlocked();
         this.initDone = true;
       });
-      this.initDone = false;
     } else if (this.car.subscription) {
+      this.initDone = false;
       this.subscription = this.car.subscription;
       this.carParkService.getBySubscription(this.car.subscription).then(carPark => {
         this.carParkSubscribed = carPark;
@@ -81,12 +84,29 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
   }
 
   selectToWash() {
-    this.subscriberService.selectToBeWashed(this.subscription)
-      .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
-      .catch(err => {
-        console.error(err);
-        this.showToast('Fatal Error, please contact admin', 'toastError');
-      });
+    let prompt = this.alertCtrl.create({
+      title: 'Select To be washed', message: 'Enter the Car Park LOT Number', inputs: [{
+        name: 'carParkLotNumber', placeholder: 'Car Park Lot Number'
+      },], buttons: [{
+        text: 'Cancel'
+      }, {
+        text: 'Select', handler: data => {
+          // car lot number is a number
+          if (data.carParkLotNumber.length > 0) {
+            this.subscriberService.selectToBeWashed(this.subscription, data.carParkLotNumber)
+              .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
+              .catch(err => {
+                console.error(err);
+                this.showToast('Fatal Error, please contact admin', 'toastError');
+              });
+          } else {
+            this.showToast('Car Lot Number cannot be empty', 'toastError');
+            this.selectToWash();
+          }
+        }
+      }]
+    });
+    prompt.present();
   }
 
   selectAsWashed() {

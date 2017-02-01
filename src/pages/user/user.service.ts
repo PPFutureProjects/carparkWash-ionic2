@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Facebook } from 'ionic-native';
+import { LoadingController } from 'ionic-angular';
 import 'rxjs/add/operator/map';
 import * as firebase from 'firebase';
 
@@ -8,8 +10,6 @@ import { CarModel } from '../car/shared/car.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { ProfileEnum } from '../shared/profile.enum';
 import { ServiceUtils } from '../shared/service.utils';
-import { Facebook } from 'ionic-native';
-import { LoadingController } from 'ionic-angular';
 
 
 @Injectable()
@@ -62,6 +62,9 @@ export class UserService extends ServiceUtils {
       console.error(err);
       let errMsg: string = 'Log in Fail';
       switch (err.code) {
+        case 'auth/network-request-failed':
+          errMsg = 'No Internet Connection';
+          break;
         case 'auth/invalid-email':
         case 'auth/user-not-found':
         case 'auth/wrong-password':
@@ -168,6 +171,10 @@ export class UserService extends ServiceUtils {
       updates['carParks/' + carPark.region + '/' + carPark.area.toLowerCase() + '/' + newCarParkId] = carPark;
       updates['areas/' + carPark.region + '/' + carPark.area.toLowerCase()] = true;
       updates['users/' + user.uid + '/carParks/' + newCarParkId] = carPark;
+    }
+
+    if (user.profile === ProfileEnum.client) {
+      updates['clientNames/' + user.uid] = user.name;
     }
 
     return this.refDatabase.child('users').child(user.uid).set(user).then(() => {

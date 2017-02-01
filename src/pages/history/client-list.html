@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Subscription History</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-item class="no-car-park-yet" *ngIf="clients?.length === 0">
+    No Client registered yet
+  </ion-item>
+
+  <ion-list *ngFor="let client of clients">
+    <ion-item (click)="selectClient(client)">{{client.name}}</ion-item>
+  </ion-list>
+
+</ion-content>

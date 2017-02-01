@@ -11,7 +11,7 @@ import { RegionEnum } from '../car-park-filter/region.enum';
   selector: 'page-add-car',
   templateUrl: 'edit-car-park.html',
 })
-export class EditCarParkPage extends AbstractPage { //PickImageAbstract
+export class EditCarParkPage extends AbstractPage {
 
   // Value input from the caller of the dialog
   carParkToEdit: CarParkModel;
@@ -20,7 +20,8 @@ export class EditCarParkPage extends AbstractPage { //PickImageAbstract
   regionEnum = RegionEnum;
   carParkForm: FormGroup;
   formErrors = {
-    name: '',
+    carParkName: '',
+    carParkCode: '',
     region: '',
     area: '',
     address: '',
@@ -33,13 +34,6 @@ export class EditCarParkPage extends AbstractPage { //PickImageAbstract
     super(toastCtrl);
     this.carParkToEdit = params.get('carParkToEdit') ? params.get('carParkToEdit') : new CarParkModel();
     this.buildForm();
-  }
-
-  ngOnInit() {
-    this.buildForm();
-    this.carParkForm.valueChanges
-      .subscribe(data => this.messageService.onValueChanged(this.carParkForm, this.formErrors));
-    this.messageService.onValueChanged(this.carParkForm, this.formErrors);
   }
 
   pickCarParkPicture(event) {
@@ -62,32 +56,39 @@ export class EditCarParkPage extends AbstractPage { //PickImageAbstract
   }
 
   save() {
-    this.carParkToEdit.name = this.carParkForm.value.name;
+    this.carParkToEdit.name = this.carParkForm.value.carParkName;
+    this.carParkToEdit.code = this.carParkForm.value.carParkCode;
     this.carParkToEdit.address = this.carParkForm.value.address;
-    this.carParkToEdit.region = this.carParkForm.value.region;
-    this.carParkToEdit.area = this.carParkForm.value.area;
+    // this.carParkToEdit.region = this.carParkForm.value.region;
+    // this.carParkToEdit.area = this.carParkForm.value.area;
     //this.carParkToEdit.nbPlaces = this.carParkForm.value.nbPlaces;
-    this.viewCtrl.dismiss(this.carParkToEdit)
+    this.viewCtrl.dismiss({
+      carpark: this.carParkToEdit,
+      area: this.carParkForm.value.area,
+      region: this.carParkForm.value.region
+    });
   }
 
   private buildForm() {
-    this.carParkForm = this.formBuilder.group(
-      {
-        name: [this.carParkToEdit.name, Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthName),
-            Validators.maxLength(this.messageService.maxLengthName)])],
-        region: [this.carParkToEdit.region, Validators.required],
-        area: [this.carParkToEdit.area, Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthName),
-            Validators.maxLength(this.messageService.maxLengthName)])],
-        address: [this.carParkToEdit.address, Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthAddress),
-            Validators.maxLength(this.messageService.maxLengthAddress)])],
-        //nbPlaces: [this.carParkToEdit.nbPlaces],
-      });
+    this.carParkForm = this.formBuilder.group({
+      carParkName: [this.carParkToEdit.name,
+        Validators.compose([Validators.required,
+          Validators.minLength(this.messageService.minLengthCarParkName),
+          Validators.maxLength(this.messageService.maxLengthCarParkName)])],
+      region: [this.carParkToEdit.region, Validators.required],
+      area: [this.carParkToEdit.area,
+        Validators.compose([Validators.required,
+          Validators.minLength(this.messageService.minLengthArea),
+          Validators.maxLength(this.messageService.maxLengthArea)])],
+      address: [this.carParkToEdit.address,
+        Validators.compose([Validators.required,
+          Validators.minLength(this.messageService.minLengthAddress),
+          Validators.maxLength(this.messageService.maxLengthAddress)])],
+      //nbPlaces: [this.carParkToEdit.nbPlaces],
+    });
+    this.carParkForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.carParkForm, this.formErrors));
+    this.messageService.onValueChanged(this.carParkForm, this.formErrors);
   }
 
 }

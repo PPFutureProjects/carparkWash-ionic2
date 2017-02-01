@@ -38,4 +38,5 @@
         <variable name="APP_ID" value="1357947454263996" />
         <variable name="APP_NAME" value="carparkWash" />
     </plugin>
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.6.1" />
 </widget>

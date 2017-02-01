@@ -8,6 +8,7 @@ export class CarParkModel {
   subscriptions: Array<SubscriptionModel>;
 
   name: string;
+  code: string;
   picture: string;
   address: string;
   region: Region;
@@ -22,6 +23,7 @@ export class CarParkModel {
 
   constructor() {
     this.name = '';
+    this.code = '';
     this.picture = '';
     this.address = '';
     this.area = '';

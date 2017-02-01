@@ -126,6 +126,9 @@ export class LoginPage extends AbstractPage {
       console.error(err);
       let errMsg = 'Log in Fail';
       switch (err.code) {
+        case 'auth/network-request-failed':
+          errMsg = 'No Internet Connection';
+          break;
         case 'auth/invalid-email':
         case 'auth/user-not-found':
         case 'auth/wrong-password':
@@ -142,69 +145,73 @@ export class LoginPage extends AbstractPage {
     } else {
       let loading = this.loadingCtrl.create(this.loadingOptions);
       loading.present();
-      this.userService.create(this.userModel, this.password, this.carParkModel, this.carModel)
-        .then(() => {
-          loading.dismissAll();
-          this.navCtrl.setRoot(HomePage);
-          this.menuCtr.enable(true);
-          this.showToast('Sign Up Success', 'toastInfo');
-        })
-        .catch((err: firebase.FirebaseError) => {
-          loading.dismissAll();
-          console.error(err);
-          let errMsg = 'Sign Up Fail';
+      this.userService.create(this.userModel, this.password, this.carParkModel, this.carModel).then(() => {
+        loading.dismissAll();
+        this.navCtrl.setRoot(HomePage);
+        this.menuCtr.enable(true);
+        this.showToast('Sign Up Success', 'toastInfo');
+      }).catch((err: firebase.FirebaseError) => {
+        loading.dismissAll();
+        console.error(err);
+        let errMsg = 'Sign Up Fail';
 
-          switch (err.code) {
-            case 'auth/email-already-in-use-but-not-verified':
-              let alert = this.alertCtrl.create({
-                title: err.message[0],
-                message: err.message[1],
-                buttons: [
-                  {
-                    text: 'Re-sent',
-                    handler: () => {
-                      let loading = this.loadingCtrl.create(this.loadingOptions);
-                      loading.present();
-                      this.userService.sentEmailVerification().then(() => {
-                        loading.dismissAll();
-                        this.showToast('Verification email sent', 'toastInfo');
-                        this.isOnLogin = true;
-                      }).catch(err => {
-                        loading.dismissAll();
-                        console.log(err);
-                        this.showToast(
-                          'Error Sending Verification email, please contact admin',
-                          'toastError');
-                      });
-                    }
-                  },
-                  {
-                    text: 'Cancel',
-                    role: 'cancel'
+        switch (err.code) {
+          case 'auth/email-already-in-use-but-not-verified':
+            let alert = this.alertCtrl.create({
+              title: err.message[0],
+              message: err.message[1],
+              buttons: [
+                {
+                  text: 'Re-sent',
+                  handler: () => {
+                    let loading = this.loadingCtrl.create(this.loadingOptions);
+                    loading.present();
+                    this.userService.sentEmailVerification().then(() => {
+                      loading.dismissAll();
+                      this.showToast('Verification email sent', 'toastInfo');
+                      this.isOnLogin = true;
+                    }).catch(err => {
+                      loading.dismissAll();
+                      console.log(err);
+                      this.showToast(
+                        'Error Sending Verification email, please contact admin',
+                        'toastError');
+                    });
                   }
-                ]
-              });
-              alert.present();
-              break;
-            case 'auth/email-already-in-use':
-              errMsg = err.message;
-              break;
-            case 'auth/network-request-failed':
-              errMsg = 'No internet connection';
-              break;
-          }
+                },
+                {
+                  text: 'Cancel',
+                  role: 'cancel'
+                }
+              ]
+            });
+            alert.present();
+            break;
+          case 'auth/email-already-in-use':
+            errMsg = err.message;
+            break;
+          case 'auth/network-request-failed':
+            errMsg = 'No Internet Connection';
+            break;
+        }
 
-          this.showToast(errMsg, 'toastError');
-        });
+        this.showToast(errMsg, 'toastError');
+      });
     }
   }
 
   resetPassword() {
     this.userService.resetPassword(this.userModel).then(() => {
       this.showToast('Reset password email sent', 'toastInfo');
-    }, (err) => {
+    }).catch((err: firebase.FirebaseError) => {
       console.error(err);
-      this.showToast(err.message, 'toastError');
+      let errMsg = err.message;
+      switch (err.code) {
+        case 'auth/network-request-failed':
+          errMsg = 'No Internet Connection';
+          break;
+      }
+      this.showToast(errMsg, 'toastError');
     });
   }
 
@@ -217,12 +224,9 @@ export class LoginPage extends AbstractPage {
   private buildCarForm() {
     this.carForm = this.formBuilder.group({
       licencePlateNumber: ['', Validators.compose([Validators.required,
-        Validators.minLength(
-          this.messageService.minLengthLicencePlateNumber),
-        Validators.maxLength(
-          this.messageService.maxLengthLicencePlateNumber)])],
-      brandModel: ['', Validators.maxLength(
-        this.messageService.maxLengthBrandModel)],
+        Validators.minLength(this.messageService.minLengthLicencePlateNumber),
+        Validators.maxLength(this.messageService.maxLengthLicencePlateNumber)])],
+      brandModel: ['', Validators.maxLength(this.messageService.maxLengthBrandModel)],
       colour: ['', Validators.maxLength(this.messageService.maxLengthCarColour)]
     });
     this.carForm.valueChanges.subscribe(data => {
@@ -232,29 +236,24 @@ export class LoginPage extends AbstractPage {
   }
 
   private buildSignUpForm() {
-    this.signUpForm = this.formBuilder.group(
-      {
-        email: ['', Validators.compose(
-          [Validators.required,
-            GlobalValidator.mailFormat,
-            Validators.maxLength(this.messageService.maxLengthEmail)
-          ])],
-        name: ['', Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthName),
-            Validators.maxLength(this.messageService.maxLengthName)])],
-        password: ['', Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthPassword),
-            Validators.maxLength(this.messageService.maxLengthPassword)])],
-        confirmPassword: ['', Validators.required],
-        address: ['', Validators.compose(
-          [Validators.required,
-            Validators.minLength(this.messageService.minLengthAddress),
-            Validators.maxLength(this.messageService.maxLengthAddress)])],
-        phoneNumber: ['', Validators.pattern(
-          /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
-      });
+    this.signUpForm = this.formBuilder.group({
+      email: ['', Validators.compose([Validators.required,
+        GlobalValidator.mailFormat,
+        Validators.maxLength(this.messageService.maxLengthEmail)
+      ])],
+      name: ['', Validators.compose([Validators.required,
+        Validators.minLength(this.messageService.minLengthName),
+        Validators.maxLength(this.messageService.maxLengthName)])],
+      password: ['', Validators.compose(
+        [Validators.required, Validators.minLength(this.messageService.minLengthPassword),
+          Validators.maxLength(this.messageService.maxLengthPassword)])],
+      confirmPassword: ['', Validators.required],
+      address: ['', Validators.compose([Validators.required,
+        Validators.minLength(this.messageService.minLengthAddress),
+        Validators.maxLength(this.messageService.maxLengthAddress)])],
+      phoneNumber: ['', Validators.pattern(
+        /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
+    });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
     });
@@ -263,11 +262,10 @@ export class LoginPage extends AbstractPage {
   }
 
   private buildLoginForm() {
-    this.loginForm = this.formBuilder.group(
-      {
-        email: ['', Validators.required],
-        password: ['', Validators.required]
-      });
+    this.loginForm = this.formBuilder.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
+    });
     this.loginForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.loginForm, this.loginFormErrors);
     });

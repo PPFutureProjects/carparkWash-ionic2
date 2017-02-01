@@ -3,17 +3,14 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Car parks</ion-title>
+    <ion-title>Car Parks</ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <div class="filter-info-layout">
-    <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
-    <!--</div>-->
-    <!--<div class="center-element">-->
-    <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
-  </div>
+  <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
+
+  <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
 
   <ion-item class="no-car-park-yet" *ngIf="carParks?.length === 0">
     <h2>Select a filter for car parks</h2>

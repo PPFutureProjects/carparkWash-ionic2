@@ -9,4 +9,15 @@ export class ServiceUtils {
   protected arrayFromObject(objects) {
     return Object.keys(objects ? objects : []).map(key => objects[key]);
   }
+
+  /**
+   * Merge array of arrays
+   *
+   * @param results
+   * @returns {Array<Object>}
+   */
+  protected mergeResults(results: Array<Array<Object>>) {
+    return results.reduce((merged, result) => merged.concat(result), []);
+  }
+
 }

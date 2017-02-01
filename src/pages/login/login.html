@@ -97,7 +97,8 @@
 
     <ion-item>
       <ion-label>Silhouette Picture</ion-label>
-      <ion-select class="override-select-height" [ngModelOptions]="{standalone: true}"
+      <ion-select class="override-select-height" interface="action-sheet"
+                  [ngModelOptions]="{standalone: true}"
                   [(ngModel)]="carModel.silhouettePicture">
         <ion-option value="{{silhouettePictureTypeEnum.SEDAN}}">{{silhouettePictureTypeEnum.SEDAN}}</ion-option>
         <ion-option value="{{silhouettePictureTypeEnum.SUV}}">{{silhouettePictureTypeEnum.SUV}}</ion-option>

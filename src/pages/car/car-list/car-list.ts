@@ -41,12 +41,7 @@ export class CarListPage extends AbstractPage {
     //if (!this.selectedCarPark) {
     //  this.router.navigate(['']);
     //} else {
-    this.carService.getByCarPark(this.carParkService.selectedCarPark)
-      .then((subscriptions: Array<SubscriptionModel>) => this.subscriptions = subscriptions)
-      .catch(err => {
-        console.log(err);
-        this.showToast('Error getting Cars, please contact admin', 'toastError');
-      });
+    this.subscriptions = this.carParkService.selectedCarPark.subscriptions;
     //}
   }
 

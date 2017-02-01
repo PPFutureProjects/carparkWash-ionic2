@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ToastController } from 'ionic-angular';
+import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
 import { CarParkService } from '../shared/car-park.service';
 import { CarParkModel } from '../shared/car-park.model';
 import { CarService } from '../../car/shared/car.service';
@@ -30,11 +30,17 @@ export class CarParkListPage extends AbstractPage {
     prevButton: '.swiper-button-prev',
   };
 
+  private loadingOptions: LoadingOptions;
 
   constructor(public carParkService: CarParkService, public carService: CarService,
-              public toastCtrl: ToastController) {
+              public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
 
     super(toastCtrl);
+    this.loadingOptions = {
+      content: 'Loading',
+      spinner: 'crescent',
+      showBackdrop: false
+    };
     this.selectedCar = this.carService.selectedCar;
   }
 
@@ -52,9 +58,15 @@ export class CarParkListPage extends AbstractPage {
   }
 
   getCarParksFilter(carParkFilterModel: CarParkFilterModel) {
-    this.carParkService.getByAreas(carParkFilterModel)
-      .then(carParks => this.carParks = carParks)
+    let loading = this.loadingCtrl.create(this.loadingOptions);
+    loading.present();
+    this.carParkService.getFiltered(carParkFilterModel)
+      .then(carParks => {
+        this.carParks = carParks;
+        loading.dismissAll();
+      })
       .catch(err => {
+        loading.dismissAll();
         console.log(err);
         this.showToast('Error getting Car parks, please contact admin', 'toastError');
       });

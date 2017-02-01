@@ -1,44 +1,59 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
-import { CarParkService } from '../shared/car-park.service';
-import { CarParkFilterModel } from './car-park-filter.model';
-import { AbstractPage } from '../../shared/abstract.page';
-import { RegionEnum } from './region.enum';
+import { Component, EventEmitter, Output } from "@angular/core";
+import { ToastController, LoadingController, LoadingOptions } from "ionic-angular";
+import { CarParkService } from "../shared/car-park.service";
+import { CarParkFilterModel, FilterBy, FilterByEnum } from "./car-park-filter.model";
+import { AbstractPage } from "../../shared/abstract.page";
+import { RegionEnum } from "./region.enum";
+import { FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { ValidationMessageService } from "../../shared/validator/validation-message.service";
 
 @Component({
   selector: 'app-car-park-filter',
-  templateUrl: 'car-park-filter.html',
+  templateUrl: 'car-park-filter.html'
 })
 export class CarParkFilterComponent extends AbstractPage {
 
-  selectedCarParkFilter: CarParkFilterModel;
-  areasOfRegion: Array<string>
-  //areaFilter: string;
-  //filteredAreasPart: Array<AreaModel>
-  //@ViewChild('selectOptionArea') selectOptionArea: MdSelect;
+  carParkFilter: CarParkFilterModel;
+  areasOfRegion: Array<string>;
+  filterBy: FilterBy = FilterByEnum.code;
+  filterByEnum = FilterByEnum;
+
+  codeFielterForm: FormGroup;
+  codeFormErrors = {
+    carParkCode: ''
+  };
+
+  areaFielterForm: FormGroup;
+  areaFormErrors = {
+    carParkLotNumber: ''
+  };
 
   @Output() onFilterCarParks = new EventEmitter<CarParkFilterModel>();
 
   regionEnum = RegionEnum;
   private loadingOptions: LoadingOptions;
 
-  constructor(public carParkService: CarParkService, public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+  constructor(public carParkService: CarParkService, public toastCtrl: ToastController,
+              public loadingCtrl: LoadingController, public formBuilder: FormBuilder,
+              public messageService: ValidationMessageService) {
     super(toastCtrl);
-    this.selectedCarParkFilter = new CarParkFilterModel();
-    this.areasOfRegion = [];
     this.loadingOptions = {
       content: 'Loading',
       spinner: 'crescent',
       showBackdrop: false
     };
+    this.carParkFilter = new CarParkFilterModel();
+    this.areasOfRegion = [];
+    this.buildForm();
   }
 
-  getAreasByPart() {
-    this.selectedCarParkFilter.area = undefined;
-    if (this.selectedCarParkFilter.region) {
+  getAreasByRegion() {
+    this.carParkFilter.area = undefined;
+    // if select is opened but none value is selected
+    if (this.carParkFilter.region) {
       let loading = this.loadingCtrl.create(this.loadingOptions);
       loading.present();
-      this.carParkService.getAreasByRegion(this.selectedCarParkFilter.region)
+      this.carParkService.getAreasByRegion(this.carParkFilter.region)
         .then(areasOfRegion => {
           this.areasOfRegion = areasOfRegion;
           loading.dismissAll();
@@ -52,7 +67,29 @@ export class CarParkFilterComponent extends AbstractPage {
   }
 
   filterCarParks() {
-    this.onFilterCarParks.emit(this.selectedCarParkFilter);
+    if (this.filterBy === FilterByEnum.code) {
+      this.carParkFilter.region = undefined;
+      this.carParkFilter.area = '';
+    } else {
+      this.carParkFilter.code = '';
+    }
+    this.onFilterCarParks.emit(this.carParkFilter);
   }
 
+  private buildForm() {
+    this.codeFielterForm = this.formBuilder.group({
+      carParkCode: ['', Validators.required]
+    });
+    this.codeFielterForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.codeFielterForm, this.codeFormErrors));
+    this.messageService.onValueChanged(this.codeFielterForm, this.codeFormErrors);
+
+    this.areaFielterForm = this.formBuilder.group({
+      carParkRegion: ['', Validators.required],
+      carParkArea: ['']
+    });
+    this.areaFielterForm.valueChanges
+      .subscribe(data => this.messageService.onValueChanged(this.areaFielterForm, this.areaFormErrors));
+    this.messageService.onValueChanged(this.areaFielterForm, this.areaFormErrors);
+  }
 }
