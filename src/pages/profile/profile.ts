@@ -59,7 +59,7 @@ export class ProfilePage extends AbstractPage {
     this.buildProfileForm(!editMode);
   }
 
-  save() {
+  saveUserInfo() {
     this.user.email = this.profileForm.value.email;
     this.user.name = this.profileForm.value.name;
     this.user.address = this.profileForm.value.address;
@@ -79,9 +79,7 @@ export class ProfilePage extends AbstractPage {
   }
 
   updateUserFromDatabase() {
-    this.userService.getCurrent(false).then(user => {
-      this.user = user;
-    });
+    this.userService.getCurrent(false).then(user => this.user = user);
   }
 
   private buildProfileForm(isDisabled: boolean) {
@@ -99,8 +97,8 @@ export class ProfilePage extends AbstractPage {
           Validators.minLength(this.messageService.minLengthAddress),
           Validators.maxLength(this.messageService.maxLengthAddress)])],
       phoneNumber: [{value: this.user.phoneNumber, disabled: isDisabled},
-        Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)
-      ],
+        Validators.compose([Validators.required,
+          Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)])],
     });
     this.profileForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.profileForm, this.formErrors));

@@ -67,7 +67,7 @@ export class ValidationMessageService {
     },
     'phoneNumber': {
       'required': this.required('Phone Number'),
-      'pattern': this.required('Phone Number') + '\nOr\n' + this.incorrectFormat('Phone Number')
+      'pattern': this.incorrectFormat('Phone Number')
     },
     'profile': {
       'required': this.required('Profile'),

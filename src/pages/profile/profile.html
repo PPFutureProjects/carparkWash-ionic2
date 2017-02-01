@@ -16,7 +16,7 @@
       </button>
       <button ion-button clear large icon-only class="check-btn-space" *ngIf="editMode"
               [disabled]="!profileForm.valid"
-              (tap)="profileForm.valid && save()">
+              (tap)="profileForm.valid && saveUserInfo()">
         <ion-icon><i class="material-icons">check_circle</i></ion-icon>
       </button>
     </ion-buttons>
@@ -61,7 +61,7 @@
 
       <ion-item>
         <ion-label floating>Phone Number</ion-label>
-        <ion-input required type="number"
+        <ion-input required type="text"
                    formControlName="phoneNumber"
                    [disabled]="!editMode"
                    value="{{user.phoneNumber}}"></ion-input>

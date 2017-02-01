@@ -19,8 +19,6 @@
   </form>
 
   <ion-item no-lines class="btns-modal">
-    <button ion-button clear ()="cancel()">Cancel Changes</button>
-    <button  (tap)="save()">Save Password</button>
     <button ion-button clear (tap)="cancel()">Cancel</button>
     <button ion-button [disabled]="form.invalid"
             (tap)="form.valid && select()">Select</button>

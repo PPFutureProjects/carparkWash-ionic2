@@ -251,8 +251,8 @@ export class LoginPage extends AbstractPage {
       address: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthAddress),
         Validators.maxLength(this.messageService.maxLengthAddress)])],
-      phoneNumber: ['', Validators.pattern(
-        /\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)]
+      phoneNumber: ['', Validators.compose([Validators.required,
+        Validators.pattern(/\(?([0-9]{3})?\)?([ .-]?)([0-9]{3})\2([0-9]{4})/)])]
     });
     this.signUpForm.valueChanges.subscribe(data => {
       this.messageService.onValueChanged(this.signUpForm, this.signUpFormErrors);
