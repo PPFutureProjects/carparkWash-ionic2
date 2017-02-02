@@ -10,7 +10,7 @@ import { ProfileEnum } from '../pages/shared/profile.enum';
 import { UserReady } from '../pages/user/user-notifier';
 import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
-import { ClientListPage } from '../pages/history/client-list';
+import { HistoryPage } from '../pages/history/history';
 declare var cordova: any;
 
 @Component({
@@ -51,7 +51,7 @@ export class MyApp {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario
     if (page.component === null) {
-      if (cordova) {
+      if ((<any>window).cordova) {
         cordova.InAppBrowser.open('https://services2.hdb.gov.sg/webapp/BN22CpkVcncy/BN22CpkInfoSearch.jsp', '_blank',
           'location=yes');
       }
@@ -71,7 +71,7 @@ export class MyApp {
     ];
     if (isAdmin) {
       this.pages.push({title: 'Add Manager/Cleaner', component: AddUserPage});
-      this.pages.push({title: 'History Subscriptions', component: ClientListPage});
+      this.pages.push({title: 'History Subscriptions', component: HistoryPage});
     }
     this.pages.push({title: 'Disconnect', component: LoginPage});
   }

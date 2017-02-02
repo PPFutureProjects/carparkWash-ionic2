@@ -26,7 +26,6 @@ import { HomePage } from '../pages/home/home';
 import { AnnouncementService } from '../pages/shared/announcement.service';
 import { HistoryPage } from '../pages/history/history';
 import { HistoryService } from '../pages/history/history.service';
-import { ClientListPage } from '../pages/history/client-list';
 
 @NgModule({
   declarations: [
@@ -43,7 +42,6 @@ import { ClientListPage } from '../pages/history/client-list';
     SettingPage,
     HomePage,
     HistoryPage,
-    ClientListPage,
 
     CarItemComponent,
     CarParkItemComponent,
@@ -69,8 +67,7 @@ import { ClientListPage } from '../pages/history/client-list';
     ChangePasswordPage,
     SettingPage,
     HomePage,
-    HistoryPage,
-    ClientListPage,
+    HistoryPage
   ],
   providers: [
     UserService,

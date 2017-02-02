@@ -8,22 +8,47 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-card>
-    <ion-card-title>Subscriptions List</ion-card-title>
+  <ion-card *ngIf="!selectedClient && !selectedHistory">
+    <ion-card-header>Client List</ion-card-header>
 
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let history of histories" (click)="selectHistory(history)">
+        <ion-item class="no-car-park-yet" *ngIf="clients?.length === 0">
+          <h2>No Client registered yet</h2>
+        </ion-item>
+
+        <ion-item *ngFor="let client of clients">
+          <div (tap)="selectClient(client)">{{client.name}}</div>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="selectedClient && !selectedHistory">
+    <ion-card-header class="card-header-layout">
+      <span>{{selectedClient.name}}'s Subscriptions</span>
+      <ion-icon name="ios-close-circle-outline" (tap)="unSelectClient()"></ion-icon>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-list>
+        <ion-item *ngFor="let history of histories" (tap)="selectHistory(history)">
           <span>{{history.dateSubscription | date}}</span>
           <span>{{history.car.licencePlateNumber}} - {{history.car.brandModel}}</span>
         </ion-item>
       </ion-list>
     </ion-card-content>
-
   </ion-card>
 
-  <ion-card *ngIf="selectedHistory">
-    <ion-card-title>Subscription {{selectedHistory.dateSubscription | date}}</ion-card-title>
+  <ion-card *ngIf="selectedClient && selectedHistory">
+    <ion-card-header class="card-header-layout">
+      <span>{{selectedClient.name}}'s Subscriptions</span>
+      <ion-icon name="ios-close-circle-outline" (tap)="unSelectClient()"></ion-icon>
+    </ion-card-header>
+    <ion-card-header class="card-header-layout">
+      <span>On {{selectedHistory.dateSubscription | date}}</span>
+      <ion-icon name="ios-close-circle-outline" (tap)="unSelectHistory()"></ion-icon>
+    </ion-card-header>
     <ion-card-content>
       <ion-list class="days-list">
         <ion-item *ngFor="let day of selectedHistory.days">
@@ -36,7 +61,7 @@
         </ion-item>
       </ion-list>
     </ion-card-content>
-
   </ion-card>
+
 
 </ion-content>

@@ -56,6 +56,9 @@ export class UserService extends ServiceUtils {
 
   login(userModel: UserModel, password: string) {
     return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
+      if (!userAuth.emailVerified) {
+        throw {code: 'auth/unverified-email'};
+      }
       return this.getCurrent()
     }).catch((err: firebase.FirebaseError) => {
       console.error(err);
@@ -129,21 +132,22 @@ export class UserService extends ServiceUtils {
   }
 
   create(user: UserModel, password: string, carPark?: CarParkModel, car?: CarModel) {
-    return firebase.auth().createUserWithEmailAndPassword(user.email, password).then(() => {
-      user.uid = firebase.auth().currentUser.uid;
-      user.provider = ProviderEnum.email;
-      return this.createUserModel(user, carPark, car)
-        .then(() => this.sentEmailVerification())
-        .catch((err: any) => {
-          if (err.code === 'auth/email-already-in-use' && firebase.auth().currentUser && !firebase.auth().currentUser.emailVerified) {
-            throw {
-              code: 'auth/email-already-in-use-but-not-verified',
-              message: ['email already in use but not yet verified,', 'Re-sent verification email ?']
-            };
-          }
-          throw err;
-        });
-    });
+    return firebase.auth().createUserWithEmailAndPassword(user.email, password)
+      .then(() => {
+        user.uid = firebase.auth().currentUser.uid;
+        user.provider = ProviderEnum.email;
+        return this.createUserModel(user, carPark, car)
+          .then(() => this.sentEmailVerification());
+      })
+      .catch((err: any) => {
+        if (err.code === 'auth/email-already-in-use' && firebase.auth().currentUser && !firebase.auth().currentUser.emailVerified) {
+          throw {
+            code: 'auth/email-already-in-use-but-not-verified',
+            message: ['email already in use but not yet verified,', 'Re-send verification email ?']
+          };
+        }
+        throw err;
+      });
   }
 
   sentEmailVerification() {
@@ -191,10 +195,10 @@ export class UserService extends ServiceUtils {
 
   isAuth(): Promise<boolean> {
     return this.currentUser ? Promise.resolve(true) : new Promise((resolve, reject) =>
-      firebase.auth().onAuthStateChanged(resolve, reject)).then((user: firebase.User) => {
-      this.userReady.notify(Boolean(user));
-      return Boolean(user);
-    });
+        firebase.auth().onAuthStateChanged(resolve, reject)).then((user: firebase.User) => {
+        this.userReady.notify(Boolean(user));
+        return Boolean(user);
+      });
   }
 
   logOut() {

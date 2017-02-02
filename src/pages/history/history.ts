@@ -10,24 +10,36 @@ import { SubscriptionModel } from '../shared/subscription/subscription.model';
 })
 export class HistoryPage {
 
-  private client: UserModel;
-  private histories: Array<SubscriptionModel>;
-  private selectedHistory: SubscriptionModel;
+  clients: Array<UserModel>;
+  selectedClient: UserModel;
+  histories: Array<SubscriptionModel>;
+  selectedHistory: SubscriptionModel;
 
   constructor(public navCtrl: NavController, public navParams: NavParams,
               public historyService: HistoryService) {}
 
   ionViewDidLoad() {
-    this.client = this.historyService.selectedClient;
-    if (this.client) {
-      this.historyService.getHistory(this.client)
-        .then(histories => this.histories = histories);
-    } else {
-      this.navCtrl.pop();
-    }
+    this.historyService.getClients().then(clients => this.clients = clients);
+  }
+
+  selectClient(client: UserModel) {
+    this.selectedClient = client;
+    this.selectedHistory = undefined;
+    this.historyService.getHistory(this.selectedClient)
+      .then(histories => this.histories = histories);
   }
 
   selectHistory(history: SubscriptionModel) {
     this.selectedHistory = history;
   }
+
+  unSelectHistory() {
+    this.selectedHistory = undefined;
+  }
+
+  unSelectClient() {
+    this.selectedHistory = undefined;
+    this.selectedClient = undefined;
+  }
+
 }
