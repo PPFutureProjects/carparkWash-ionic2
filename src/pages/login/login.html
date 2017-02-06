@@ -6,23 +6,25 @@
   <p>Log in or Sign up for free now.</p>
 
   <form [formGroup]="loginForm" *ngIf="isOnLogin">
-    <ion-item>
-      <ion-label floating>Email</ion-label>
-      <ion-input type="email" formControlName="email"
-                 [(ngModel)]="userModel.email"></ion-input>
-    </ion-item>
-    <ion-item no-lines class="center-input alert alert-danger" *ngIf="loginFormErrors.email">
-      {{ loginFormErrors.email }}
-    </ion-item>
+    <ion-list>
+      <ion-item class="default-input">
+        <ion-label><ion-icon name="ios-at-outline"></ion-icon>Email</ion-label>
+        <ion-input type="email" formControlName="email"
+                   [(ngModel)]="userModel.email"></ion-input>
+      </ion-item>
+      <ion-item no-lines class="center-input alert alert-danger" *ngIf="loginFormErrors.email">
+        {{ loginFormErrors.email }}
+      </ion-item>
 
-    <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password" formControlName="password"
-                 [(ngModel)]="password"></ion-input>
-    </ion-item>
-    <ion-item no-lines class="center-input alert alert-danger" *ngIf="loginFormErrors.password">
-      {{ loginFormErrors.password }}
-    </ion-item>
+      <ion-item class="default-input">
+        <ion-label><ion-icon name="ios-lock-outline"></ion-icon>Password</ion-label>
+        <ion-input type="password" formControlName="password"
+                   [(ngModel)]="password"></ion-input>
+      </ion-item>
+      <ion-item no-lines class="center-input alert alert-danger" *ngIf="loginFormErrors.password">
+        {{ loginFormErrors.password }}
+      </ion-item>
+    </ion-list>
   </form>
 
   <form [formGroup]="signUpForm" *ngIf="!isOnLogin">

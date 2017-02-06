@@ -31,12 +31,13 @@ export class UserService extends ServiceUtils {
     } else {
       return new Promise((resolve, reject) => {
         return firebase.auth().onAuthStateChanged(resolve, reject)
-      }).then((user: firebase.User) => {
-        if (!user) {
+      }).then((userAuth: firebase.User) => {
+        if (!userAuth) {
+          //FIXME is this good ?
           return null;
           //throw {code: 'auth/user-not-found', message: 'Incorrect email or password'};
         }
-        return this.refDatabase.child('users').child(user.uid).once('value').then(snapshot => {
+        return this.refDatabase.child('users').child(userAuth.uid).once('value').then(snapshot => {
           this.currentUser = snapshot.val();
           if (this.currentUser === null) {
             return this.createUserModel(userFb);
@@ -56,9 +57,10 @@ export class UserService extends ServiceUtils {
 
   login(userModel: UserModel, password: string) {
     return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
-      if (!userAuth.emailVerified) {
-        throw {code: 'auth/unverified-email'};
-      }
+      //TODO redo this for prod
+      // if (!userAuth.emailVerified) {
+      //   throw {code: 'auth/unverified-email'};
+      // }
       return this.getCurrent()
     }).catch((err: firebase.FirebaseError) => {
       console.error(err);

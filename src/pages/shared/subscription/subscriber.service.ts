@@ -51,7 +51,7 @@ export class SubscriberService extends ServiceUtils {
 
       let subCarParkPath = carPark.id + '/subscriptions/' + car.id;
       updates['users/' + carPark.userUid + '/carParks/' + subCarParkPath] = subscriptionModel;
-      updates[this.carParkPrePAth(carPark) + '/' + subCarParkPath] = subscriptionModel;
+      updates[this.carParkPrePath(carPark) + '/' + subCarParkPath] = subscriptionModel;
 
       subscriptionModel.id = this.refDatabase.child('historySubscription').child(car.userUid).push().key;
       updates['historySubscription/' + car.userUid + '/' + subscriptionModel.id] = subscriptionModel;
@@ -74,8 +74,7 @@ export class SubscriberService extends ServiceUtils {
     carPark.unlocked = tomorrow.getTime();
     let updates = {};
     updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = carPark;
-    updates['carParks/' + carPark.region + '/' + carPark.area + '/' + carPark.id] = carPark;
-    updates[this.carParkPrePAth(carPark) + '/' + carPark.id] = carPark;
+    updates[this.carParkPrePath(carPark) + '/' + carPark.id] = carPark;
     return this.refDatabase.update(updates);
   }
 
@@ -93,7 +92,7 @@ export class SubscriberService extends ServiceUtils {
 
     let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + '/' + subDayPath] = dayCleanerModel;
-    updates[this.carParkPrePAth(subscription) + '/' + subDayPath] = dayCleanerModel;
+    updates[this.carParkPrePath(subscription) + '/' + subDayPath] = dayCleanerModel;
 
     updates['historySubscription/' + subscription.clientUid + '/' + subscription.id] = subscription;
     return this.refDatabase.update(updates);
@@ -113,17 +112,18 @@ export class SubscriberService extends ServiceUtils {
 
     let subDayPath = subscription.carParkId + '/subscriptions/' + subscription.car.id + '/days/' + dayIndex;
     updates['users/' + subscription.managerUid + '/carParks/' + subDayPath] = dayCleanerModel;
-    updates[this.carParkPrePAth(subscription) + '/' + subDayPath] = dayCleanerModel;
+    updates[this.carParkPrePath(subscription) + '/' + subDayPath] = dayCleanerModel;
 
     updates['historySubscription/' + subscription.clientUid + '/' + subscription.id] = subscription;
     return this.refDatabase.update(updates);
   }
 
-  private carParkPrePAth(carPark: SubscriptionModel | CarParkModel) {
+  private carParkPrePath(carPark: SubscriptionModel | CarParkModel) {
     if ((<SubscriptionModel>carPark).carParkRegion) {
-      return 'carParks/' + (<SubscriptionModel>carPark).carParkRegion + '/' + (<SubscriptionModel>carPark).carParkArea;
+      return 'carParks/' + (<SubscriptionModel>carPark).carParkRegion
+        + '/' + (<SubscriptionModel>carPark).carParkArea.toLowerCase();
     } else {
-      return 'carParks/' + (<CarParkModel>carPark).region + '/' + (<CarParkModel>carPark).area;
+      return 'carParks/' + (<CarParkModel>carPark).region + '/' + (<CarParkModel>carPark).area.toLowerCase();
     }
   }
 }

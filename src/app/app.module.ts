@@ -26,6 +26,7 @@ import { HomePage } from '../pages/home/home';
 import { AnnouncementService } from '../pages/shared/announcement.service';
 import { HistoryPage } from '../pages/history/history';
 import { HistoryService } from '../pages/history/history.service';
+import { EventBus } from '../pages/shared/eventBus';
 
 @NgModule({
   declarations: [
@@ -79,6 +80,7 @@ import { HistoryService } from '../pages/history/history.service';
     ValidationMessageService,
     AnnouncementService,
     HistoryService,
+    EventBus,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

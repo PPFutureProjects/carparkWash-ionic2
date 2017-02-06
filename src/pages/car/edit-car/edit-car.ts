@@ -50,7 +50,8 @@ export class EditCarPage {
           Validators.minLength(this.messageService.minLengthLicencePlateNumber),
           Validators.maxLength(this.messageService.maxLengthLicencePlateNumber)])],
       brandModel: [this.carToEdit.brandModel,
-        Validators.maxLength(this.messageService.maxLengthBrandModel)],
+        Validators.compose([Validators.required,
+          Validators.maxLength(this.messageService.maxLengthBrandModel)])],
       colour: [this.carToEdit.colour,
         Validators.maxLength(this.messageService.maxLengthCarColour)],
       carType: [this.carToEdit.type]

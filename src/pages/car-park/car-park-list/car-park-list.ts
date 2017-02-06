@@ -15,19 +15,20 @@ export class CarParkListPage extends AbstractPage {
 
   selectedCar: CarModel;
   carParks: Array<CarParkModel>;
+
   configCarousel = {
     slidesPerView: 1,
     //slidesPerColumn: 3,
-    spaceBetween: 30,
+    spaceBetween: 10,
     //grabCursor: true,
     centeredSlides: true,
-    loop: true,
+    // loop: true,
     //autoplay: 5000,
     //autoplayDisableOnInteraction: false,
     paginationClickable: true,
     pagination: '.swiper-pagination',
-    nextButton: '.swiper-button-next',
-    prevButton: '.swiper-button-prev',
+    // nextButton: '.swiper-button-next',
+    // prevButton: '.swiper-button-prev',
   };
 
   private loadingOptions: LoadingOptions;

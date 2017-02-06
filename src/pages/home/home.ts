@@ -1,7 +1,6 @@
-import { Component } from '@angular/core';
-import { LoadingOptions, ToastController, ModalController, LoadingController } from 'ionic-angular';
+import { Component, ViewChild } from '@angular/core';
+import { LoadingOptions, ToastController, ModalController, LoadingController, NavParams } from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import * as Swiper from 'swiper';
 import { UserModel } from '../user/user.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
 import { ProfileEnum } from '../shared/profile.enum';
@@ -16,6 +15,8 @@ import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.
 import { Region } from '../car-park/car-park-filter/region.enum';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { AnnouncementService } from '../shared/announcement.service';
+import { SwiperComponent } from 'angular2-useful-swiper/lib/swiper.component';
+import { EventBus } from '../shared/eventBus';
 
 @Component({
   selector: 'page-home',
@@ -30,16 +31,16 @@ export class HomePage extends AbstractPage {
   profileTypeEnum = ProfileEnum;
   configCarousel = {
     slidesPerView: 1,
-    spaceBetween: 30,
+    spaceBetween: 10,
     //grabCursor: true,
-    centeredSlides: false,
-    //loop: true,
+    centeredSlides: true,
+    // loop: true,
     // autoplay: 5000,
     // autoplayDisableOnInteraction false,
     paginationClickable: true,
     pagination: '.swiper-pagination',
-    nextButton: '.swiper-button-next',
-    prevButton: '.swiper-button-prev',
+    // nextButton: '.swiper-button-next',
+    // prevButton: '.swiper-button-prev',
   };
 
   announcementForm: FormGroup;
@@ -47,13 +48,16 @@ export class HomePage extends AbstractPage {
     announcement: '',
   };
 
+  @ViewChild('usefulSwiper') usefulSwiper: SwiperComponent;
+
   private loadingOptions: LoadingOptions;
 
   constructor(public userService: UserService, public carService: CarService,
               public carParkService: CarParkService, public loadingCtrl: LoadingController,
               public toastCtrl: ToastController, public modalCtrl: ModalController,
               public messageService: ValidationMessageService, public formBuilder: FormBuilder,
-              public announcementService: AnnouncementService) {
+              public announcementService: AnnouncementService, public params: NavParams,
+              public eventBus: EventBus) {
 
     super(toastCtrl);
     this.user = new UserModel();
@@ -65,31 +69,34 @@ export class HomePage extends AbstractPage {
     this.buildForms();
   }
 
-  ionViewDidEnter() {
-    // by passing Swiper not found on angular2-useful-swiper
-    new Swiper('.swip', {});
-  }
-
   ionViewWillEnter() {
-    let loadingUser = this.loadingCtrl.create(this.loadingOptions);
-    loadingUser.present();
-    this.userService.getCurrent(true).then(user => {
-      this.user = user;
-      loadingUser.dismiss();
-    }).catch(err => {
-      loadingUser.dismiss();
-      console.error(err);
-      this.showToast('Fail to get your profile data', 'toastError');
-    });
     let loading = this.loadingCtrl.create(this.loadingOptions);
     loading.present();
+    this.userService.getCurrent(false).then(user => {
+      if (!this.user.email) {
+        this.user = user;
+      }
+      if (this.carService.selectedCar) {
+        for (let car of this.user.cars) {
+          if (car.id === this.carService.selectedCar.id) {
+            car.subscription = this.carService.selectedCar.subscription;
+            break;
+          }
+        }
+        this.eventBus.updateCarItem(true);
+      }
+      this.carService.selectedCar = undefined;
+      loading.dismiss();
+    }).catch(err => {
+      console.error(err);
+      loading.dismiss();
+      this.showToast('Fail to get user data', 'toastError');
+    });
     this.announcementService.get().then(announcement => {
       this.announcement = announcement;
       this.buildForms();
       console.log(announcement);
-      loading.dismiss();
     }).catch(err => {
-      loading.dismiss();
       console.error(err);
       this.showToast('Fail to get announcement, Please contact admin', 'toastError');
     });
@@ -136,6 +143,7 @@ export class HomePage extends AbstractPage {
 
   updateUserFromDatabase() {
     this.userService.getCurrent(false).then(user => {
+      this.usefulSwiper.Swiper.slidePrev();
       this.user = user;
     });
   }
@@ -148,6 +156,7 @@ export class HomePage extends AbstractPage {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
         this.carService.add(this.user, newCar).then(() => {
+          this.usefulSwiper.Swiper.slideNext();
           loading.dismissAll();
           this.showToast(`The car ${newCar.licencePlateNumber} added successfully`, 'toastInfo');
         }).catch(err => {
@@ -170,6 +179,7 @@ export class HomePage extends AbstractPage {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
         this.carParkService.add(this.user, newCarPark.carpark).then(() => {
+          this.usefulSwiper.Swiper.slideNext();
           loading.dismissAll();
           this.showToast(`The car ${newCarPark.carpark.name} added successfully`, 'toastInfo');
         }).catch(err => {

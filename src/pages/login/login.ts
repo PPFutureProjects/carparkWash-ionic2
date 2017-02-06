@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import * as firebase from 'firebase';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import {
@@ -22,6 +22,7 @@ import { GlobalValidator } from '../shared/validator/global.validator';
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginPage extends AbstractPage {
 
@@ -239,8 +240,7 @@ export class LoginPage extends AbstractPage {
     this.signUpForm = this.formBuilder.group({
       email: ['', Validators.compose([Validators.required,
         GlobalValidator.mailFormat,
-        Validators.maxLength(this.messageService.maxLengthEmail)
-      ])],
+        Validators.maxLength(this.messageService.maxLengthEmail)])],
       name: ['', Validators.compose([Validators.required,
         Validators.minLength(this.messageService.minLengthName),
         Validators.maxLength(this.messageService.maxLengthName)])],

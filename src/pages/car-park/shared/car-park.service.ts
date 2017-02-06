@@ -45,12 +45,12 @@ export class CarParkService extends ServiceUtils {
     updates['areas/' + region + '/' + area.toLowerCase()] = true;
 
     let oldRegion = updatedCarPark.region;
-    let oldArea = updatedCarPark.area;
-    if (oldRegion && oldRegion !== region && oldArea && oldArea !== area) {
+    let oldArea = updatedCarPark.area.toLowerCase();
+    if (oldRegion && oldRegion !== region && oldArea && oldArea !== area.toLowerCase()) {
       updates['carParks/' + oldRegion + '/' + oldArea + '/' + updatedCarPark.id] = null;
     } else if (oldRegion && oldRegion !== region) {
-      updates['carParks/' + oldRegion + '/' + area + '/' + updatedCarPark.id] = null;
-    } else if (oldArea && oldArea !== area) {
+      updates['carParks/' + oldRegion + '/' + area.toLowerCase() + '/' + updatedCarPark.id] = null;
+    } else if (oldArea && oldArea !== area.toLowerCase()) {
       updates['carParks/' + region + '/' + oldArea + '/' + updatedCarPark.id] = null;
     }
 
@@ -74,7 +74,7 @@ export class CarParkService extends ServiceUtils {
 
   getBySubscription(subscriptionModel: SubscriptionModel): firebase.Promise<CarParkModel> {
     return this.refDatabase.child('carParks').child(subscriptionModel.carParkRegion)
-      .child(subscriptionModel.carParkArea).child(subscriptionModel.carParkId).once('value')
+      .child(subscriptionModel.carParkArea.toLowerCase()).child(subscriptionModel.carParkId).once('value')
       .then(snapshot => {
         let carPark = snapshot.val() as CarParkModel;
         carPark.subscriptions = this.arrayFromObject(carPark.subscriptions);
@@ -90,7 +90,7 @@ export class CarParkService extends ServiceUtils {
           let carparksPromise = new Array();
           for (let region of Object.keys(regions)) {
             for (let area of Object.keys(regions[region])) {
-              carparksPromise.push(this.refDatabase.child('carParks').child(region).child(area)
+              carparksPromise.push(this.refDatabase.child('carParks').child(region).child(area.toLowerCase())
                 .orderByChild('code').startAt(carParkFilterModel.code).once('value')
                 .then(snapshot => this.arrayFromObject(snapshot.val())
                   .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks))));
@@ -102,7 +102,8 @@ export class CarParkService extends ServiceUtils {
             });
         });
     } else if (carParkFilterModel.area) {
-      return this.refDatabase.child('carParks').child(carParkFilterModel.region).child(carParkFilterModel.area).once('value')
+      return this.refDatabase.child('carParks').child(carParkFilterModel.region)
+        .child(carParkFilterModel.area.toLowerCase()).once('value')
         .then(snapshot => this.arrayFromObject(snapshot.val())
           .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks)));
     } else {

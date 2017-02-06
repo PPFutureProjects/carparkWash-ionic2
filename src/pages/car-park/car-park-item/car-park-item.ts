@@ -58,7 +58,7 @@ export class CarParkItemComponent extends AbstractPage {
     //  if (!this.carPark) {
     //    this.router.navigate(['']);
     //  }
-    this.setIsCarParlUnlocked();
+    this.setIsCarParkUnlocked();
   }
 
   select() {
@@ -87,7 +87,7 @@ export class CarParkItemComponent extends AbstractPage {
   unlock() {
     this.subscriberService.unlock(this.carPark)
       .then(() => {
-        this.setIsCarParlUnlocked();
+        this.setIsCarParkUnlocked();
         this.showToast(`the car park ${this.carPark.name} is unlocked`, 'toastInfo')
       })
       .catch(err => {
@@ -148,7 +148,7 @@ export class CarParkItemComponent extends AbstractPage {
     }).present();
   }
 
-  private setIsCarParlUnlocked() {
+  private setIsCarParkUnlocked() {
     let today = new Date();
     today.setHours(0, 0, 0, 0);
     today.setDate(today.getDate() + 1);

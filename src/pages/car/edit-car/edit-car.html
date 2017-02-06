@@ -22,20 +22,20 @@
     </ion-item>
 
     <ion-item>
-      <ion-label>Car Type</ion-label>
-      <ion-select interface="action-sheet" formControlName="carType">
-        <ion-option value="{{carTypeEnum.SEDAN}}">{{carTypeEnum.SEDAN | camelCase}}</ion-option>
-        <ion-option value="{{carTypeEnum.SUV}}">{{carTypeEnum.SUV | camelCase}}</ion-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
       <ion-label floating>Brand & Model</ion-label>
       <ion-input required type="text"
                  formControlName="brandModel"></ion-input>
     </ion-item>
     <ion-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
       {{ formErrors.brandModel }}
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Car Type</ion-label>
+      <ion-select interface="action-sheet" formControlName="carType">
+        <ion-option value="{{carTypeEnum.SEDAN}}">{{carTypeEnum.SEDAN | camelCase}}</ion-option>
+        <ion-option value="{{carTypeEnum.SUV}}">{{carTypeEnum.SUV | camelCase}}</ion-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>

@@ -150,22 +150,12 @@
     <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.address">
       {{ carParkFormErrors.address }}
     </ion-item>
-    <!--<ion-item>-->
-    <!--<ion-input type="number" required-->
-    <!--[dividerColor]="carParkFormErrors.nbPlaces?'accent':'primary'"-->
-    <!--placeholder="Number of parks"-->
-    <!--formControlName="nbPlaces"-->
-    <!--[(ngModel)]="carParkModel.nbPlaces"></ion-input>-->
-    <!--</ion-item>-->
-    <!--<ion-item class="alert alert-danger" *ngIf="carParkFormErrors.nbPlaces">-->
-    <!--{{ carParkFormErrors.nbPlaces }}-->
-    <!--</ion-item>-->
   </form>
 
   <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileEnum.cleaner">
   </form>
 
-  <button ion-button block large padding
+  <button ion-button block large padding margin-top
           [disabled]="!areInputsValid()"
           (click)="areInputsValid()&& createAccount()">Create {{userModel.profile}}
   </button>

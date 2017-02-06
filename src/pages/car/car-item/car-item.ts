@@ -11,14 +11,20 @@ import { CarParkService } from '../../car-park/shared/car-park.service';
 import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
 import { AbstractPage } from '../../shared/abstract.page';
 import {
-  ToastController, LoadingController, LoadingOptions, NavController, AlertController, ModalController
+  ToastController,
+  LoadingController,
+  LoadingOptions,
+  NavController,
+  AlertController,
+  ModalController
 } from 'ionic-angular';
 import { CarParkListPage } from '../../car-park/car-park-list/car-park-list';
 import { EditCarPage } from '../edit-car/edit-car';
+import { EventBus } from '../../shared/eventBus';
 
 @Component({
   selector: 'app-car-item',
-  templateUrl: 'car-item.html',
+  templateUrl: 'car-item.html'
 })
 export class CarItemComponent extends AbstractPage implements AfterContentInit {
 
@@ -26,17 +32,21 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
   carParkSubscribed: CarParkModel;
   carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
-  profileEnum = ProfileEnum;
-  washStateEnum = WashStateEnum;
   initDone: boolean = true;
+
   @Input() car: CarModel;
   @Input() subscription: SubscriptionModel;
   @Input() isSelected: boolean;
   @Output() removed = new EventEmitter<boolean>();
 
+  profileEnum = ProfileEnum;
+  washStateEnum = WashStateEnum;
   private loadingOptions: LoadingOptions;
 
-  constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService, public modalCtrl: ModalController, public subscriberService: SubscriberService, public toastCtrl: ToastController, public loadingCtrl: LoadingController, public navCtrl: NavController, private alertCtrl: AlertController) {
+  constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService,
+              public modalCtrl: ModalController, public subscriberService: SubscriberService,
+              public toastCtrl: ToastController, public loadingCtrl: LoadingController,
+              public navCtrl: NavController, private alertCtrl: AlertController, public eventBus: EventBus) {
 
     super(toastCtrl);
     this.loadingOptions = {
@@ -44,14 +54,28 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
       spinner: 'crescent',
       showBackdrop: false
     };
+
+    eventBus.carUpdated$.subscribe(() => {
+      this.subscription = this.car.subscription;
+      if (this.subscription) {
+        this.initDone = false;
+        this.carParkService.getBySubscription(this.subscription).then(carPark => {
+          this.carParkSubscribed = carPark;
+          this.setIsSubscribedCarParkUnlocked();
+          this.initDone = true;
+        });
+        this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
+      }
+    });
+
     // this.currentUser = this.userService.getIfSet();
     // if (!this.currentUser) {
-      this.userService.getCurrent()
-        .then(user => this.currentUser = user)
-        .catch(err => {
-          console.error(err);
-          this.showToast('Fatal Error, please contact admin', 'toastError');
-        });
+    this.userService.getCurrent()
+      .then(user => this.currentUser = user)
+      .catch(err => {
+        console.error(err);
+        this.showToast('Fatal Error, please contact admin', 'toastError');
+      });
     // }
   }
 
@@ -128,7 +152,7 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
           .then(() => {
             this.car = updatedCar;
             loading.dismissAll();
-            this.showToast(`${this.car.licencePlateNumber} successfully updated`, 'toastError');
+            this.showToast(`${this.car.licencePlateNumber} successfully updated`, 'toastInfo');
           })
           .catch(err => {
             loading.dismissAll();
@@ -154,7 +178,7 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
             loading.dismissAll();
             this.removed.emit(true);
             console.log(data);
-            this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastError');
+            this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastInfo');
           }).catch(err => {
             loading.dismissAll();
             console.log(err);
@@ -172,4 +196,5 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
     today.setDate(today.getDate() + 1);
     this.carParkSubscribedIsUnlocked = this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
   }
+
 }
