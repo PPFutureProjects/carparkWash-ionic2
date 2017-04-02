@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
-import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
+import { ToastController, LoadingController, LoadingOptions, MenuController } from 'ionic-angular';
 import { CarParkService } from '../shared/car-park.service';
 import { CarParkModel } from '../shared/car-park.model';
 import { CarService } from '../../car/shared/car.service';
 import { CarModel } from '../../car/shared/car.model';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
-import { AbstractPage } from '../../shared/abstract.page';
+import { UtilsPage } from '../../shared/utils.page';
 
 @Component({
   selector: 'page-car-park-list',
   templateUrl: 'car-park-list.html',
 })
-export class CarParkListPage extends AbstractPage {
+export class CarParkListPage extends UtilsPage {
 
   selectedCar: CarModel;
   carParks: Array<CarParkModel>;
@@ -34,7 +34,7 @@ export class CarParkListPage extends AbstractPage {
   private loadingOptions: LoadingOptions;
 
   constructor(public carParkService: CarParkService, public carService: CarService,
-              public toastCtrl: ToastController, public loadingCtrl: LoadingController) {
+              public toastCtrl: ToastController, public loadingCtrl: LoadingController, public menuCtrl: MenuController) {
 
     super(toastCtrl);
     this.loadingOptions = {

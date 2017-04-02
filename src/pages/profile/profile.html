@@ -1,14 +1,18 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle large>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Profile</ion-title>
-    <ion-buttons end>
-      <button ion-button clear large *ngIf="!editMode"
+  <ion-navbar hideBackButton>
+    <!--<button ion-button menuToggle large>-->
+    <!--<ion-icon name="menu"></ion-icon>-->
+    <!--</button>-->
+    <ion-buttons left>
+      <button ion-button clear large icon-only padding (tap)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Profile</ion-title>
+    <ion-buttons right>
+      <button ion-button clear large icon-only *ngIf="!editMode"
               (tap)="toggleEditMode(true)">
         <ion-icon><i class="material-icons">mode_edit</i></ion-icon>
-        Edit Profile
       </button>
       <button ion-button clear large icon-only *ngIf="editMode"
               (tap)="toggleEditMode(false)">
@@ -23,53 +27,161 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="background">
   <form [formGroup]="profileForm" class="center-form-items">
-    <div class="form-style">
-      <ion-item>
-        <ion-label floating>Name</ion-label>
-        <ion-input required type="text"
-                   formControlName="name"
-                   [disabled]="!editMode"
-                   value="{{user.name}}"></ion-input>
-      </ion-item>
-      <ion-item class="alert alert-danger" *ngIf="formErrors.name">
-        {{ formErrors.name }}
-      </ion-item>
 
+    <ion-item no-lines (tap)="editMode && startPickPicture()">
+      <ion-avatar item-left>
+        <img [src]="selectedPicture">
+      </ion-avatar>
+      <h2>O Days 0 hours</h2>
+      <p>since you last clean your vehicle</p>
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>Full Name</ion-label>
+        <ion-input required type="text"
+                   [disabled]="!editMode"
+                   formControlName="name"
+                   value="{{currentUser.name}}"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.name">
+      {{ formErrors.name }}
+    </ion-item>
+
+    <div>
       <ion-item>
         <ion-label floating>Email</ion-label>
         <ion-input required type="email"
-                   formControlName="email"
                    [disabled]="!editMode"
-                   value="{{user.email}}"></ion-input>
+                   formControlName="email"
+                   value="{{currentUser.email}}"></ion-input>
       </ion-item>
-      <ion-item class="alert alert-danger" *ngIf="formErrors.email">
-        {{ formErrors.email }}
-      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.email">
+      {{ formErrors.email }}
+    </ion-item>
 
+    <div>
       <ion-item>
         <ion-label floating>Address</ion-label>
-        <ion-input required type="email"
-                   formControlName="address"
+        <ion-input required type="text"
                    [disabled]="!editMode"
-                   value="{{user.address}}"></ion-input>
+                   formControlName="address"
+                   value="{{currentUser.address}}"></ion-input>
       </ion-item>
-      <ion-item class="alert alert-danger" *ngIf="formErrors.address">
-        {{ formErrors.address }}
-      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.address">
+      {{ formErrors.address }}
+    </ion-item>
 
+    <div>
       <ion-item>
         <ion-label floating>Phone Number</ion-label>
         <ion-input required type="text"
-                   formControlName="phoneNumber"
                    [disabled]="!editMode"
-                   value="{{user.phoneNumber}}"></ion-input>
-      </ion-item>
-      <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
-        {{ formErrors.phoneNumber }}
+                   formControlName="phoneNumber"
+                   value="{{currentUser.phoneNumber}}"></ion-input>
       </ion-item>
     </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
+      {{ formErrors.phoneNumber }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>NRIC NO.</ion-label>
+        <ion-input required type="text"
+                   [disabled]="!editMode"
+                   formControlName="nricNo"
+                   value="{{currentUser.nricNo}}"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.nricNo">
+      {{ formErrors.nricNo }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>Date of Birth</ion-label>
+        <ion-datetime required displayFormat="MMM DD YYYY"
+                      [disabled]="!editMode"
+                      formControlName="dateOfBirth"></ion-datetime>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
+      {{ formErrors.phoneNumber }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>SEX</ion-label>
+        <ion-select [disabled]="!editMode"
+                    formControlName="sex">
+          <ion-option value="m">M</ion-option>
+          <ion-option value="f">F</ion-option>
+        </ion-select>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.sex">
+      {{ formErrors.sex }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>Race</ion-label>
+        <ion-input type="text"
+                   [disabled]="!editMode"
+                   formControlName="race"
+                   value="{{currentUser.race}}"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.race">
+      {{ formErrors.race }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>AGE</ion-label>
+        <ion-input type="number"
+                   [disabled]="!editMode"
+                   formControlName="age"
+                   value="{{currentUser.age}}"></ion-input>
+      </ion-item>
+    </div>
+
+    <div>
+      <ion-item>
+        <ion-label floating>BANK ACCOUNT DETAILS</ion-label>
+        <ion-input required type="text"
+                   [disabled]="!editMode"
+                   formControlName="bankAccountDetails"
+                   value="{{currentUser.bankAccountDetails}}"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.bankAccountDetails">
+      {{ formErrors.bankAccountDetails }}
+    </ion-item>
+
+    <div>
+      <ion-item>
+        <ion-label floating>ACCOUNT NUMBER</ion-label>
+        <ion-input required type="text"
+                   [disabled]="!editMode"
+                   formControlName="accountNumber"
+                   value="{{currentUser.accountNumber}}"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item class="alert alert-danger" *ngIf="formErrors.accountNumber">
+      {{ formErrors.accountNumber }}
+    </ion-item>
   </form>
+
+  <ion-item (tap)="changePassword()" *ngIf="currentUser?.provider === providerTypeEnum.email">
+    <ion-label>Password :</ion-label>
+    <ion-input type="password" disabled="true" value="******"></ion-input>
+  </ion-item>
 
 </ion-content>

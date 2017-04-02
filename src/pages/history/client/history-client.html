@@ -1,0 +1,62 @@
+<ion-card *ngIf="!selectedClient && !selectedHistory">
+  <ion-card-header>Clients List</ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      <ion-item class="no-car-park-yet" *ngIf="clients?.length === 0">
+        <h2>No Client registered yet</h2>
+      </ion-item>
+
+      <ion-item *ngFor="let client of clients">
+        <div (tap)="selectClient(client)">{{client.name}}</div>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+
+<ion-card *ngIf="selectedClient && !selectedHistory">
+  <ion-card-header class="card-header-layout">
+    <span>{{selectedClient.name}}'s Subscriptions</span>
+    <ion-icon name="ios-close-circle-outline" (tap)="unSelectClient()"></ion-icon>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      <ion-item class="no-car-park-yet" *ngIf="histories?.length === 0">
+        <h2>No Subscription is made yet</h2>
+      </ion-item>
+
+      <ion-item *ngFor="let history of histories" (tap)="selectHistory(history)">
+        <h2>{{history.subscription.dateSubscription | date}}</h2>
+        <h3>{{history.car.licencePlateNumber}}</h3>
+        <p>{{history.carPark.address}}</p>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+
+<ion-card *ngIf="selectedClient && selectedHistory">
+  <ion-card-header class="card-header-layout">
+    <span>{{selectedClient.name}}'s Subscription</span>
+    <ion-icon name="ios-close-circle-outline" (tap)="unSelectClient()"></ion-icon>
+  </ion-card-header>
+  <ion-card-header text-wrap class="card-header-layout multi-line">The car {{selectedHistory.car.licencePlateNumber}}
+    in {{selectedHistory.carPark.address}}
+    on {{selectedHistory.subscription.dateSubscription | date}}
+    <ion-icon class="center-vertical" name="ios-close-circle-outline" (tap)="unSelectHistory()"></ion-icon>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-list class="days-list">
+      <div class="separator" *ngFor="let day of selectedHistory.subscription.days">
+        <span>The day index: {{day.id}}</span>
+        <h3>Wash Status: {{day.washStatus | camelCase}}</h3>
+        <span *ngIf="day?.washRequestDate">Wash Request Time {{day.washRequestDate | date:'HH:mm:ss'}}</span>
+        <span *ngIf="day?.washDate">Wash time: {{day.washDate | date:'HH:mm:ss'}}</span>
+        <span *ngIf="day?.cleanerName">Cleaner Name: {{day.cleanerName}}</span>
+        <span *ngIf="day?.carParkLotNumber">Car Park Lot Number: {{day.carParkLotNumber}}</span>
+        <span *ngIf="day?.job?.assignmentDate">Car Park Lot Number: {{day.carParkLotNumber}}</span>
+        <span *ngIf="day?.job?.answerDate">Car Park Lot Number: {{day.carParkLotNumber}}</span>
+      </div>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -1,15 +1,14 @@
-import { Component, Input, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, AfterContentInit, ViewChild, ElementRef } from '@angular/core';
 import { CarModel } from '../shared/car.model';
 import { CarService } from '../shared/car.service';
-import { UserService } from '../../user/user.service';
-import { UserModel } from '../../user/user.model';
-import { ProfileEnum } from '../../shared/profile.enum';
-import { SubscriberService } from '../../shared/subscription/subscriber.service';
-import { SubscriptionModel } from '../../shared/subscription/subscription.model';
+import { UserService } from '../../user/shared/user.service';
+import { UserModel } from '../../user/shared/user.model';
+import { ProfileEnum } from '../../user/shared/profile.enum';
+import { SubscriberService } from '../subscription/subscriber.service';
 import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { CarParkService } from '../../car-park/shared/car-park.service';
-import { WashStateEnum } from '../../shared/subscription/wash-state.enum';
-import { AbstractPage } from '../../shared/abstract.page';
+import { WashStateEnum } from '../../shared/wash-state.enum';
+import { UtilsPage } from '../../shared/utils.page';
 import {
   ToastController,
   LoadingController,
@@ -21,26 +20,34 @@ import {
 import { CarParkListPage } from '../../car-park/car-park-list/car-park-list';
 import { EditCarPage } from '../edit-car/edit-car';
 import { EventBus } from '../../shared/eventBus';
+import { JobStateEnum, JobState } from '../../shared/job/job-state.enum';
+import { SelectCleanerPage } from '../select-cleaner/select-cleaner';
+import { RespondToJobPage } from '../respond-to-job/respond-to-job';
+import { SubscriptionPage } from '../subscription/subscription';
+import { SubscriptionModel } from '../subscription/subscription.model';
 
 @Component({
   selector: 'app-car-item',
   templateUrl: 'car-item.html'
 })
-export class CarItemComponent extends AbstractPage implements AfterContentInit {
+export class CarItemComponent extends UtilsPage implements AfterContentInit {
 
   currentUser: UserModel;
-  carParkSubscribed: CarParkModel;
-  carParkSubscribedIsUnlocked: boolean;
   dayIndex: number;
   initDone: boolean = true;
 
-  @Input() car: CarModel;
-  @Input() subscription: SubscriptionModel;
-  @Input() isSelected: boolean;
-  @Output() removed = new EventEmitter<boolean>();
+  @ViewChild('carThumb') carThumb: ElementRef;
 
+  @Input() car: CarModel;
+  @Input() carParkSubscribed: CarParkModel;
+  @Input() isEdit: boolean = false;
+  @Input() isSelected: boolean;
+  @Output() toRemove = new EventEmitter<CarModel>();
+
+  jobStateEnum = JobStateEnum;
   profileEnum = ProfileEnum;
   washStateEnum = WashStateEnum;
+
   private loadingOptions: LoadingOptions;
 
   constructor(public carService: CarService, public userService: UserService, public carParkService: CarParkService,
@@ -54,17 +61,15 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
       spinner: 'crescent',
       showBackdrop: false
     };
-
-    eventBus.carUpdated$.subscribe(() => {
-      this.subscription = this.car.subscription;
-      if (this.subscription) {
+    this.eventBus.carUpdated$.subscribe(() => {
+      if (this.car.subscription) {
         this.initDone = false;
-        this.carParkService.getBySubscription(this.subscription).then(carPark => {
+        //TODO this will be removed may be ?
+        this.carParkService.getById(this.car.subscription.carParkId).then(carPark => {
           this.carParkSubscribed = carPark;
-          this.setIsSubscribedCarParkUnlocked();
           this.initDone = true;
         });
-        this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
+        this.dayIndex = Math.round((new Date().getTime() - this.car.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
       }
     });
 
@@ -80,66 +85,162 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
   }
 
   ngAfterContentInit() {
-    if (this.subscription) {
+    if (!this.car) {
+      // this.router.navigate(['']);
+    } else {
       this.initDone = false;
-      this.car = this.subscription.car;
-      this.carParkService.getBySubscription(this.subscription).then(carPark => {
-        this.carParkSubscribed = carPark;
-        this.setIsSubscribedCarParkUnlocked();
+      if (this.carParkSubscribed) {
+        this.dayIndex = Math.round((new Date().getTime() - this.car.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
         this.initDone = true;
-      });
-    } else if (this.car.subscription) {
-      this.initDone = false;
-      this.subscription = this.car.subscription;
-      this.carParkService.getBySubscription(this.car.subscription).then(carPark => {
-        this.carParkSubscribed = carPark;
-        this.setIsSubscribedCarParkUnlocked();
+        this.initThumbCss();
+      } else if (this.car.subscription && !this.carParkSubscribed) {
+        this.carParkService.getById(this.car.subscription.carParkId).then(carPark => {
+          this.carParkSubscribed = carPark;
+          this.initDone = true;
+          this.initThumbCss();
+        }).catch(err => {
+          this.initDone = true;
+          this.initThumbCss();
+          console.log(err);
+        });
+        this.dayIndex = Math.round((new Date().getTime() - this.car.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
+      } else {
         this.initDone = true;
-      });
-    }
-    if (this.subscription) {
-      this.dayIndex = Math.round((new Date().getTime() - this.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
+        this.initThumbCss();
+      }
     }
   }
 
-  selectToSubscribe() {
-    this.carService.selectedCar = this.car;
-    this.navCtrl.push(CarParkListPage);
+  initThumbCss() {
+    setTimeout(() => {
+      if (!this.carThumb) {
+        this.initThumbCss();
+      } else if (this.carThumb.nativeElement.width < this.carThumb.nativeElement.height) {
+        this.carThumb.nativeElement.className += ' portrait';
+      }
+    }, 100);
   }
 
-  selectToWash() {
-    let prompt = this.alertCtrl.create({
-      title: 'Select To be washed', message: 'Enter the Car Park LOT Number', inputs: [{
-        name: 'carParkLotNumber', placeholder: 'Car Park Lot Number'
-      },], buttons: [{
-        text: 'Cancel'
-      }, {
-        text: 'Select', handler: data => {
-          // car lot number is a number
-          if (data.carParkLotNumber.length > 0) {
-            this.subscriberService.selectToBeWashed(this.subscription, data.carParkLotNumber)
-              .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
-              .catch(err => {
-                console.error(err);
-                this.showToast('Fatal Error, please contact admin', 'toastError');
-              });
-          } else {
-            this.showToast('Car Lot Number cannot be empty', 'toastError');
-            this.selectToWash();
-          }
-        }
-      }]
+  subscribeOrSelectToWash() {
+    let isActifSubscription = this.isActifSubscription(this.car.subscription);
+    if (!this.isSelected) {
+      if (isActifSubscription) {
+        this.selectToWash(isActifSubscription);
+      } else {
+        //TODO subscription expired do you want to re subscribe ?
+        this.subscribe(isActifSubscription);
+      }
+    }
+  }
+
+  private subscribe(isActifSubscription) {
+    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
+      {carToSubscribe: this.car, isActifSubscription: isActifSubscription});
+    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
+      console.log(result.carPark);
+      if (result.carPark) {
+        this.subscriberService.subscribe(result.carPark, this.carService.selectedCar)
+          .then(() => {
+            this.showToast(`the car ${this.carService.selectedCar.licencePlateNumber}
+                  is subscribed to the car park ${result.carPark.address}`, 'toastInfo');
+          })
+          .catch(err => {
+            console.error(err);
+            this.showToast('Fatal Error, please contact admin', 'toastError');
+          });
+      }
     });
-    prompt.present();
+    subscriptionPage.present();
+  }
+
+  selectToWash(isActifSubscription) {
+    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
+      {carToSubscribe: this.car, carParkSubscribed: this.carParkSubscribed, isActifSubscription: isActifSubscription});
+    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
+      console.log(result.lotNumber);
+      if (result.lotNumber) {
+        this.subscriberService.selectToBeWashed(this.car.subscription, result.lotNumber)
+          .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
+          .catch(err => {
+            console.error(err);
+            this.showToast('Fatal Error, please contact admin', 'toastError');
+          });
+      }
+    });
+    subscriptionPage.present();
+  }
+
+  selectCleaner() {
+    let dialogRef = this.modalCtrl.create(SelectCleanerPage, {carToWash: this.car, dayIndex: this.dayIndex});
+    dialogRef.onDidDismiss((cleaner: UserModel) => {
+      if (cleaner) {
+        this.subscriberService.createJob(this.car, cleaner, this.dayIndex)
+          .then(() => this.showToast(`A job is created for the cleaner ${cleaner.name}`, 'toastInfo'))
+          .catch(err => {
+            console.error(err);
+            this.showToast('Fatal Error, please contact admin', 'toastError');
+          });
+      }
+    });
+    dialogRef.present();
   }
 
   selectAsWashed() {
-    this.subscriberService.setToWashed(this.subscription, this.currentUser)
+    this.subscriberService.setToWashed(this.car.subscription, this.currentUser)
       .then(() => this.showToast('The selected car is washed', 'toastInfo'))
       .catch(err => {
         console.error(err);
         this.showToast('Fatal Error, please contact admin', 'toastError');
       });
+  }
+
+  respondToTheJob() {
+    let dialogRef = this.modalCtrl.create(RespondToJobPage, {
+      'carToWash': this.car,
+      'carParkSubscribed': this.carParkSubscribed
+    });
+    dialogRef.onDidDismiss((jobStateEnum: JobState) => {
+      if (jobStateEnum && jobStateEnum !== JobStateEnum.notAnswered) {
+        let loading = this.loadingCtrl.create(this.loadingOptions);
+        loading.present();
+        this.subscriberService.respondToJob(this.currentUser, this.car, this.dayIndex, jobStateEnum)
+          .then(() => {
+            loading.dismissAll();
+            this.showToast(`The job is ${jobStateEnum}`, 'toastInfo');
+          })
+          .catch(err => {
+            loading.dismissAll();
+            console.error(err);
+            this.showToast(`Fail to ${jobStateEnum} the job`, 'toastError');
+          });
+      }
+    });
+    dialogRef.present();
+  }
+
+  notifyCarNotFound() {
+    this.alertCtrl.create({
+      title: 'CONFIRMATION',
+      message: `Are you sure you didn't found the car ${this.car.licencePlateNumber} ?`,
+      buttons: [{
+        text: 'Cancel'
+      }, {
+        text: 'Yes', handler: () => {
+          let loading = this.loadingCtrl.create(this.loadingOptions);
+          loading.present();
+          this.subscriberService.notifyCarNotFound(this.car, this.dayIndex)
+            .then(() => {
+              loading.dismissAll();
+              this.showToast(`The car owner is notified`, 'toastInfo');
+            })
+            .catch(err => {
+              loading.dismissAll();
+              console.error(err);
+              this.showToast(`Fail to notify the car owner`, 'toastError');
+            });
+        }
+      }]
+    }).present();
   }
 
   edit() {
@@ -172,29 +273,20 @@ export class CarItemComponent extends AbstractPage implements AfterContentInit {
         text: 'Cancel'
       }, {
         text: 'OK', handler: () => {
-          let loading = this.loadingCtrl.create(this.loadingOptions);
-          loading.present();
-          this.carService.remove(this.car).then(data => {
-            loading.dismissAll();
-            this.removed.emit(true);
-            console.log(data);
-            this.showToast(`The car ${this.car.licencePlateNumber} was removed successfully`, 'toastInfo');
-          }).catch(err => {
-            loading.dismissAll();
-            console.log(err);
-            this.showToast(`Could not remove the car ${this.car.licencePlateNumber}, please contact admin`,
-              'toastError');
-          });
+          this.toRemove.emit(this.car);
         }
       }]
     }).present();
   }
 
-  private setIsSubscribedCarParkUnlocked() {
-    let today = new Date();
-    today.setHours(0, 0, 0, 0);
-    today.setDate(today.getDate() + 1);
-    this.carParkSubscribedIsUnlocked = this.carParkSubscribed && this.carParkSubscribed.unlocked === today.getTime();
+  private isActifSubscription(subscription: SubscriptionModel) {
+    if (subscription) {
+      let today = new Date();
+      let priorBefaure30Days = new Date(new Date().setDate(today.getDate()-30));
+      if (priorBefaure30Days < new Date(subscription.dateSubscription)) {
+        return true;
+      }
+    }
+    return false;
   }
-
 }

@@ -1,25 +1,68 @@
 
-page-add-car {
+page-edit-car {
 
-  .override-background-preview {
-    max-width: 300px;
-    max-height: 300px;
+  //.loading-picture {
+  //  position: relative;
+  //  left: -25px;
+  //  width: 25px;
+  //  height: 25px;
+  //}
+
+  .text-center {
+    text-align: center;
   }
 
-  .loading-picture {
-    position: relative;
-    left: -25px;
-    width: 25px;
-    height: 25px;
+  .center-element {
+    display: flex;
+    justify-content: center;
   }
 
-  .lbl-indent {
-    position: relative;
-    left: -25px;
+  .btns-dialog {
+    display: flex;
+    justify-content: flex-end;
   }
 
-  .mandatory {
-    color: red;
+  .add-item-picture-size {
+    width: 50%;
   }
 
+  .fit-picture {
+    object-fit: contain;
+    height: 100%;
+  }
+
+  .no-padding {
+    padding: 0px;
+  }
+
+  .input-border {
+    border: solid black 1px !important;
+    //border-radius: 5px !important;
+  }
+
+  .margin-top20 {
+    margin-top: 20px;
+  }
+
+  .margin-right20 {
+    margin-right: 20px;
+  }
+
+  .margin0 {
+    margin: 0px;
+  }
+
+  .row-input {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .color-box-size {
+    width: 32px;
+    height: 32px;
+  }
+
+  .color-box-border {
+    border: black solid 1px;
+  }
 }

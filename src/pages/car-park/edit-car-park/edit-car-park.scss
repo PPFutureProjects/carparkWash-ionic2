@@ -17,8 +17,20 @@ page-add-car {
     margin-right: 60px;
   }
 
+  .item-lbl-pick-picture {
+    .input-wrapper {
+      overflow: hidden;
+    }
+  }
+
   .mandatory {
     color: red;
   }
+
+  .input-border {
+    border: solid black 1px !important;
+    //border-radius: 5px !important;
+  }
+
 
 }

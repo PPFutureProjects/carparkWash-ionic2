@@ -1,0 +1,22 @@
+<ion-backdrop class="active-backdrop" disable-activated="" role="presentation" tappable=""></ion-backdrop>
+
+<div class="root">
+  <h2>Car Selected a Cleaner to do the Job</h2>
+
+  <ion-list>
+    <ion-searchbar auto-complete autocomplete="off" tabindex=-1
+                   max-num-list="20" accept-user-input="false"
+                   placeholder="Select Cleaner" [list-formatter]="getCleanerName"
+                   value-property-name="uid" display-property-name="name"
+                   [(ngModel)]="selectedCleaner" [source]="cleaners"></ion-searchbar>
+  </ion-list>
+
+
+  <ion-item no-lines class="btns-dialog">
+    <button ion-button clear color="primary" (tap)="cancel()">Cancel</button>
+    <button ion-button clear color="primary" [disabled]="!selectedCleaner?.uid"
+            (tap)="selectedCleaner?.uid && select()">Select
+    </button>
+  </ion-item>
+
+</div>

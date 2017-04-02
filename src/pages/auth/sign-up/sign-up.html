@@ -1,0 +1,125 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button ion-button icon-only clear class="btn-icon-style"
+              (tap)="backToLoginPage()">
+        <img src="assets/icon/Back-32.png">
+      </button>
+    </ion-buttons>
+    <ion-title>Sign Up</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="background">
+
+  <ion-item (tap)="startPickPicture()">
+    <ion-label class="center-element">
+      <ion-avatar>
+        <img *ngIf="selectedPicture" [src]="selectedPicture">
+        <img *ngIf="!selectedPicture" src="assets/picture/add-item.png">
+        <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
+      </ion-avatar>
+    </ion-label>
+  </ion-item>
+
+  <form [formGroup]="signUpForm">
+
+    <div>
+      <ion-item class="ion-item-input">
+        <ion-label>
+          <ion-icon name="ios-person-outline"></ion-icon>
+        </ion-label>
+        <ion-input required type="text" placeholder="Full Name" formControlName="name"
+                   [(ngModel)]="userModel.name"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.name">
+      {{ signUpFormErrors.name }}
+    </ion-item>
+
+    <div>
+      <ion-item class="ion-item-input margin-inter-input">
+        <ion-label>
+          <ion-icon name="ios-at-outline"></ion-icon>
+        </ion-label>
+        <ion-input required type="email" placeholder="Email" formControlName="email"
+                   [(ngModel)]="userModel.email"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.email">
+      {{ signUpFormErrors.email }}
+    </ion-item>
+
+    <div>
+      <ion-item class="ion-item-input margin-inter-input">
+        <ion-label>
+          <ion-icon name="ios-lock-outline"></ion-icon>
+        </ion-label>
+        <ion-input required type="password" placeholder="Password" formControlName="password"
+                   [(ngModel)]="password"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.password">
+      {{ signUpFormErrors.password }}
+    </ion-item>
+
+    <div>
+      <ion-item class="ion-item-input margin-inter-input">
+        <ion-label>
+          <ion-icon name="ios-lock-outline"></ion-icon>
+        </ion-label>
+        <ion-input required type="password" placeholder="Re-type Password" formControlName="confirmPassword"
+                   [(ngModel)]="confirmPassword"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.confirmPassword">
+      {{ signUpFormErrors.confirmPassword }}
+    </ion-item>
+
+    <div>
+      <ion-item class="ion-item-input margin-inter-input">
+        <ion-label>
+          <ion-icon name="md-globe"></ion-icon>
+        </ion-label>
+        <ion-input required type="text" placeholder="Address" formControlName="address"
+                   [(ngModel)]="userModel.address"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.address">
+      {{ signUpFormErrors.address }}
+    </ion-item>
+
+    <div>
+      <ion-item class="ion-item-input margin-inter-input">
+        <ion-label>
+          <ion-icon name="ios-call-outline"></ion-icon>
+        </ion-label>
+        <ion-input required type="text" placeholder="Phone Number" formControlName="phoneNumber"
+                   [(ngModel)]="userModel.phoneNumber"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="signUpFormErrors.phoneNumber">
+      {{ signUpFormErrors.phoneNumber }}
+    </ion-item>
+  </form>
+
+  <p class="text-term-use margin-inter-input">
+    Login means you agree with our <span class="text-blue">Term of use</span>
+    and our <span class="text-blue">Privacy Policy</span>
+  </p>
+
+  <div class="center-element btns-action">
+    <button block ion-button large color="primary"
+            [disabled]="!selectedPicture || signUpForm.invalid"
+            (tap)="selectedPicture && signUpForm.valid && signUp()">
+      Done
+    </button>
+    <!--<button ion-button icon-only clear color="dark" class="btn-icon-style"-->
+            <!--[disabled]="!selectedPicture || signUpForm.invalid"-->
+            <!--(tap)="selectedPicture && signUpForm.valid && signUp()">-->
+      <!--<ion-icon name="ios-checkmark-circle-outline"></ion-icon>-->
+    <!--</button>-->
+  </div>
+
+</ion-content>
+

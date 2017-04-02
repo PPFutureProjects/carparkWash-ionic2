@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
-import { HistoryService } from './history.service';
-import { UserModel } from '../user/user.model';
-import { SubscriptionModel } from '../shared/subscription/subscription.model';
+import { NavController, NavParams, MenuController } from 'ionic-angular';
 
 @Component({
   selector: 'page-history',
@@ -10,36 +7,12 @@ import { SubscriptionModel } from '../shared/subscription/subscription.model';
 })
 export class HistoryPage {
 
-  clients: Array<UserModel>;
-  selectedClient: UserModel;
-  histories: Array<SubscriptionModel>;
-  selectedHistory: SubscriptionModel;
+  historyChoice: string = 'subscriptions';
 
-  constructor(public navCtrl: NavController, public navParams: NavParams,
-              public historyService: HistoryService) {}
-
-  ionViewDidLoad() {
-    this.historyService.getClients().then(clients => this.clients = clients);
+  constructor(public navCtrl: NavController, public navParams: NavParams, public menuCtrl: MenuController) {
   }
 
-  selectClient(client: UserModel) {
-    this.selectedClient = client;
-    this.selectedHistory = undefined;
-    this.historyService.getHistory(this.selectedClient)
-      .then(histories => this.histories = histories);
+  toggleMenu() {
+    this.menuCtrl.toggle();
   }
-
-  selectHistory(history: SubscriptionModel) {
-    this.selectedHistory = history;
-  }
-
-  unSelectHistory() {
-    this.selectedHistory = undefined;
-  }
-
-  unSelectClient() {
-    this.selectedHistory = undefined;
-    this.selectedClient = undefined;
-  }
-
 }

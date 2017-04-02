@@ -11,14 +11,11 @@ export class ValidationMessageService {
   public maxLengthPassword = 20;
   public minLengthAddress = 5;
   public maxLengthAddress = 50;
-  public minLengthArea = 2;
-  public maxLengthArea = 20;
-  public maxLengthBrandModel = 20;
+  public maxLengthBrand = 20;
+  public maxLengthModel = 20;
   public minLengthLicencePlateNumber = 3;
   public maxLengthLicencePlateNumber = 10;
   public maxLengthCarColour = 20;
-  public minLengthCarParkName = 3;
-  public maxLengthCarParkName = 20;
   public maxLengthCarParkCode = 10;
   public maxLengthCarParkLotNumber = 15;
 
@@ -57,14 +54,6 @@ export class ValidationMessageService {
       'minlength': this.minLength('Address', this.minLengthAddress),
       'maxlength': this.maxLength('Address', this.maxLengthAddress)
     },
-    'region': {
-      'required': this.required('Region'),
-    },
-    'area': {
-      'required': this.required('Area'),
-      'minlength': this.minLength('Area', this.minLengthCarParkName),
-      'maxlength': this.maxLength('Area', this.maxLengthCarParkName)
-    },
     'phoneNumber': {
       'required': this.required('Phone Number'),
       'pattern': this.incorrectFormat('Phone Number')
@@ -77,19 +66,17 @@ export class ValidationMessageService {
       'minlength': this.minLength('Licence Plate Number', this.minLengthLicencePlateNumber),
       'maxlength': this.maxLength('Licence Plate Number', this.maxLengthLicencePlateNumber)
     },
-    'brandModel': {
-      'maxlength': this.maxLength('Brand & Model', this.maxLengthBrandModel)
+    'brand': {
+      'required': this.required('Brand'),
+      'maxlength': this.maxLength('Brand', this.maxLengthBrand)
+    },
+    'model': {
+      'required': this.required('Model'),
+      'maxlength': this.maxLength('Model', this.maxLengthModel)
     },
     'colour': {
+      'required': this.required('Car Colour'),
       'maxlength': this.maxLength('Car Colour', this.maxLengthCarColour)
-    },
-    'nbPlaces': {
-      'pattern': this.required('Number of parks') + '\nOr\n' + this.incorrectFormat('Number of parks')
-    },
-    'carParkName': {
-      'required': this.required('Car park name'),
-      'minlength': this.minLength('Car park name', this.minLengthCarParkName),
-      'maxlength': this.maxLength('Car park name', this.maxLengthCarParkName)
     },
     'carParkCode': {
       'required': this.required('Car park code'),
@@ -99,6 +86,25 @@ export class ValidationMessageService {
       'required': this.required('Car park Lot Number'),
       'maxlength': this.maxLength('Car park Lot Number', this.maxLengthCarParkLotNumber)
     },
+    'sex': {
+      'required': this.required('Sex'),
+    },
+    'dateOfBirth': {
+      'required': this.required('Date Of Birth'),
+    },
+    'nricNo': {
+      'required': this.required('Nric No.'),
+    },
+    'race': {
+      'required': this.required('Race'),
+    },
+    'bankAccountDetails': {
+      'required': this.required('Bank Account Details'),
+    },
+    'accountNumber': {
+      'required': this.required('Account Number'),
+    },
+
   };
 
   onValueChanged(currentForm: FormGroup, formErrors: any) {

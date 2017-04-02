@@ -1,0 +1,34 @@
+<ion-card *ngIf="!selectedCarParkHistory">
+  <ion-card-header>Car parks List</ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      <ion-item class="no-car-park-yet" *ngIf="carParksHistory?.length === 0">
+        <h2>No Car Park added/unlocked yet</h2>
+      </ion-item>
+
+      <ion-item *ngFor="let carParkHistory of carParksHistory">
+        <div (tap)="selectCarParkHistory(carParkHistory)">{{carParkHistory.address}}</div>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>
+
+<ion-card *ngIf="selectedCarParkHistory">
+  <ion-card-header class="card-header-layout multi-line">{{selectedCarParkHistory.address}}
+      unlock dates
+    <ion-icon name="ios-close-circle-outline" (tap)="unSelectCarParkHistory()"></ion-icon>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-list>
+      <ion-item class="no-car-park-yet" *ngIf="selectedCarParkHistory.unlockedDates?.length === 0">
+        <h2>Never unlocked yet</h2>
+      </ion-item>
+
+      <ion-item *ngFor="let unlockedDate of selectedCarParkHistory.unlockedDates" (tap)="selectHistory(history)">
+        <h2>{{unlockedDate | date}}</h2>
+      </ion-item>
+    </ion-list>
+  </ion-card-content>
+</ion-card>

@@ -1,59 +1,100 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle large>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Add/Edit Car</ion-title>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button ion-button icon-only clear class="btn-icon-style"
+              (tap)="cancel()">
+        <img src="assets/icon/Back-32.png">
+      </button>
+    </ion-buttons>
+    <ion-title text-center>{{ title }}</ion-title>
+    <ion-buttons right>
+      <div class="btn-icon-style"></div>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
 
-  <P>Please, no Lorries, Vans or Larger vehicles </P>
+  <h2 class="text-center">Add an image of your vehicle</h2>
+
+  <P class="text-center">Please make sure colour and plate number are clear and visible in the picture</P>
+
+  <!--<P class="text-center">Please, no Lorries, Vans or Larger vehicles </P>-->
 
   <form [formGroup]="carForm">
-    <ion-item>
-      <ion-label floating>Licence Plate Number</ion-label>
-      <ion-input required type="text"
-                 formControlName="licencePlateNumber"></ion-input>
-    </ion-item>
-    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
+
+    <div class="center-element">
+      <ion-card class="add-item-picture-size">
+        <ion-card-content class="no-padding">
+          <ion-item (tap)="startPickPicture()">
+            <ion-label class="center-element">
+              <img class="fit-picture" [src]="selectedPicture">
+              <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <div>
+      <ion-item class="input-border margin-top20">
+        <ion-input required type="text" placeholder="Licence Plate Number"
+                   formControlName="licencePlateNumber"></ion-input>
+      </ion-item>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
       {{ formErrors.licencePlateNumber }}
     </ion-item>
 
-    <ion-item>
-      <ion-label floating>Brand & Model</ion-label>
-      <ion-input required type="text"
-                 formControlName="brandModel"></ion-input>
+    <div class="row-input margin-top20">
+      <div>
+        <ion-item class="input-border margin-right20">
+          <ion-input required type="text" placeholder="Brand"
+                     formControlName="brand"></ion-input>
+        </ion-item>
+      </div>
+      <div>
+        <ion-item class="input-border">
+          <ion-input required type="text" placeholder="Model"
+                     formControlName="model"></ion-input>
+        </ion-item>
+      </div>
+    </div>
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.brand">
+      {{ formErrors.brand }}
     </ion-item>
-    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.brandModel">
-      {{ formErrors.brandModel }}
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Car Type</ion-label>
-      <ion-select interface="action-sheet" formControlName="carType">
-        <ion-option value="{{carTypeEnum.SEDAN}}">{{carTypeEnum.SEDAN | camelCase}}</ion-option>
-        <ion-option value="{{carTypeEnum.SUV}}">{{carTypeEnum.SUV | camelCase}}</ion-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Colour</ion-label>
-      <ion-input type="text"
-                 formControlName="colour"></ion-input>
-    </ion-item>
-    <ion-item class="center-input alert alert-danger" *ngIf="formErrors.colour">
-      {{ formErrors.colour }}
+    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.model">
+      {{ formErrors.model }}
     </ion-item>
 
+    <div class="row-input margin-top20">
+      <ion-item class="margin-right20">
+        <ion-label class="margin0" (tap)="selectSilhouette()">
+          <img *ngIf="selectedType === silhouetteEnum.sedan" src="assets/picture/sedan.jpg">
+          <img *ngIf="selectedType === silhouetteEnum.suv" src="assets/picture/suv.jpg">
+          <div *ngIf="!selectedType">Select Car Type</div>
+        </ion-label>
+      </ion-item>
+
+      <ion-item>
+        <ion-label class="margin0" (tap)="selectColour()">
+          <!--<colour-select [value]="selectedColour" (selectValueEvent)="setSelectedColour($event)"></colour-select>-->
+          <div *ngIf="selectedColour" class="color-box-size color-box-border"
+               [ngStyle]="{backgroundColor: selectedColour}"></div>
+          <div *ngIf="!selectedColour">
+            Select Colour
+          </div>
+        </ion-label>
+      </ion-item>
+    </div>
   </form>
 
-  <ion-item no-lines class="btns-dialog">
-    <button ion-button clear large (tap)="cancel()">Cancel</button>
-    <button ion-button clear large [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
-      Save
-    </button>
+  <ion-item no-lines>
+    <ion-label class="btns-dialog">
+      <button ion-button icon-only large clear [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
+        <ion-icon name="arrow-forward"></ion-icon>
+      </button>
+    </ion-label>
   </ion-item>
 
 </ion-content>

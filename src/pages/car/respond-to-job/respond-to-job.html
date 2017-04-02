@@ -1,0 +1,26 @@
+<ion-backdrop class="active-backdrop" disable-activated="" role="presentation" tappable=""></ion-backdrop>
+
+<div class="root">
+  <h2>Answer to this Job proposal</h2>
+
+  <ion-list>
+    <ion-item>
+      Car Brand: {{carToWash.brand}}
+    </ion-item>
+    <ion-item>
+      Car Model: {{carToWash.model}}
+    </ion-item>
+    <ion-item>
+      Car Park Code: {{carParkSubscribed.code}}
+    </ion-item>
+    <ion-item>
+      Car Park Address: {{carParkSubscribed.address}}
+    </ion-item>
+
+    <ion-item class="btns-dialog">
+      <button ion-button clear color="primary" (tap)="acceptJob()">Accept Job</button>
+      <button ion-button clear color="primary" (tap)="declineJob()">Decline Job</button>
+      <button ion-button clear color="primary" (tap)="answerLater()">Answer Later</button>
+    </ion-item>
+  </ion-list>
+</div>

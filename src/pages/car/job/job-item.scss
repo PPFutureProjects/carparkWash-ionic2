@@ -1,0 +1,38 @@
+job-item {
+  .bg-color {
+    background-color: #f8f5f0;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .margin-bottom10 {
+    margin-bottom: 10px;
+  }
+
+  .car-plate-number {
+    font-size: 20px;
+  }
+
+  .car-park-no {
+    font-size: 17px;
+  }
+
+  .lot-no {
+    font-size: 17px;
+  }
+
+  .square-avatar {
+    border-radius: 0px;
+    box-shadow: inherit;
+    img {
+      border-radius: 5px;
+    }
+  }
+
+  .no-padding-left {
+    padding-left: 0px;
+  }
+
+}

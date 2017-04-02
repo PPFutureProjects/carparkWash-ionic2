@@ -1,0 +1,79 @@
+<!--<ion-header>-->
+<!--<ion-navbar hideBackButton>-->
+<!--<ion-buttons left>-->
+<!--<button ion-button icon-only clear class="btn-icon-style"-->
+<!--(tap)="backToWelcomePage()">-->
+<!--<img src="assets/icon/Back-32.png">-->
+<!--</button>-->
+<!--</ion-buttons>-->
+<!--<ion-title text-center>Login</ion-title>-->
+<!--<ion-buttons right>-->
+<!--<div class="btn-icon-style"></div>-->
+<!--</ion-buttons>-->
+<!--</ion-navbar>-->
+<!--</ion-header>-->
+
+<ion-content padding class="background">
+  <h2 class="center-element title">Tap'N'Wash</h2>
+  <form [formGroup]="loginForm">
+    <ion-list>
+      <ion-item class="ion-item-input">
+        <ion-label>
+          <i class="material-icons">mail_outline</i>
+        </ion-label>
+        <ion-input required type="email" placeholder="Email" formControlName="email"
+                   [(ngModel)]="userModel.email"></ion-input>
+      </ion-item>
+      <ion-item no-lines class="center-element alert alert-danger" *ngIf="loginFormErrors.email">
+        {{ loginFormErrors.email }}
+      </ion-item>
+
+      <ion-item class="ion-item-input margin-top20">
+        <ion-label>
+          <i class="material-icons">lock_outline</i>
+        </ion-label>
+        <ion-input required type="password" placeholder="Password" formControlName="password"
+                   [(ngModel)]="password"></ion-input>
+      </ion-item>
+      <ion-item no-lines class="center-element alert alert-danger" *ngIf="loginFormErrors.password">
+        {{ loginFormErrors.password }}
+      </ion-item>
+    </ion-list>
+  </form>
+
+
+  <!--<div class="center-element margin-vertical20">-->
+  <!--<button ion-button icon-only clear color="dark" class="btn-icon-style" [disabled]="loginForm.invalid"-->
+  <!--(tap)="loginForm.valid && login()">-->
+  <!--<ion-icon name="ios-exit-outline"></ion-icon>-->
+  <!--</button>-->
+  <!--</div>-->
+  <button ion-button block large color="primary"
+          [disabled]="loginForm.invalid"
+          (tap)="loginForm.valid && login()">SIGN IN
+  </button>
+
+  <div class="center-element margin-top20">
+    <button ion-button clear color="primary" class="forgot-password-border" (tap)="resetPassword()">Forgot password ?
+    </button>
+  </div>
+
+  <button ion-button block large class="btn-social-login fb-bg-color margin-top10" (tap)="loginFacebook()">
+    <img src="assets/icon/Facebook-72.png">
+    <div>Facebook</div>
+    <img>
+  </button>
+
+  <button ion-button block large class="btn-social-login gp-bg-color margin-top10" (tap)="loginGooglePlus()">
+    <img src="assets/icon/GooglePlus-72.png">
+    <div>Google</div>
+    <img>
+  </button>
+
+  <!--<p class="text-no-account-yet">-->
+    <!--Do not have an account yet ?-->
+  <!--</p>-->
+
+  <button ion-button block large class="signup-bg-color margin-top10" (tap)="goToSignUp()">New User</button>
+
+</ion-content>

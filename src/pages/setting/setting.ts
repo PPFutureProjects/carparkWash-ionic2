@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
 import {
   NavController, NavParams, ModalController, ToastController, LoadingController,
-  LoadingOptions
+  LoadingOptions, MenuController
 } from 'ionic-angular';
-import { ChangePasswordPage } from './change-password/change-password';
-import { UserService } from '../user/user.service';
-import { AbstractPage } from '../shared/abstract.page';
-import { UserModel, ProviderEnum } from '../user/user.model';
+import { ChangePasswordPage } from '../profile/change-password/change-password';
+import { UserService } from '../user/shared/user.service';
+import { UtilsPage } from '../shared/utils.page';
+import { UserModel, ProviderEnum } from '../user/shared/user.model';
 
 @Component({
   selector: 'page-setting',
   templateUrl: 'setting.html'
 })
-export class SettingPage extends AbstractPage {
+export class SettingPage extends UtilsPage {
 
   user: UserModel;
   providerTypeEnum = ProviderEnum;
@@ -20,7 +20,8 @@ export class SettingPage extends AbstractPage {
   private loadingOptions: LoadingOptions;
 
   constructor(public userService: UserService, public toastCtrl: ToastController, public navCtrl: NavController,
-              public navParams: NavParams, public modalCtrl: ModalController, public loadingCtrl: LoadingController) {
+              public navParams: NavParams, public modalCtrl: ModalController, public loadingCtrl: LoadingController,
+              public menuCtrl: MenuController) {
 
     super(toastCtrl);
     this.loadingOptions = {

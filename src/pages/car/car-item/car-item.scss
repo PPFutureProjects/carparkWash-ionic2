@@ -1,18 +1,60 @@
 
 app-car-item {
 
-  .btn-action-layout {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-  }
-
   ion-item {
     min-height: 25px !important;
   }
 
   ion-item ion-label {
     margin: 0px !important;
+  }
+
+  .column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .btn-action-layout {
+    justify-content: space-around;
+  }
+
+  .item-car-width {
+    width: 129px;
+  }
+
+  .thumbnail {
+    border: solid 2px #f3cd3c;
+    border-radius: 5px;
+    position: relative;
+    width: 129px;
+    height: 129px;
+    overflow: hidden;
+  }
+  .thumbnail img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    height: 100%;
+    width: auto;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+  }
+  .thumbnail img.portrait {
+    width: calc(100% - 1px);
+    height: auto;
+  }
+
+  .btn-delete-position {
+    // top left
+    position: relative;
+    top: -142px;
+    left: 7px;
+    // bottom right
+    //position: relative;
+    //top: -25px;
+    //left: calc(100% - 23px);
   }
 
 }

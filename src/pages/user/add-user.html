@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="background">
 
   <form [formGroup]="signUpForm">
     <ion-item>
@@ -92,67 +92,6 @@
         <ion-option value="{{profileEnum.cleaner}}">Cleaner</ion-option>
       </ion-select>
     </ion-item>
-  </form>
-
-  <form [formGroup]="carParkForm" *ngIf="userModel.profile === profileEnum.manager">
-    <br>
-    <h2>Add the first car park</h2>
-    <ion-item>
-      <ion-label floating>Car park Name</ion-label>
-      <ion-input required type="text"
-                 formControlName="carParkName"
-                 [(ngModel)]="carParkModel.name"></ion-input>
-    </ion-item>
-    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.name">
-      {{ carParkFormErrors.name }}
-    </ion-item>
-
-
-    <ion-item (tap)="pickCarParkPicture()">
-      <ion-label class="lbl-pick-picture">
-        Click to pick a Picture<span class="mandatory">*</span>
-      </ion-label>
-      <ion-avatar item-right>
-        <img *ngIf="carParkToEdit?.picture" [src]="carParkToEdit.picture">
-        <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
-      </ion-avatar>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Region</ion-label>
-      <ion-select required class="override-select-height override-select-padding" interface="action-sheet"
-                  formControlName="region"
-                  [(ngModel)]="carParkModel.region">
-        <ion-option value="{{regionEnum.central}}">{{regionEnum.central | camelCase}}</ion-option>
-        <ion-option value="{{regionEnum.east}}">{{regionEnum.east | camelCase}}</ion-option>
-        <ion-option value="{{regionEnum.north}}">{{regionEnum.north | camelCase}}</ion-option>
-        <ion-option value={{regionEnum.northEast}}>{{regionEnum.northEast | camelCase}}</ion-option>
-        <ion-option value={{regionEnum.west}}>{{regionEnum.west | camelCase}}</ion-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Area</ion-label>
-      <ion-input required type="text"
-                 formControlName="area"
-                 [(ngModel)]="carParkModel.area"></ion-input>
-    </ion-item>
-    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.area">
-      {{ carParkFormErrors.area }}
-    </ion-item>
-
-    <ion-item>
-      <ion-label floating>Car park Address</ion-label>
-      <ion-input required type="text"
-                 formControlName="address"
-                 [(ngModel)]="carParkModel.address"></ion-input>
-    </ion-item>
-    <ion-item no-lines class="alert alert-danger" *ngIf="carParkFormErrors.address">
-      {{ carParkFormErrors.address }}
-    </ion-item>
-  </form>
-
-  <form [formGroup]="cleanerForm" *ngIf="userModel.profile === profileEnum.cleaner">
   </form>
 
   <button ion-button block large padding margin-top

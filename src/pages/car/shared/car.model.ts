@@ -1,25 +1,28 @@
-import { SubscriptionModel } from '../../shared/subscription/subscription.model';
+import { SubscriptionModel } from '../subscription/subscription.model';
+import { CarColourType } from './car-colour.enum';
+import { CarType } from './car-silhouette.enum';
+
 export class CarModel {
 
   id: string;
-  subscription: SubscriptionModel;
   licencePlateNumber: string;
   type: CarType;
-  brandModel: string;
-  colour: string;
+  brand: string;
+  model: string;
+  colour: CarColourType;
   userUid: string;
+  picture: string;
+
+  /**
+   * Not saved in database
+   */
+  subscription: SubscriptionModel;
 
   constructor() {
     this.licencePlateNumber = '';
-    this.brandModel = '';
-    this.colour = '';
+    this.brand = '';
+    this.model = '';
+    // this.colour = '';
+    this.picture = 'assets/picture/add-item.png';
   }
 }
-
-export type CarType = 'SEDAN' | 'SUV';
-
-export const CarTypeEnum = {
-  SEDAN: 'SEDAN' as CarType,
-  SUV: 'SUV' as CarType,
-};
-

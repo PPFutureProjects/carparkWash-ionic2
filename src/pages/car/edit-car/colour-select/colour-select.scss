@@ -1,0 +1,46 @@
+colour-select {
+
+  .root {
+    background: white;
+    position: relative;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-content: flex-end;
+    align-items: center;
+
+    z-index: 2;
+
+    padding: 30px;
+
+    border-radius: 30px;
+    border: black solid 1px;
+
+    margin-left: 30px;
+    margin-right: 30px;
+
+    img {
+      width: 200px;
+    }
+  }
+
+  .margin15 {
+    margin: 15px;
+  }
+
+  .boxes-layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .color-box-size {
+    width: 32px;
+    height: 32px;
+  }
+
+  .color-box-border {
+    border: black solid 1px;
+  }
+}

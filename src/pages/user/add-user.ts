@@ -1,21 +1,19 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ToastController, LoadingController, LoadingOptions } from 'ionic-angular';
-import { ImagePickerOptions, ImagePicker } from 'ionic-native';
-import { UserModel } from './user.model';
-import { ProfileEnum } from '../shared/profile.enum';
-import { UserService } from './user.service';
+import { ToastController, LoadingController, LoadingOptions, MenuController } from 'ionic-angular';
+import { UserModel } from './shared/user.model';
+import { ProfileEnum } from './shared/profile.enum';
+import { UserService } from './shared/user.service';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
 import { CarParkModel } from '../car-park/shared/car-park.model';
-import { AbstractPage } from '../shared/abstract.page';
-import { RegionEnum } from '../car-park/car-park-filter/region.enum';
+import { UtilsPage } from '../shared/utils.page';
 import { GlobalValidator } from '../shared/validator/global.validator';
 
 @Component({
   selector: 'page-add-user',
   templateUrl: 'add-user.html',
 })
-export class AddUserPage extends AbstractPage {
+export class AddUserPage extends UtilsPage {
 
   connectEmailNoFacebook: 'true' | 'false';
   userModel = new UserModel();
@@ -24,7 +22,6 @@ export class AddUserPage extends AbstractPage {
   confirmPassword: string = '';
 
   profileEnum = ProfileEnum;
-  regionEnum = RegionEnum;
   signUpForm: FormGroup;
   signUpFormErrors = {
     email: '',
@@ -37,20 +34,11 @@ export class AddUserPage extends AbstractPage {
     address: '',
     phoneNumber: '',
   };
-  carParkForm: FormGroup;
-  carParkFormErrors = {
-    carParkName: '',
-    address: '',
-    area: '',
-    //nbPlaces: ''
-  };
-  cleanerForm: FormGroup;
-  cleanerFormErrors = {};
 
   private loadingOptions: LoadingOptions;
 
   constructor(public userService: UserService, public toastCtrl: ToastController,
-              public messageService: ValidationMessageService,
+              public messageService: ValidationMessageService, public menuCtrl: MenuController,
               public formBuilder: FormBuilder, public loadingCtrl: LoadingController) {
 
     super(toastCtrl);
@@ -79,29 +67,15 @@ export class AddUserPage extends AbstractPage {
     }
   }
 
-  pickCarParkPicture(event) {
-    ImagePicker.getPictures(<ImagePickerOptions>{
-      maximumImagesCount: 1,
-      outputType: 0
-    }).then((results) => {
-      this.carParkModel.picture = results[0];
-    }, (err) => {
-      console.error(err);
-      this.showToast('Fail to get picture', 'toastError');
-    });
-  }
-
   areInputsValid() {
     return this.userInfoForm.valid
-      && ((this.connectEmailNoFacebook === 'true' && this.signUpForm.valid) || this.connectEmailNoFacebook === 'false')
-      && ((this.userModel.profile === ProfileEnum.cleaner && this.cleanerForm.valid)
-      || (this.userModel.profile === ProfileEnum.manager && this.carParkForm.valid))
+      && ((this.connectEmailNoFacebook === 'true' && this.signUpForm.valid) || this.connectEmailNoFacebook === 'false');
   }
 
   private createWithFacebook() {
     let loading = this.loadingCtrl.create(this.loadingOptions);
     loading.present();
-    this.userService.facebookLogin(this.userModel, this.carParkModel).then((data) => {
+    this.userService.facebookLogin(this.userModel).then((data) => {
       loading.dismissAll();
       this.buildForms();
       this.showToast(`Account ${this.userModel.profile} created`, 'toastInfo');
@@ -123,7 +97,7 @@ export class AddUserPage extends AbstractPage {
   private createWithEmail() {
     let loading = this.loadingCtrl.create(this.loadingOptions);
     loading.present();
-    this.userService.create(this.userModel, this.password, this.carParkModel)
+    this.userService.create(this.userModel, this.password, false)
       .then(() => {
         loading.dismissAll();
         this.buildForms();
@@ -149,28 +123,6 @@ export class AddUserPage extends AbstractPage {
     this.userModel.profile = undefined;
     this.buildSignUpForm();
     this.buildUserInfoForm();
-    this.buildCarParkForm();
-    this.buildCleanerForm();
-  }
-
-  private buildCarParkForm() {
-    this.carParkForm = this.formBuilder.group({
-      carParkName: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthCarParkName),
-        Validators.maxLength(this.messageService.maxLengthCarParkName)])],
-      address: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthAddress),
-        Validators.maxLength(this.messageService.maxLengthAddress)])],
-      region: ['', Validators.required],
-      area: ['', Validators.compose([Validators.required,
-        Validators.minLength(this.messageService.minLengthName),
-        Validators.maxLength(this.messageService.maxLengthName)])],
-      //nbPlaces: ['', Validators.pattern('^[0-9]+$')]
-    });
-    this.carParkForm.valueChanges.subscribe(data => {
-      this.messageService.onValueChanged(this.carParkForm, this.carParkFormErrors);
-    });
-    this.messageService.onValueChanged(this.carParkForm, this.carParkFormErrors);
   }
 
   private buildSignUpForm() {
@@ -206,17 +158,6 @@ export class AddUserPage extends AbstractPage {
       this.messageService.onValueChanged(this.userInfoForm, this.userInfoFormErrors);
     });
     this.messageService.onValueChanged(this.userInfoForm, this.userInfoFormErrors);
-  }
-
-  private buildCleanerForm() {
-    this.cleanerForm = this.formBuilder.group({
-      //email: ['', Validators.required],
-      //password: ['', Validators.required]
-    });
-    this.cleanerForm.valueChanges.subscribe(data => {
-      this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
-    });
-    this.messageService.onValueChanged(this.cleanerForm, this.cleanerFormErrors);
   }
 
 }

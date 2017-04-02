@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="background">
 
   <app-car-park-item [carPark]="selectedCarPark" isSelected="true"></app-car-park-item>
 
@@ -17,9 +17,8 @@
 
   <swiper [config]="configCarousel">
     <div class="swiper-wrapper">
-      <!--TODO each car has it's subscription, passing cars here is possible-->
       <app-car-item class="swiper-slide"
-                    *ngFor="let subscription of subscriptions" [subscription]="subscription"></app-car-item>
+                    *ngFor="let car of cars" [car]="car"></app-car-item>
     </div>
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>

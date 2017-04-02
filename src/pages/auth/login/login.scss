@@ -1,0 +1,87 @@
+
+page-login {
+
+  ion-label > i {
+    margin-right: 5px !important;;
+    position: relative !important;;
+    top: 5px !important;;
+    font-size: 25px !important;;
+  }
+
+  //.input-border {
+  //  border: solid black 1px !important;
+  //border-radius: 5px !important;
+  //}
+
+  .forgot-password-border {
+    border-bottom: 1px solid black;
+    border-radius: 0px;
+  }
+
+  .margin-top20 {
+    margin-top: 20px;
+  }
+
+  .margin-top10 {
+    margin-top: 10px;
+  }
+
+  .margin-vertical20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  form {
+    //margin-top: 50px;
+    margin-top: 30px;
+  }
+
+  .title {
+    color: #1488f0;
+  }
+
+  .center-element {
+    display: flex;
+    justify-content: center;
+  }
+
+  .gp-bg-color {
+    background-color: #ff3d00;
+  }
+
+  .fb-bg-color {
+    background-color: #3f51b5;
+  }
+
+  .signup-bg-color {
+    background-color: gray;
+  }
+
+  .btn-social-login {
+    padding: 0px;
+    .button-inner {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    img {
+      width: 56px;
+      heigh: 56px;
+    }
+  }
+
+  //.text-no-account-yet {
+  //  color: #85213a;
+  //  margin-top: 40px;
+  //  margin-bottom: 20px;
+  //}
+
+  .label-ios {
+    color: #999;
+  }
+
+  p {
+    text-align: center;
+  }
+
+}

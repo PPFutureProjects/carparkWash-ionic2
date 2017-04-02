@@ -7,7 +7,7 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content padding class="background">
   <app-car-item [car]="selectedCar" isSelected="true"></app-car-item>
 
   <app-car-park-filter (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>

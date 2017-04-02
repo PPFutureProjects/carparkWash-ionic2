@@ -1,32 +1,31 @@
 import { Component, ViewChild } from '@angular/core';
-import { LoadingOptions, ToastController, ModalController, LoadingController, NavParams } from 'ionic-angular';
+import {
+  LoadingOptions, ToastController, ModalController, LoadingController, NavParams, Loading,
+  MenuController
+} from 'ionic-angular';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { UserModel } from '../user/user.model';
+import { UserModel } from '../user/shared/user.model';
 import { CarParkModel } from '../car-park/shared/car-park.model';
-import { ProfileEnum } from '../shared/profile.enum';
-import { UserService } from '../user/user.service';
+import { ProfileEnum } from '../user/shared/profile.enum';
+import { UserService } from '../user/shared/user.service';
 import { CarParkService } from '../car-park/shared/car-park.service';
 import { CarService } from '../car/shared/car.service';
-import { AbstractPage } from '../shared/abstract.page';
+import { UtilsPage } from '../shared/utils.page';
 import { EditCarPage } from '../car/edit-car/edit-car';
 import { CarModel } from '../car/shared/car.model';
 import { EditCarParkPage } from '../car-park/edit-car-park/edit-car-park';
 import { CarParkFilterModel } from '../car-park/car-park-filter/car-park-filter.model';
-import { Region } from '../car-park/car-park-filter/region.enum';
 import { ValidationMessageService } from '../shared/validator/validation-message.service';
-import { AnnouncementService } from '../shared/announcement.service';
 import { SwiperComponent } from 'angular2-useful-swiper/lib/swiper.component';
-import { EventBus } from '../shared/eventBus';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
-export class HomePage extends AbstractPage {
+export class HomePage extends UtilsPage {
 
-  user: UserModel;
+  currentUser: UserModel;
   carParks: Array<CarParkModel>;
-  announcement: string;
 
   profileTypeEnum = ProfileEnum;
   configCarousel = {
@@ -43,11 +42,6 @@ export class HomePage extends AbstractPage {
     // prevButton: '.swiper-button-prev',
   };
 
-  announcementForm: FormGroup;
-  announcementFormErrors = {
-    announcement: '',
-  };
-
   @ViewChild('usefulSwiper') usefulSwiper: SwiperComponent;
 
   private loadingOptions: LoadingOptions;
@@ -55,66 +49,66 @@ export class HomePage extends AbstractPage {
   constructor(public userService: UserService, public carService: CarService,
               public carParkService: CarParkService, public loadingCtrl: LoadingController,
               public toastCtrl: ToastController, public modalCtrl: ModalController,
-              public messageService: ValidationMessageService, public formBuilder: FormBuilder,
-              public announcementService: AnnouncementService, public params: NavParams,
-              public eventBus: EventBus) {
+              public messageService: ValidationMessageService, public formBuilder: FormBuilder) {
 
     super(toastCtrl);
-    this.user = new UserModel();
+    this.currentUser = new UserModel();
     this.loadingOptions = {
       content: 'Loading',
       spinner: 'crescent',
       showBackdrop: false
     };
-    this.buildForms();
   }
 
   ionViewWillEnter() {
     let loading = this.loadingCtrl.create(this.loadingOptions);
     loading.present();
+    //TODO test if this is OK
     this.userService.getCurrent(false).then(user => {
-      if (!this.user.email) {
-        this.user = user;
+      this.currentUser = user;
+      if (this.currentUser.profile == ProfileEnum.admin) {
+        this.getAllCarParks(loading);
+      } else {
+        loading.dismissAll();
       }
-      if (this.carService.selectedCar) {
-        for (let car of this.user.cars) {
-          if (car.id === this.carService.selectedCar.id) {
-            car.subscription = this.carService.selectedCar.subscription;
-            break;
-          }
-        }
-        this.eventBus.updateCarItem(true);
-      }
-      this.carService.selectedCar = undefined;
-      loading.dismiss();
     }).catch(err => {
       console.error(err);
-      loading.dismiss();
+      loading.dismissAll();
       this.showToast('Fail to get user data', 'toastError');
     });
-    this.announcementService.get().then(announcement => {
-      this.announcement = announcement;
-      this.buildForms();
-      console.log(announcement);
-    }).catch(err => {
-      console.error(err);
-      this.showToast('Fail to get announcement, Please contact admin', 'toastError');
-    });
+    // this.userService.getCurrent(false).then(user => {
+    //   if (!this.user.email) {
+    //     this.user = user;
+    //   }
+    //
+    //   if (this.carService.selectedCar) {
+    //     for (let car of this.user.cars) {
+    //       if (car.id === this.carService.selectedCar.id) {
+    //         car.subscription = this.carService.selectedCar.subscription;
+    //         break;
+    //       }
+    //     }
+    //     this.eventBus.updateCarItem(true);
+    //   }
+    //   this.carService.selectedCar = undefined;
+    //   loading.dismiss();
+    // }).catch(err => {
+    //   console.error(err);
+    //   loading.dismiss();
+    //   this.showToast('Fail to get user data', 'toastError');
+    // });
   }
 
-  resetAnnouncement() {
-    this.buildForms();
-  }
-
-  saveAnnouncement() {
-    this.announcementService.set(this.announcementForm.value.announcement)
-      .then(() => {
-        this.announcement = this.announcementForm.value.announcement;
-        this.showToast('Announcement saved', 'toastInfo');
+  private getAllCarParks(loading: Loading) {
+    return this.carParkService.getAll()
+      .then(allCarParks => {
+        this.carParks = allCarParks;
+        loading.dismissAll();
       })
       .catch(err => {
-        console.log(err);
-        this.showToast(err.message, 'toastError');
+        console.error(err);
+        loading.dismissAll();
+        this.showToast('Fail to load car parks', 'toastError');
       });
   }
 
@@ -133,29 +127,82 @@ export class HomePage extends AbstractPage {
       });
   }
 
+  /**
+   * Add car or car park
+   */
   add() {
-    if (this.user.profile === ProfileEnum.client) {
+    if (this.currentUser.profile === ProfileEnum.client) {
       this.addCar();
-    } else if (this.user.profile === ProfileEnum.manager) {
+      // this.currentUser.profile === ProfileEnum.manager ||
+    } else if (this.currentUser.profile === ProfileEnum.admin) {
       this.addCarPark();
     }
   }
 
-  updateUserFromDatabase() {
-    this.userService.getCurrent(false).then(user => {
-      this.usefulSwiper.Swiper.slidePrev();
-      this.user = user;
+
+  removeCarPark(carPark) {
+    let loading = this.loadingCtrl.create(this.loadingOptions);
+    loading.present();
+    this.carParkService.remove(carPark).then(data => {
+      console.log(data);
+      this.updateUserFromDatabase(`The car park ${carPark.code} was removed successfully`, loading);
+    }).catch(err => {
+      loading.dismissAll();
+      console.log(err);
+      this.showToast(`Could not remove the car park ${carPark.code}, please contact admin`, 'toastError');
     });
   }
 
-  private addCar() {
+  removeCar(car) {
+    let loading = this.loadingCtrl.create(this.loadingOptions);
+    loading.present();
+    this.carService.remove(car)
+      .then(() => {
+        this.updateUserFromDatabase(`The car ${car.licencePlateNumber} was removed successfully`, loading);
+      })
+      .catch(err => {
+        console.log(err);
+        loading.dismissAll();
+        this.showToast(`Could not remove the car ${car.licencePlateNumber}, please contact admin`, 'toastError');
+      });
+
+  }
+
+  /**
+   * Called after car or carpark is deleted
+   */
+  private updateUserFromDatabase(toastMsg: string, loading: Loading) {
+    if (this.currentUser.profile === ProfileEnum.admin) {
+      this.getAllCarParks(loading).then(() => {
+        this.usefulSwiper.Swiper.slidePrev();
+        this.showToast(toastMsg, 'toastInfo');
+      }).catch(err => {
+        loading.dismissAll();
+        console.log(err);
+        this.showToast(`Fatal Error, please contact admin`, 'toastError');
+      });
+    } else {
+      this.userService.getCurrent(false).then(user => {
+        this.currentUser = user;
+        loading.dismissAll();
+        this.usefulSwiper.Swiper.slidePrev();
+        this.showToast(toastMsg, 'toastError');
+      }).catch(err => {
+        loading.dismissAll();
+        console.log(err);
+        this.showToast(`Fatal Error, please contact admin`, 'toastError');
+      });
+    }
+  }
+
+  addCar() {
     let editCarPage = this.modalCtrl.create(EditCarPage);
     editCarPage.onDidDismiss((newCar: CarModel) => {
       if (newCar) {
-        newCar.userUid = this.user.uid;
+        newCar.userUid = this.currentUser.uid;
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
-        this.carService.add(this.user, newCar).then(() => {
+        this.carService.add(this.currentUser, newCar).then(() => {
           this.usefulSwiper.Swiper.slideNext();
           loading.dismissAll();
           this.showToast(`The car ${newCar.licencePlateNumber} added successfully`, 'toastInfo');
@@ -171,34 +218,28 @@ export class HomePage extends AbstractPage {
 
   private addCarPark() {
     let editCarParkPage = this.modalCtrl.create(EditCarParkPage);
-    editCarParkPage.onDidDismiss((newCarPark: {carpark: CarParkModel, region: Region, area: string}) => {
-      if (newCarPark && newCarPark.carpark) {
-        newCarPark.carpark.userUid = this.user.uid;
-        newCarPark.carpark.region = newCarPark.region;
-        newCarPark.carpark.area = newCarPark.area;
+    editCarParkPage.onDidDismiss((newCarPark: {carPark: CarParkModel, manager: UserModel}) => {
+      if (newCarPark) {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
-        this.carParkService.add(this.user, newCarPark.carpark).then(() => {
+        this.carParkService.add(newCarPark).then(() => {
+          if (this.currentUser.profile === ProfileEnum.admin) {
+            if (!this.carParks) {
+              this.carParks = new Array<CarParkModel>();
+            }
+            this.carParks.push(newCarPark.carPark);
+          }
           this.usefulSwiper.Swiper.slideNext();
           loading.dismissAll();
-          this.showToast(`The car ${newCarPark.carpark.name} added successfully`, 'toastInfo');
+          this.showToast(`The car ${newCarPark.carPark.code} added successfully`, 'toastInfo');
         }).catch(err => {
           loading.dismissAll();
           console.error(err);
-          this.showToast(`Fail to add ${newCarPark.carpark.name}`, 'toastError');
+          this.showToast(`Fail to add ${newCarPark.carPark.code}`, 'toastError');
         });
       }
     });
     editCarParkPage.present();
   }
 
-  private buildForms() {
-    this.announcementForm = this.formBuilder.group({
-      announcement: [this.announcement],
-    });
-    this.announcementForm.valueChanges.subscribe(data => {
-      this.messageService.onValueChanged(this.announcementForm, this.announcementFormErrors);
-    });
-    this.messageService.onValueChanged(this.announcementForm, this.announcementFormErrors);
-  }
 }

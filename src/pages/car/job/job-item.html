@@ -1,0 +1,34 @@
+
+<ion-row wrap class="bg-color">
+  <ion-col class="item-car-width">
+
+    <ion-item-sliding>
+      <ion-item class="bg-color">
+
+        <ion-avatar item-left class="square-avatar no-padding-left">
+          <img [src]="car.picture">
+        </ion-avatar>
+        <ion-label class="margin0">
+          <h2 class="margin-bottom10 bold car-plate-number">{{ car.licencePlateNumber }}</h2>
+          <p class="car-park-no">Car park No: <span class="bold">{{ car.subscription.carParkCode }}</span></p>
+          <p class="lot-no">Lot No: <span class="bold">{{ car.subscription.days[dayIndex].carParkLotNumber }}</span></p>
+        </ion-label>
+      </ion-item>
+
+      <ion-item-options side="right">
+        <button ion-button color="secondary">
+          Washed
+        </button>
+      </ion-item-options>
+      <ion-item-options side="left">
+        <button ion-button color="primary">
+          Delete
+        </button>
+        <button ion-button color="danger">
+          Not Found
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+
+  </ion-col>
+</ion-row>

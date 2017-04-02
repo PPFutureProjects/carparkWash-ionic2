@@ -3,64 +3,119 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Car Park Wash System</ion-title>
+    <ion-title text-center>Tap To Wash</ion-title>
+    <ion-buttons right>
+      <div class="btn-icon-style"></div>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content
+  [ngClass]="{'bg-jobs': currentUser.profile === profileTypeEnum.cleaner}">
 
-  <div *ngIf="user?.profile === profileTypeEnum.admin">
-    <form [formGroup]="announcementForm">
-      <ion-item>
-        <ion-label floating>Announcement</ion-label>
-        <ion-input type="text" formControlName="announcement"></ion-input>
-      </ion-item>
-    </form>
-    <ion-row>
-      <button ion-button block large clear padding (tap)="resetAnnouncement()">Reset</button>
-      <button ion-button block large clear padding (tap)="saveAnnouncement()">Save</button>
-    </ion-row>
+  <div class="bg-white">
+    <ion-item no-lines class="padding1">
+      <ion-avatar item-left class="profile-avatar square-avatar">
+        <img *ngIf="currentUser" [src]="currentUser.picture">
+      </ion-avatar>
+      <ion-label class="margin0">
+        <div class="margin0">
+          <i class="fa fa-address-card-o icon-lbl" aria-hidden="true"></i>
+          {{currentUser.name}}
+        </div>
+        <div class="margin0">
+          <i class="fa fa-envelope-o icon-lbl" aria-hidden="true"></i>
+          {{currentUser.email}}
+        </div>
+        <div class="margin0">
+          <i class="fa fa-phone icon-lbl" aria-hidden="true"></i>
+          {{currentUser.phoneNumber}}
+        </div>
+        <div class="margin0">
+          <i class="fa fa-home icon-lbl" aria-hidden="true"></i>
+          {{currentUser.address}}
+        </div>
+      </ion-label>
+    </ion-item>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-item-input">
+            <ion-input placeholder="Enter your carpark location"
+                       [(ngModel)]="currentUser.workingCarPark"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col class="toggle-size padding1 center-item">
+          <ion-item no-lines>
+            <ion-toggle mode="ios" [(ngModel)]="currentUser.isOnVacation"></ion-toggle>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="divider"></div>
   </div>
 
-  <ion-item no-lines class="announcement-wrapper" margin-bottom
-            *ngIf="user?.profile !== profileTypeEnum.admin && announcement">
-    <ion-label class="announcement-animation">{{announcement}}</ion-label>
-  </ion-item>
+  <p *ngIf="currentUser?.profile === profileTypeEnum.client">Select the vehicle you would like us to clean:</p>
 
-  <app-car-park-filter *ngIf="user?.profile === profileTypeEnum.cleaner"
-                       (onFilterCarParks)="getCarParksFilter($event)"></app-car-park-filter>
+  <div padding class="center-text"
+       *ngIf="currentUser?.profile === profileTypeEnum.client && currentUser.cars.length === 0">
+    <i class="material-icons no-car-icon">sentiment_very_dissatisfied</i>
+    <p class="no-vehicle-found">Oops sorry, currently you have no vehicle registered yet.</p>
+  </div>
 
-  <swiper [config]="configCarousel" #usefulSwiper *ngIf="user?.profile && user.profile !== profileTypeEnum.admin">
+  <ion-grid padding *ngIf="currentUser.profile === profileTypeEnum.client">
+    <div *ngFor="let car of currentUser.cars">
+      <app-car-item [car]="car" isEdit="" (toRemove)="removeCar($event)"></app-car-item>
+    </div>
+  </ion-grid>
+
+  <div class="" *ngIf="currentUser.profile === profileTypeEnum.cleaner">
+    <div class="title-activities">Activities:</div>
+    <ion-list>
+      <job-item *ngFor="let car of currentUser.cars" [car]="car"></job-item>
+    </ion-list>
+    <div></div>
+  </div>
+
+  <swiper [config]="configCarousel" #usefulSwiper
+          *ngIf="currentUser?.profile
+                && (currentUser.profile === profileTypeEnum.admin || currentUser.profile === profileTypeEnum.manager)">
     <!------------ Client's cars list ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.client">
-      <app-car-item class="swiper-slide" *ngFor="let car of user.cars"
-                    [car]="car" (removed)="updateUserFromDatabase()"></app-car-item>
-    </div>
+    <!--<div class="swiper-wrapper" *ngIf="currentUser.profile === profileTypeEnum.client">-->
+    <!--<app-car-item class="swiper-slide" *ngFor="let car of currentUser.cars"-->
+    <!--[car]="car" [isEdit]="isEdit" (toRemove)="removeCar($event)"></app-car-item>-->
+    <!--</div>-->
     <!------------ Manager's car parks list ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.manager">
-      <app-car-park-item class="swiper-slide" *ngFor="let carPark of user.carParks"
-                         [carPark]="carPark" (removed)="updateUserFromDatabase()"></app-car-park-item>
+    <div class="swiper-wrapper" *ngIf="currentUser.profile === profileTypeEnum.manager">
+      <app-car-park-item class="swiper-slide" *ngFor="let carPark of currentUser.carParks"
+                         [carPark]="carPark" (toRemove)="removeCarPark($event)"></app-car-park-item>
     </div>
-    <!------------ Cleaner car parks to select then select a car to wahs ------------>
-    <div class="swiper-wrapper" *ngIf="user.profile === profileTypeEnum.cleaner">
+    <!------------ All car parks, admin can manage them all ------------>
+    <div class="swiper-wrapper" *ngIf="currentUser.profile === profileTypeEnum.admin">
       <app-car-park-item class="swiper-slide" *ngFor="let carPark of carParks"
-                         [carPark]="carPark"></app-car-park-item>
+                         [carPark]="carPark" (toRremove)="removeCarPark($event)"></app-car-park-item>
     </div>
+    <!------------ Cleaner's jobs list ------------>
+    <!--<div class="swiper-wrapper" *ngIf="currentUser.profile === profileTypeEnum.cleaner">-->
+    <!--<app-car-item class="swiper-slide" *ngFor="let car of currentUser.cars"-->
+    <!--[car]="car"></app-car-item>-->
+    <!--</div>-->
     <!-- Add Pagination -->
     <div class="swiper-pagination"></div>
     <!-- Add Arrows -->
     <!--<div class="swiper-button-next"-->
-         <!--*ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 1)-->
-             <!--|| (user.profile === profileTypeEnum.manager && user.carParks?.length > 1)-->
-             <!--|| (user.profile === profileTypeEnum.cleaner && carParks?.length > 1)"></div>-->
+    <!--*ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 1)-->
+    <!--|| (user.profile === profileTypeEnum.manager && user.carParks?.length > 1)-->
+    <!--|| (user.profile === profileTypeEnum.cleaner && carParks?.length > 1)"></div>-->
     <!--<div class="swiper-button-prev"-->
-         <!--*ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 1)-->
-             <!--|| (user.profile === profileTypeEnum.manager && user.carParks?.length > 1)-->
-             <!--|| (user.profile === profileTypeEnum.cleaner && carParks?.length > 1)"></div>-->
+    <!--*ngIf="(user.profile === profileTypeEnum.client && user.cars?.length > 1)-->
+    <!--|| (user.profile === profileTypeEnum.manager && user.carParks?.length > 1)-->
+    <!--|| (user.profile === profileTypeEnum.cleaner && carParks?.length > 1)"></div>-->
   </swiper>
 
   <ion-fab bottom right (tap)="add()"
-           *ngIf="user?.profile === profileTypeEnum.client || user.profile === profileTypeEnum.manager">
+           *ngIf="currentUser.profile === profileTypeEnum.admin">
     <button ion-fab mini>
       <ion-icon name="add"></ion-icon>
     </button>

@@ -1,0 +1,32 @@
+page-support {
+
+  .btn-call-style {
+    color: white;
+    background-color: #c0372b;
+  }
+
+  .text-area-border {
+    border: 1px solid black;
+    border-radius: 2px;
+  }
+
+  .margin-vertical {
+    margin-top: 15px;
+    margin-bottom: 25px;
+  }
+
+  .faq-style {
+    color: #007efc;
+
+    border-color: black;
+    border-style: solid;
+    border-width: 2px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+
+}

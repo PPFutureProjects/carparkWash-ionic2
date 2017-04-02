@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle large>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Support</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-item class="faq-style">
+    <ion-label>
+      Frequently Asked Questions
+    </ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Write to us:</ion-label>
+  </ion-item>
+  <ion-item class="text-area-border">
+    <ion-textarea rows="10" placeholder="How can we help you ?" [(ngModel)]="textToAdmin"></ion-textarea>
+  </ion-item>
+
+  <button block ion-button large outline color="primary" class="margin-vertical"
+          [disabled]="!textToAdmin" (tap)="textToAdmin && sendToAdmin()">Send
+  </button>
+
+
+  <button block ion-button large outline class="btn-call-style" (tap)="callSupport()">Call Support</button>
+
+</ion-content>

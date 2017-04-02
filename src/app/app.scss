@@ -1,6 +1,5 @@
 // http://ionicframework.com/docs/v2/theming/
 
-
 // App Global Sass
 // --------------------------------------------------
 // Put style rules here that you want to apply globally. These
@@ -14,6 +13,82 @@
 // To declare rules for a specific mode, create a child rule
 // for the .md, .ios, or .wp mode classes. The mode class is
 // automatically applied to the <body> element in the app.
+
+//Menu with icons only
+.menu-inner {
+  //width: 85px;
+}
+
+.ion-item-input {
+  background-color: #ECF0F1;
+  border: 0px !important;
+  padding-left: 10px !important;
+  ion-label {
+    margin: 0px;
+  }
+
+  // WebKit, Blink, Edge
+  input::-webkit-input-placeholder {
+    color: #BDC3C7;
+  }
+  // Mozilla Firefox 4 to 18
+  input:-moz-placeholder {
+    color: #BDC3C7;
+    opacity: 1;
+  }
+  // Mozilla Firefox 19+
+  input::-moz-placeholder {
+    color: #BDC3C7;
+    opacity: 1;
+  }
+  // Internet Explorer 10-11
+  input:-ms-input-placeholder {
+    color: #BDC3C7;
+  }
+}
+
+button {
+  text-transform: inherit !important;
+  border-radius: 5px !important;
+}
+
+.override-ios-menu .item-inner {
+  padding: 0px !important;
+  background-image: none !important;
+}
+
+.menu-item {
+  align-items: center;
+  display: flex;
+}
+
+.margin-right {
+  margin-right: 10px;
+}
+
+.margin-left {
+  margin-left: 10px;
+}
+
+.footer-log-out {
+  height: 71px;
+}
+
+.margin-bottom0 {
+  margin-bottom: 0px !important;
+}
+
+.btn-log-out {
+  position: absolute;
+  bottom: 0;
+}
+
+.lbl-log-out {
+  display: flex;
+  justify-content: center;
+  border: 1px solid !important;
+  padding: 5px;
+}
 
 .toastInfo div {
   background: #327eff !important;
@@ -44,7 +119,7 @@
 
 .alert {
   white-space: pre-line;
-  margin-top: 5px;
+  margin-top: 2px;
   border: 2px solid transparent;
   border-radius: 10px;
   padding: 5px;
@@ -54,12 +129,61 @@
   height: inherit;
 }
 
-.alert ion-label{
+.alert ion-label {
   white-space: normal;
 }
 
 .alert-danger {
-  color: #a94442;
+  color: black !important;
+  //color: #a94442;
   background-color: #f2dede;
   border-color: #ebccd1;
+
+  .label-ios {
+    color: black !important;
+  }
 }
+
+button[block][ion-button][large][outline] {
+  border-color: black;
+  border-width: 2px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.btn-icon-style {
+  height: 54px !important;
+  width: 55px !important;
+  background-color: transparent;
+
+  ion-icon {
+    font-size: 72px;
+  }
+}
+
+ion-header /deep/ .toolbar-background {
+  background-color: #0f88f2; //#13bcd5;
+}
+
+.bar-button-default-ios, .bar-button-default.bar-button-ios-default, .bar-button-clear-ios-default {
+  color: black;
+}
+
+.ion-ios-menu, .ion-md-menu {
+  color: white;
+}
+
+.background {
+  background-image: url(../assets/picture/background.png);
+  background-size: cover;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+
+.active-backdrop {
+  z-index: 0;
+  opacity: 0.4;
+  visibility: visible !important;
+}
+

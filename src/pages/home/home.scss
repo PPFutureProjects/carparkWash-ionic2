@@ -1,27 +1,119 @@
 page-home {
 
-  .announcement-wrapper {
-    border-bottom: 1px solid gray !important;
-    border-top: 1px solid gray !important;
+  .profile-avatar {
+    img {
+      width: 100px !important;
+      height: 100px !important;
+    }
   }
 
-  .announcement-animation {
-    animation: scroll-to-left linear 10s;
-    animation-iteration-count: infinite;
-    transform-origin: 50% 50%;
-    -webkit-animation: scroll-to-left linear 10s;
-    -webkit-animation-iteration-count: infinite;
-    -webkit-transform-origin: 50% 50%;
-    -moz-animation: scroll-to-left linear 10s;
-    -moz-animation-iteration-count: infinite;
-    -moz-transform-origin: 50% 50%;
-    -o-animation: scroll-to-left linear 10s;
-    -o-animation-iteration-count: infinite;
-    -o-transform-origin: 50% 50%;
-    -ms-animation: scroll-to-left linear 10s;
-    -ms-animation-iteration-count: infinite;
-    -ms-transform-origin: 50% 50%;
+  ion-avatar {
+    //width: 72px;
+    //height: 72px;
+
+    margin-top: 1px !important;
+    margin-bottom: 5px !important;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    -moz-box-shadow: 1px 1px 5px 0px #656565;
+    -webkit-box-shadow: 1px 1px 5px 0px #656565;
+    -o-box-shadow: 1px 1px 5px 0px #656565;
+    box-shadow: 1px 1px 5px 0px #656565;
+    filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=5);
+
+    img {
+      width: 72px !important;
+      height: 72px !important;
+      //width: 60px !important;
+      //height: 60px !important;
+      //border-radius: 0px !important;
+    }
   }
+
+  .square-avatar {
+    border-radius: 0px;
+    box-shadow: inherit;
+    img {
+      border-radius: 5px;
+    }
+  }
+
+  .icon-lbl {
+    font-size: 26px;
+    margin-right: 10px;
+    position: relative;
+    top: 2px;
+  }
+
+  .toggle-size {
+    max-width: 85px;
+  }
+
+  .center-text {
+    text-align: center;
+  }
+
+  .no-vehicle-found {
+    color: red;
+  }
+
+  .no-car-icon {
+    font-size: 50px;
+  }
+
+  .margin0 {
+    margin: 0px;
+  }
+
+  .padding1 {
+    padding: 1px;
+  }
+
+  .title-activities {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    font-size: medium;
+  }
+
+  .item-block {
+    min-height: 2rem;
+  }
+
+  .divider {
+    height: 1px;
+    background-color: #f3cd3c;
+    margin-top: 1px;
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+
+  .center-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .center-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .item-car-width {
+    width: 129px;
+  }
+
+  .bg-white {
+    background-color: white;
+  }
+
+  .bg-jobs {
+    background-color: #f1e8e1;
+  }
+
 }
 
 @keyframes scroll-to-left {

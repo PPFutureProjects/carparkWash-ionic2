@@ -1,0 +1,69 @@
+page-welcom {
+
+  .center-element {
+    display: flex;
+    justify-content: center;
+  }
+
+  .space-between-element {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  .margin-top50 {
+    margin-top: 50px;
+  }
+
+  .margin-top10 {
+    margin-top: 10px;
+  }
+
+  .text-description {
+    font-size: 1.6rem;
+  }
+
+  p {
+    text-align: center;
+  }
+
+  ion-item {
+    background: transparent;
+  }
+
+  .text-term-use {
+    margin-top: 40px;
+    margin-bottom: 80px;
+  }
+
+  .text-powered {
+    width: 100%;
+  }
+
+  @media all and (orientation: portrait) {
+    .text-powered-portrait {
+      bottom: 20px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  .text-blue {
+    color: #0075ff;
+  }
+
+  .fb-style {
+    ion-icon {
+      color: #3b5998;
+      font-size: 72px;
+    }
+  }
+
+  .gp-style {
+    background-color: #ff3d00;
+    ion-icon {
+      font-size: 48px;
+    }
+  }
+
+}

@@ -1,0 +1,84 @@
+page-sign-up {
+
+  //.override-select-height {
+  //  min-height: 6rem;
+  //
+  //  .select-text, .select-text {
+  //    align-self: center;
+  //  }
+  //
+  //  .select-text, .select-icon {
+  //    align-self: center;
+  //  }
+  //}
+
+  ion-label > ion-icon {
+    margin-right: 5px !important;;
+    position: relative !important;;
+    top: 5px !important;;
+    font-size: 25px !important;;
+  }
+
+  .center-element {
+    display: flex;
+    justify-content: center;
+  }
+
+  .label-ios {
+    color: #999;
+  }
+
+  //.input-border {
+  //  border: solid black 1px !important;
+  //  border-radius: 5px !important;
+  //}
+
+  .margin-inter-input {
+    margin-top: 10px;
+  }
+
+  ion-avatar {
+    width: 90px;
+    height: 90px;
+
+    margin-top: 1px;
+    margin-bottom: 5px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    -moz-box-shadow: 1px 1px 5px 0px #656565;
+    -webkit-box-shadow: 1px 1px 5px 0px #656565;
+    -o-box-shadow: 1px 1px 5px 0px #656565;
+    box-shadow: 1px 1px 5px 0px #656565;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=5);
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    border-radius: 100px;
+
+    img {
+      width: 85px !important;
+      height: 85px !important;
+      //width: 60px !important;
+      //height: 60px !important;
+      //border-radius: 0px !important;
+    }
+  }
+
+  p {
+    text-align: center;
+  }
+
+  .text-blue {
+    color: #0075ff;
+  }
+
+  .btn-icon-style ion-icon {
+    font-size: 65px;
+  }
+
+  .btns-action {
+    margin: 20px;
+  }
+}

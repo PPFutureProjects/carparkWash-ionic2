@@ -1,0 +1,14 @@
+<ion-backdrop class="active-backdrop" disable-activated="" role="presentation" tappable=""></ion-backdrop>
+
+<div class="root">
+
+  <h4>Select your car colour</h4>
+
+  <div class="boxes-layout">
+    <div class="color-box-size color-box-border margin15"
+         *ngFor="let colour of colours"
+         [ngStyle]="{backgroundColor: colour}"
+         (tap)="selectColour(colour)"></div>
+  </div>
+
+</div>

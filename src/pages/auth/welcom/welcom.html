@@ -1,0 +1,39 @@
+<ion-content padding class="background">
+
+  <h2 class="center-element margin10">Hi!</h2>
+
+  <p class="margin-top50 text-description">
+    Welcome to a time where you do not
+    need to wait in line for your car to
+    shine. Do it while you are at the comfort
+    of your home, focusing on your work or
+    running your errands. Because why not ?
+  </p>
+
+  <div class="space-between-element">
+    <!--<button ion-button icon-only class="btn-icon-style fb-style" (tap)="loginFacebook()">-->
+    <!--<ion-icon name="logo-facebook"></ion-icon>-->
+    <img src="assets/icon/Facebook-72.png" (tap)="loginFacebook()">
+    <!--</button>-->
+    <!--<button ion-button icon-only class="btn-icon-style gp-style" (tap)="loginGooglePlus()">-->
+    <!--<ion-icon name="logo-googleplus"></ion-icon>-->
+    <img src="assets/icon/GooglePlus-72.png" (tap)="loginGooglePlus()">
+    <!--</button>-->
+  </div>
+
+  <ion-item no-lines>
+    <ion-label class="center-element">or</ion-label>
+  </ion-item>
+
+  <ion-item no-lines>
+    <button ion-button large block outline (tap)="loginByEmail()">Email</button>
+  </ion-item>
+
+  <p class="text-term-use margin-right">
+    Login means you agree with our <span class="text-blue">Term of use</span>
+    and our <span class="text-blue">Privacy Policy</span>
+  </p>
+
+  <p class="text-powered text-powered-portrait">Powered by Tap and Wash</p>
+
+</ion-content>

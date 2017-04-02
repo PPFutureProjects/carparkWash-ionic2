@@ -1,132 +1,107 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
-import { Observable } from 'rxjs';
-import { UserModel } from '../../user/user.model';
+import { UserModel } from '../../user/shared/user.model';
 import { CarParkModel } from './car-park.model';
-import { ServiceUtils } from '../../shared/service.utils';
+import { ServiceUtils } from '../../shared/utils.service';
 import { CarParkFilterModel } from '../car-park-filter/car-park-filter.model';
-import { SubscriptionModel } from '../../shared/subscription/subscription.model';
-import { Region } from '../car-park-filter/region.enum';
+import { Http } from '@angular/http';
 
 @Injectable()
 export class CarParkService extends ServiceUtils {
 
   private _selectedCarPark: CarParkModel;
   private refDatabase: firebase.database.Reference;
+  private autocompletionMax = 20;
+  private singaporeCarParksApiUrl = `https://data.gov.sg/api/action/datastore_search`
+    + `?resource_id=139a3035-e624-4f56-b63f-89ae28d4ae4c&limit=${this.autocompletionMax}`;
+  private allSingaporeCarParks: any[];
 
-  constructor() {
+  constructor(public http: Http) {
     super();
     this.refDatabase = firebase.database().ref();
   }
 
   remove(carPark: CarParkModel) {
     let updates = {};
-    updates['users/' + carPark.userUid + '/carParks/' + carPark.id] = null;
-    updates['carParks/' + carPark.region + '/' + carPark.area.toLowerCase() + '/' + carPark.id] = null;
+    updates['users/' + carPark.managerUid + '/carParkIds/' + carPark.id] = null;
+    updates['carParks/' + carPark.id] = null;
+    //TODO delete subscription or job ???
     return this.refDatabase.update(updates);
   }
 
-  add(user: UserModel, newCarPark: CarParkModel) {
-    user.carParks.push(newCarPark);
-    newCarPark.id = this.refDatabase.child('carParks').push().key;
-
-    let updates = {};
-    updates['users/' + newCarPark.userUid + '/carParks/' + newCarPark.id] = newCarPark;
-    updates['carParks/' + newCarPark.region + '/' + newCarPark.area.toLowerCase() + '/' + newCarPark.id] = newCarPark;
-    updates['areas/' + newCarPark.region + '/' + newCarPark.area.toLowerCase()] = true;
-    return this.refDatabase.update(updates);
+  add(newCarPark: {carPark: CarParkModel, manager: UserModel}) {
+    // car parks are stored with singapore api id
+    // newCarPark.carPark.id = this.refDatabase.child('carParks').push().key;
+    return this.update(newCarPark)
+      .then(() => {
+        if (!newCarPark.manager.carParks) {
+          newCarPark.manager.carParkIds = {};
+        }
+        newCarPark.manager.carParkIds[newCarPark.carPark.id] = true;
+        if (!newCarPark.manager.carParks) {
+          newCarPark.manager.carParks = new Array<CarParkModel>();
+        }
+        newCarPark.manager.carParks.push(newCarPark.carPark);
+      });
   }
 
-  update(updatedCarPark: CarParkModel, region: Region, area: string) {
+  update(updatedCarPark: {carPark: CarParkModel, manager: UserModel}) {
     let updates = {};
-    updates['users/' + updatedCarPark.userUid + '/carParks/' + updatedCarPark.id] = updatedCarPark;
-    // Only admin can change region or area from firebase console
-    updates['carParks/' + region + '/' + area.toLowerCase() + '/' + updatedCarPark.id] = updatedCarPark;
-    updates['areas/' + region + '/' + area.toLowerCase()] = true;
+    let oldManagerUid = updatedCarPark.carPark.managerUid;
+    // update carPark's manager (action made by admin or manager)
+    if (updatedCarPark.manager.uid) {
+      updatedCarPark.carPark.managerUid = updatedCarPark.manager.uid;
+      updatedCarPark.carPark.managerName = updatedCarPark.manager.name;
 
-    let oldRegion = updatedCarPark.region;
-    let oldArea = updatedCarPark.area.toLowerCase();
-    if (oldRegion && oldRegion !== region && oldArea && oldArea !== area.toLowerCase()) {
-      updates['carParks/' + oldRegion + '/' + oldArea + '/' + updatedCarPark.id] = null;
-    } else if (oldRegion && oldRegion !== region) {
-      updates['carParks/' + oldRegion + '/' + area.toLowerCase() + '/' + updatedCarPark.id] = null;
-    } else if (oldArea && oldArea !== area.toLowerCase()) {
-      updates['carParks/' + region + '/' + oldArea + '/' + updatedCarPark.id] = null;
+      if (oldManagerUid) {
+        updates['users/' + oldManagerUid + '/carParkIds' + updatedCarPark.carPark.id] = null;
+      }
+      updates['users/' + updatedCarPark.manager.uid + '/carParkIds/' + updatedCarPark.carPark.id] = true;
     }
-
-    updatedCarPark.region = region;
-    updatedCarPark.area = area;
+    updates['carParks/' + updatedCarPark.carPark.id] = this.getSimpleObject(updatedCarPark.carPark);
     return this.refDatabase.update(updates)
   }
 
   getAll(): firebase.Promise<Array<CarParkModel>> {
     return this.refDatabase.child('carParks').once('value')
-      .then(snapshot => {
-        return this.arrayFromObject(snapshot.val())
-          .map(carparcsTreeByRegion=>
-            this.arrayFromObject(carparcsTreeByRegion)
-              .reduce((result, value) => result.concat(value), []))
-          .reduce((result, value) => result.concat(value), [])
-          .map((carparcObject: CarParkModel) => this.arrayFromObject(carparcObject)[0]);
-      })
-      .then((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks));
+      .then(snapshot => this.arrayFromObject(snapshot.val()));
   }
 
-  getBySubscription(subscriptionModel: SubscriptionModel): firebase.Promise<CarParkModel> {
-    return this.refDatabase.child('carParks').child(subscriptionModel.carParkRegion)
-      .child(subscriptionModel.carParkArea.toLowerCase()).child(subscriptionModel.carParkId).once('value')
-      .then(snapshot => {
-        let carPark = snapshot.val() as CarParkModel;
-        carPark.subscriptions = this.arrayFromObject(carPark.subscriptions);
-        return carPark;
-      })
+  getById(carParkId: string): firebase.Promise<CarParkModel> {
+    return this.refDatabase.child('carParks').child(carParkId).once('value')
+      .then(snapshot => snapshot.val());
   }
 
   getFiltered(carParkFilterModel: CarParkFilterModel): firebase.Promise<Array<CarParkModel>> {
-    if (carParkFilterModel.code) {
-      return this.refDatabase.child('areas').once('value')
-        .then(snapshot => {
-          let regions = snapshot.val();
-          let carparksPromise = new Array();
-          for (let region of Object.keys(regions)) {
-            for (let area of Object.keys(regions[region])) {
-              carparksPromise.push(this.refDatabase.child('carParks').child(region).child(area.toLowerCase())
-                .orderByChild('code').startAt(carParkFilterModel.code).once('value')
-                .then(snapshot => this.arrayFromObject(snapshot.val())
-                  .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks))));
-            }
-          }
-          return Observable.forkJoin(carparksPromise).toPromise()
-            .then((value: Array<Array<Object>>) => {
-              return this.mergeResults(value);
-            });
-        });
-    } else if (carParkFilterModel.area) {
-      return this.refDatabase.child('carParks').child(carParkFilterModel.region)
-        .child(carParkFilterModel.area.toLowerCase()).once('value')
-        .then(snapshot => this.arrayFromObject(snapshot.val())
-          .map((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks)));
-    } else {
-      return this.refDatabase.child('carParks').child(carParkFilterModel.region).once('value')
-        .then(snapshot => {
-          return this.arrayFromObject(snapshot.val())
-            .map(carParkByRegion => this.arrayFromObject(carParkByRegion))
-            .reduce((result, value) => result.concat(value), [])
-        })
-        .then((carParks: Array<CarParkModel>) => this.subscriptionToArray(carParks));
-    }
+    return this.refDatabase.child('carParks')
+      .orderByChild('code').startAt(carParkFilterModel.code).once('value')
+      .then(snapshot => this.arrayFromObject(snapshot.val()));
   }
 
-  getAreasByRegion(region: Region) {
-    return this.refDatabase.child('areas').child(region).once('value')
-      .then(snapshot => Object.keys(snapshot.val() ? snapshot.val() : []));
+  getByCodeAutocompletion(selectedCarPark: string | {car_park_no: string}) {
+    let carParkCodeQuery = this.isString(selectedCarPark) ? selectedCarPark : (<any>selectedCarPark).car_park_no;
+    return this.http.get(this.singaporeCarParksApiUrl + `&q=${carParkCodeQuery}`)
+      .map(data => data.json().result.records);
   }
 
-  private subscriptionToArray(carParks: Array<CarParkModel>) {
-    return carParks.map((carPark: CarParkModel) => {
-      carPark.subscriptions = this.arrayFromObject(carPark.subscriptions);
-      return carPark;
-    })
+  getByAddressAutocompletion(selectedCarPark: string) {
+    // let carParkCodeQuery = this.isString(selectedCarPark) ? selectedCarPark : (<any>selectedCarPark).address;
+    console.log('search with ==' + selectedCarPark);
+    return this.http.get(this.singaporeCarParksApiUrl + `&q=${selectedCarPark}`)
+      .map(data => {
+        console.log('got :');
+        console.log(data.json().result.records);
+        return data.json().result.records;
+      });
+    // return Observable.fromPromise(<any>this.refDatabase.child('allCarParks')
+    //   .orderByChild('address').limitToFirst(20).startAt(selectedCarPark).once('value')
+    //   .then(snapshot => {
+    //     return this.arrayFromObject(snapshot.val());
+    //   }));
+  }
+
+  private isString(selectedCarPark: string | {car_park_no: string} | {address: string}) {
+    return typeof selectedCarPark == 'string' || selectedCarPark instanceof String;
   }
 
   get selectedCarPark(): CarParkModel {
@@ -136,5 +111,4 @@ export class CarParkService extends ServiceUtils {
   set selectedCarPark(value: CarParkModel) {
     this._selectedCarPark = value;
   }
-
 }

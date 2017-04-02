@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button ion-button clear large icon-only padding (tap)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Add/Remove Car</ion-title>
+    <ion-buttons right>
+      <div class="btn-icon-style"></div>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+
+  <ion-grid>
+    <ion-row wrap>
+      <ion-col class="item-car-width" *ngFor="let car of currentUser.cars">
+        <app-car-item [car]="car" isEdit="true" (toRemove)="removeCar($event)"></app-car-item>
+      </ion-col>
+      <ion-col class="item-car-width" *ngIf="currentUser.cars?.length < 4">
+        <!--<ion-icon name="ios-add" class="add-icon-style" (tap)="addCar()"></ion-icon>-->
+        <ion-card class="item-car-width">
+          <!--<ion-card-header>{{car?.licencePlateNumber}}</ion-card-header>-->
+          <div class="add-car-thumbnail" (tap)="addCar()">
+            <img src="assets/icon/AddKey-100.png">
+          </div>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <div class="text-warning-portrait">
+    <p class="text-warning">Note: Removing your car will terminate your
+    subscription. Tap and Wash will not refund the balance days of your subscription.
+    <a class="read-more-warning" href="#">Read more</a>
+  </div>
+
+</ion-content>
+

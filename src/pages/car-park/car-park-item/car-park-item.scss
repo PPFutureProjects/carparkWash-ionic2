@@ -15,4 +15,15 @@ app-car-park-item {
     margin: 0px !important;
   }
 
+  .column-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .car-picture {
+    max-height: 200px;
+    object-fit: scale-down;
+  }
+
 }
