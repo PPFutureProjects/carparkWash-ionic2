@@ -20,11 +20,14 @@ declare var cordova: any;
   templateUrl: 'app.html'
 })
 export class MyApp {
+
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = WelcomPage;
 
   pages: Array<PageModel>;
+
+  ICON_PATH = 'assets/icon/colored/';
 
   logOutBtn: PageModel;
 
@@ -96,13 +99,13 @@ export class MyApp {
   initPagesMenu(profile?: ProfileType) {
     // {icon: '', title: 'Setting', component: SettingPage},
     this.pages = [
-      // {icon: 'assets/icon/Home-32.png', title: 'Home', component: HomePage, param: {edit: false}},
-      {id: 'EditProfile', icon: 'assets/icon/EditProperty-32.png', title: 'Edit Profile', component: ProfilePage}
+      // {icon: ICON_PATH + '/Home-32.png', title: 'Home', component: HomePage, param: {edit: false}},
+      {id: 'EditProfile', icon: this.ICON_PATH + 'edit_property-48.png', title: 'Edit Profile', component: ProfilePage}
       ];
     if (profile && profile === ProfileEnum.client) {
       this.pages.push({
         id: 'AddEditVehicle',
-        icon: 'assets/icon/CarService-32.png',
+        icon:this.ICON_PATH + 'CarRental-48.png',
         title: 'Add/Edit Vehicle',
         component: AddEditCarPage
       });
@@ -110,44 +113,44 @@ export class MyApp {
 
     this.pages.push({
       id: 'GetCarParkInfo',
-      icon: 'assets/icon/Parking-32.png',
+      icon: this.ICON_PATH + 'parking-48.png',
       title: 'Get Car Park Info',
       component: null
     });
     this.pages.push({
       id: 'Support',
-      icon: 'assets/icon/Headset-32.png',
+      icon: this.ICON_PATH + 'customer_support-48.png',
       title: 'Support',
       component: SupportPage
     });
     this.pages.push({
       id: 'Invites',
-      icon: 'assets/icon/Mailbox-32.png',
+      icon: this.ICON_PATH + 'Invite-48.png',
       title: 'Invites',
       component: null
     });
     this.pages.push({
       id: 'RateUs',
-      icon: 'assets/icon/Rating-32.png',
+      icon: this.ICON_PATH + 'Rating-48.png',
       title: 'Rate us',
       component: null
     });
 
-    if (profile && profile === ProfileEnum.admin) {
+    if (profile && profile === ProfileEnum.manager) {
       this.pages.push({
         id: 'AddManagerCleaner',
-        icon: 'assets/icon/Manager-32.png',
-        title: 'Add Manager/Cleaner',
+        icon: this.ICON_PATH + 'Manager-32.png',
+        title: 'Add Supervisor/Washer',
         component: AddUserPage
       });
       this.pages.push({
         id: 'Logs',
-        icon: 'assets/icon/File-32.png',
+        icon: this.ICON_PATH + 'hourglass_sand_top-48.png',
         title: 'Logs Subscriptions',
         component: HistoryPage
       });
     }
-    this.pages.push({id: 'LogOut', icon: 'assets/icon/Exit-32.png', title: 'Log out', component: WelcomPage});
-    // this.logOutBtn = {icon: 'assets/icon/Exit-32.png', title: 'Log out', component: WelcomPage, param: {}};
+    this.pages.push({id: 'LogOut', icon: this.ICON_PATH + 'exit-48.png', title: 'Log out', component: WelcomPage});
+    // this.logOutBtn = {icon: this.ICON_PATH + 'Exit-32.png', title: 'Log out', component: WelcomPage, param: {}};
   }
 }

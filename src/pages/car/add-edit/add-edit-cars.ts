@@ -1,14 +1,20 @@
 import { Component } from '@angular/core';
 import {
-  LoadingOptions, ToastController, ModalController, LoadingController, NavParams, Loading,
-  MenuController
+  LoadingOptions,
+  ToastController,
+  ModalController,
+  LoadingController,
+  NavParams,
+  Loading,
+  MenuController, NavController
 } from 'ionic-angular';
 import { UserModel } from '../../user/shared/user.model';
 import { UserService } from '../../user/shared/user.service';
 import { CarService } from '../../car/shared/car.service';
 import { UtilsPage } from '../../shared/utils.page';
 import { EditCarPage } from '../../car/edit-car/edit-car';
-import { CarModel } from '../../car/shared/car.model';
+import { CarModel } from '../shared/car.model';
+import { HomePage } from '../../home/home';
 
 @Component({
   selector: 'page-add-edit-cars',
@@ -23,7 +29,7 @@ export class AddEditCarPage extends UtilsPage {
   constructor(public userService: UserService, public carService: CarService,
               public loadingCtrl: LoadingController, public params: NavParams,
               public toastCtrl: ToastController, public modalCtrl: ModalController,
-              public menuCtrl: MenuController) {
+              public menuCtrl: MenuController, public navCtrl: NavController) {
 
     super(toastCtrl);
     this.currentUser = new UserModel();
@@ -37,7 +43,6 @@ export class AddEditCarPage extends UtilsPage {
   ionViewWillEnter() {
     let loading = this.loadingCtrl.create(this.loadingOptions);
     loading.present();
-    //TODO test if this is OK
     this.userService.getCurrent(false).then(user => {
       this.currentUser = user;
       loading.dismissAll();
@@ -46,26 +51,6 @@ export class AddEditCarPage extends UtilsPage {
       loading.dismissAll();
       this.showToast('Fail to get user data', 'toastError');
     });
-    // this.userService.getCurrent(false).then(user => {
-    //   if (!this.user.email) {
-    //     this.user = user;
-    //   }
-    //   if (this.carService.selectedCar) {
-    //     for (let car of this.user.cars) {
-    //       if (car.id === this.carService.selectedCar.id) {
-    //         car.subscription = this.carService.selectedCar.subscription;
-    //         break;
-    //       }
-    //     }
-    //     this.eventBus.updateCarItem(true);
-    //   }
-    //   this.carService.selectedCar = undefined;
-    //   loading.dismiss();
-    // }).catch(err => {
-    //   console.error(err);
-    //   loading.dismiss();
-    //   this.showToast('Fail to get user data', 'toastError');
-    // });
   }
 
   toggleMenu() {
@@ -103,7 +88,8 @@ export class AddEditCarPage extends UtilsPage {
 
   addCar() {
     let editCarPage = this.modalCtrl.create(EditCarPage);
-    // editCarPage.onDidDismiss((newCar: CarModel) => {
+    //TODO edit car not working yet
+    editCarPage.onDidDismiss((newCar: CarModel) => {
       // if (newCar) {
       //   let loading = this.loadingCtrl.create(this.loadingOptions);
       //   loading.present();
@@ -116,7 +102,11 @@ export class AddEditCarPage extends UtilsPage {
       //     this.showToast(`Fail to add ${newCar.licencePlateNumber}`, 'toastError');
       //   });
       // }
-    // });
+
+
+      // if on add => redirect to home page
+      this.navCtrl.push(HomePage);
+    });
     editCarPage.present();
   }
 

@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button ion-button icon-only clear class="btn-icon-style"
+              (tap)="back()">
+        <img src="assets/icon/Back-32.png">
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Notifications</ion-title>
+    <ion-buttons right>
+      <div class="btn-icon-style"></div>
+    </ion-buttons>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="bg-color">
+  <ion-list>
+    <ion-item class="bg-transparent" *ngFor="let notification of notifications">
+      <ion-avatar item-left><img src="assets/icon/colored/msg.png"></ion-avatar>
+      <h2 class="msg-content" [ngClass]="{msgRead: notification.wasRead, msgNotRead: !notification.wasRead}">{{ notification.message }}</h2>
+      <p>{{ notification.date }}</p>
+      <div item-right class="importance-circle" [ngClass]="{red: notification.isImportant, green: !notification.isImportant}"></div>
+    </ion-item>
+    <ion-item *ngIf="notifications?.length === 0">
+      You have no notifications
+    </ion-item>
+  </ion-list>
+</ion-content>
+

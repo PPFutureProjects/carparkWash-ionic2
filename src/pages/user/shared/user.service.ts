@@ -12,7 +12,9 @@ import { CarService } from '../../car/shared/car.service';
 import { CarParkService } from '../../car-park/shared/car-park.service';
 import { Observable } from 'rxjs';
 import { FirebaseService } from '../../shared/firebase-service';
-import { UserNamesType } from './user-names.enum';
+import { UserNamesType, UserNamesEnum } from './user-names.enum';
+import { CarParkModel } from '../../car-park/shared/car-park.model';
+import { SubscriberService } from '../../car/subscription/subscriber.service';
 
 
 @Injectable()
@@ -24,7 +26,7 @@ export class UserService extends ServiceUtils {
   private currentUser: UserModel;
 
   constructor(public firebaseService: FirebaseService, public loadingCtrl: LoadingController, public userReady: UserReady,
-              public carParkService: CarParkService, public carService: CarService) {
+              public carParkService: CarParkService, public carService: CarService, public subscriberService: SubscriberService) {
     super();
     this.refDatabase = firebase.database().ref();
     this.refStorageUsers = firebase.storage().ref('users');
@@ -74,38 +76,38 @@ export class UserService extends ServiceUtils {
       for (let carId in this.currentUser.carIds) {
         itemsPromises.push(this.carService.getById(carId));
       }
-    } else if (this.currentUser.profile === ProfileEnum.manager) {
+    } else if (this.currentUser.profile === ProfileEnum.supervisor) {
       for (let carParkId in this.currentUser.carParkIds) {
         itemsPromises.push(this.carParkService.getById(carParkId));
       }
-    } else if (this.currentUser.profile === ProfileEnum.cleaner) {
+    } else if (this.currentUser.profile === ProfileEnum.washer) {
       for (let carId in this.currentUser.jobs) {
-        itemsPromises.push(this.carService.getById(carId));
+        // 1 days === 86400000 milliseconds
+        if (new Date().getTime() - this.currentUser.jobs[carId].assignmentDate >= 86400000) {
+          // the job expired, delete it
+          this.subscriberService.deteleJob(carId, this.currentUser);
+        } else {
+          // get car information of the job
+          itemsPromises.push(this.carService.getById(carId));
+        }
       }
     }
     return Observable.forkJoin(itemsPromises).toPromise()
       .then((results: any) => {
+        results = results ? results : [];
         if (this.currentUser.profile === ProfileEnum.client) {
           this.currentUser.cars = results;
-          if (!this.currentUser.cars) {
-            this.currentUser.cars = [];
-          }
-        } else if (this.currentUser.profile === ProfileEnum.manager) {
+        } else if (this.currentUser.profile === ProfileEnum.supervisor) {
           this.currentUser.carParks = results;
-          if (!this.currentUser.carParks) {
-            this.currentUser.carParks = [];
-          }
-        } else if (this.currentUser.profile === ProfileEnum.cleaner) {
+        } else if (this.currentUser.profile === ProfileEnum.washer) {
           this.currentUser.cars = results;
-          if (!this.currentUser.cars) {
-            this.currentUser.cars = [];
-          }
           this.currentUser.cars.map(car => {
             let dayIndex = Math.round((new Date().getTime() - car.subscription.dateSubscription) / (1000 * 60 * 60 * 24));
             car.subscription.days[dayIndex].job = this.currentUser.jobs[car.id];
             return car;
           });
         }
+
         this.userReady.notify(true);
         return this.currentUser;
       });
@@ -121,8 +123,8 @@ export class UserService extends ServiceUtils {
   login(userModel: UserModel, password: string) {
     return firebase.auth().signInWithEmailAndPassword(userModel.email, password).then(userAuth => {
       if (!userAuth.emailVerified) {
-      //TODO redo this for prod
-      //   throw {code: 'auth/unverified-email'};
+        //TODO redo this for prod
+        //   throw {code: 'auth/unverified-email'};
       }
       return this.getCurrent()
     }).catch((err: firebase.FirebaseError) => {
@@ -304,18 +306,21 @@ export class UserService extends ServiceUtils {
       updates['cars/' + newCarId] = car;
       user.carIds = {newCarId: true};
     }
-    if (user.profile === ProfileEnum.manager) {
-      updates['managerNames/' + user.uid] = user.name;
+
+    if (user.profile === ProfileEnum.supervisor) {
+      updates[UserNamesEnum.supervisorNames + '/' + user.uid] = user.name;
     } else if (user.profile === ProfileEnum.client) {
-      updates['clientNames/' + user.uid] = user.name;
-    } else if (user.profile === ProfileEnum.cleaner) {
-      updates['cleanerNames/' + user.uid] = user.name;
+      updates[UserNamesEnum.clientNames + '/' + user.uid] = user.name;
+    } else if (user.profile === ProfileEnum.washer) {
+      this.currentUser.isOnVacation = false;
+      // When creating a washer, no data is inserted in washerNames,
+      // a washer is added to washerNames only when he select or change workingCarPark
     }
     updates['users/' + user.uid] = user;
     return this.refDatabase.child('users').child(user.uid).set(user).then(() => {
       return this.refDatabase.update(updates).then(() => {
         car ? user.cars = [car] : '';
-        if (!this.currentUser || this.currentUser.profile !== ProfileEnum.admin) {
+        if (!this.currentUser || this.currentUser.profile !== ProfileEnum.manager) {
           this.currentUser = user;
           this.userReady.notify(true);
         }
@@ -371,20 +376,48 @@ export class UserService extends ServiceUtils {
   }
 
   /**
-   * typeUserNames: managerNames | clientNames | cleanerNames
+   * typeUserNames: supervisorNames | clientNames
    *
    * @param typeUserNames
    * @returns {firebase.Promise<any>}
    */
-  getUserNames(typeUserNames: UserNamesType): firebase.Promise<Array<UserModel>> {
-    return this.refDatabase.child(typeUserNames).once('value')
+  getUserNames(typeUserNames: UserNamesType, carParkId?: string): firebase.Promise<Array<UserModel>> {
+    if (typeUserNames === UserNamesEnum.washerNames) {
+      if (carParkId) {
+        return this.getWasherNames(carParkId);
+      } else {
+        console.error('carParkId is needed to get washer names by car park');
+        return null;
+      }
+    } else {
+      return this.refDatabase.child(typeUserNames).once('value')
+        .then(snapshot => {
+          let usersNames = snapshot.val();
+          return Object.keys(usersNames ? usersNames : []).map(userUid => {
+            let user = new UserModel();
+            user.uid = userUid;
+            user.name = usersNames[userUid];
+            return user;
+          });
+        });
+    }
+  }
+
+  /**
+   * @param carParkId
+   * @returns {firebase.Promise<any>}
+   */
+  private getWasherNames(carParkId: string): firebase.Promise<Array<UserModel>> {
+    return this.refDatabase.child(UserNamesEnum.washerNames).child(carParkId).once('value')
       .then(snapshot => {
-        let managerNames = snapshot.val();
-        return Object.keys(managerNames ? managerNames : []).map(managerUid => {
-          let user = new UserModel();
-          user.uid = managerUid;
-          user.name = managerNames[managerUid];
-          return user;
+        let washersNames = snapshot.val();
+        return Object.keys(washersNames ? washersNames : []).map(washerUid => {
+          let washer = new UserModel();
+          washer.uid = washersNames[washerUid].uid;
+          washer.name = washersNames[washerUid].name;
+          washer.isOnVacation = washersNames[washerUid].isOnVacation;
+          washer.workingCarPark = washersNames[washerUid].workingCarPark;
+          return washer;
         });
       });
   }
@@ -412,4 +445,26 @@ export class UserService extends ServiceUtils {
       return Promise.resolve(user);
     }
   }
+
+  updateWasherWorkingCarPark(currentUser: UserModel, workingCarPark: CarParkModel) {
+    let washerWorkingCarParkAndIsOnVacation = {};
+    let simpleWorkingCarPark: CarParkModel = <CarParkModel>(this.getSimpleObject(workingCarPark) ? this.getSimpleObject(workingCarPark) : '');
+    if (currentUser.workingCarPark && currentUser.workingCarPark.id && currentUser.workingCarPark.id !== 'undefined') {
+      washerWorkingCarParkAndIsOnVacation[UserNamesEnum.washerNames + '/' + currentUser.workingCarPark.id + '/' + currentUser.uid] = null;
+    }
+    if (simpleWorkingCarPark.id && simpleWorkingCarPark.id !== undefined && currentUser.isOnVacation) {
+      washerWorkingCarParkAndIsOnVacation[UserNamesEnum.washerNames + '/' + simpleWorkingCarPark.id + '/' + currentUser.uid] = {
+        uid: currentUser.uid,
+        name: currentUser.name,
+        workingCarPark: this.getSimpleObject(workingCarPark) ? this.getSimpleObject(workingCarPark) : ''
+      };
+      washerWorkingCarParkAndIsOnVacation['users/' + currentUser.uid + '/workingCarPark'] = this.getSimpleObject(workingCarPark) ? this.getSimpleObject(workingCarPark) : '';
+    }
+    washerWorkingCarParkAndIsOnVacation['users/' + currentUser.uid + '/isOnVacation'] = currentUser.isOnVacation;
+    return this.refDatabase.update(washerWorkingCarParkAndIsOnVacation).then(() => {
+      currentUser.workingCarPark = workingCarPark;
+      // updates[UserNames.washerNames + '/' + user.workingCarPark.id + '/' + user.uid] = { uid: user.uid, name: user.name, workingCarPark: {}, isOnVacation: false};
+    });
+  }
+
 }

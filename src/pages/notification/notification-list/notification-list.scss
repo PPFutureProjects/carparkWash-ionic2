@@ -1,0 +1,39 @@
+page-notification-list {
+
+  .bg-color {
+    background-color: #f1e8e1;
+  }
+
+  .msg-content {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .msgRead {
+    color: gray;
+    font-weight: bold;
+  }
+
+  .msgNotRead {
+    font-weight: bold;
+  }
+
+  .item-inner {
+    border-bottom: 0px !important;
+  }
+
+  .importance-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  .green {
+    background: #4cda65;
+  }
+
+  .red {
+    background: #de3030;
+  }
+
+}

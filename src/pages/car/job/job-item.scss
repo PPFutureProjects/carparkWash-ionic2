@@ -1,10 +1,20 @@
 job-item {
+
+  .noDisplay {
+    display: none;
+  }
+
   .bg-color {
     background-color: #f8f5f0;
   }
 
   .bold {
     font-weight: bold;
+  }
+
+  .flex-sb {
+    display: flex;
+    justify-content: space-between;
   }
 
   .margin-bottom10 {
@@ -33,6 +43,26 @@ job-item {
 
   .no-padding-left {
     padding-left: 0px;
+  }
+
+  ion-item-options {
+    button  {
+      border-radius: 0px !important;
+    }
+  }
+
+  ion-item-sliding {
+    margin-bottom: 10px;
+    ion-item {
+      padding: 0px !important;
+    }
+  }
+
+  ion-avatar {
+    img {
+      width: 62px !important;
+      height: 62px !important;
+    }
   }
 
 }

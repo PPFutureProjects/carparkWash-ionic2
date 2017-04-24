@@ -23,14 +23,6 @@ page-home {
     -o-box-shadow: 1px 1px 5px 0px #656565;
     box-shadow: 1px 1px 5px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=5);
-
-    img {
-      width: 72px !important;
-      height: 72px !important;
-      //width: 60px !important;
-      //height: 60px !important;
-      //border-radius: 0px !important;
-    }
   }
 
   .square-avatar {
@@ -49,7 +41,7 @@ page-home {
   }
 
   .toggle-size {
-    max-width: 85px;
+    max-width: 55px;
   }
 
   .center-text {
@@ -73,6 +65,7 @@ page-home {
   }
 
   .title-activities {
+    margin-left: 20px;
     margin-top: 5px;
     margin-bottom: 10px;
     font-size: medium;
@@ -80,6 +73,33 @@ page-home {
 
   .item-block {
     min-height: 2rem;
+  }
+
+  .autocomplete-input {
+    border: 0px !important;
+    background: inherit !important;
+    border-radius: 0px !important;
+    input {
+      box-shadow: 0px 0px !important;
+      background: #ECF0F1 !important;
+      border-radius: 0px !important;
+      padding: 0px 0px 0px 35px !important;
+    }
+  }
+  .searchbar-md .searchbar-md-cancel, .searchbar-ios .searchbar-ios-cancel {
+    left: 3px;
+  }
+  .searchbar-md .searchbar-search-icon , .searchbar-ios .searchbar-search-icon {
+    // this path is correct for web emultion and real device
+    background-image: url('../assets/icon/MarkerFilled-50.png');
+    top: 5px;
+    left: 8px;
+    width: 20px;
+    height: 20px;
+    background-size: 20px;
+  }
+  .searchbar-clear-icon {
+    display: none !important;
   }
 
   .divider {
@@ -90,16 +110,21 @@ page-home {
     margin-right: 20px;
   }
 
-  .center-content {
+  .flex-row {
     display: flex;
     flex-direction: row;
-    justify-content: center;
   }
 
-  .center-item {
+  .flex-column-center {
     display: flex;
     flex-direction: column;
     justify-content: center;
+  }
+
+  .profile-icon {
+    height: 30px;
+    width: 30px;
+    margin-right: 20px;
   }
 
   .item-car-width {

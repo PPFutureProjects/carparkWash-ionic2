@@ -3,7 +3,7 @@
     <button ion-button menuToggle large>
       <ion-icon name="menu"></ion-icon>
     </button>
-    <ion-title>Create Manager/Cleaner account</ion-title>
+    <ion-title>Add Supervisor/Washer</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -87,9 +87,8 @@
       <ion-select required class="override-select-height override-select-padding" interface="action-sheet"
                   formControlName="profile"
                   [(ngModel)]="userModel.profile">
-        <!--<ion-option value={{profileTypeEnum.client}}>Client</ion-option>-->
-        <ion-option value="{{profileEnum.manager}}">Car park Manager</ion-option>
-        <ion-option value="{{profileEnum.cleaner}}">Cleaner</ion-option>
+        <ion-option value="{{profileEnum.supervisor}}">Car park Supervisor</ion-option>
+        <ion-option value="{{profileEnum.washer}}">Washer</ion-option>
       </ion-select>
     </ion-item>
   </form>

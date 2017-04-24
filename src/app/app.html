@@ -13,9 +13,10 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
+
+  <ion-content class="menu">
     <ion-list class="margin-bottom0">
-      <button ion-item class="override-ios-menu" *ngFor="let p of pages" (tap)="openPage(p)">
+      <button ion-item class="override-ios-menu bg-transparent btn-menu-separator" *ngFor="let p of pages" (tap)="openPage(p)">
         <ion-label class="menu-item">
           <img class="margin-right" src="{{ p.icon }}">
           {{p.title}}

@@ -23,40 +23,40 @@ export class CarParkService extends ServiceUtils {
 
   remove(carPark: CarParkModel) {
     let updates = {};
-    updates['users/' + carPark.managerUid + '/carParkIds/' + carPark.id] = null;
+    updates['users/' + carPark.supervisorUid + '/carParkIds/' + carPark.id] = null;
     updates['carParks/' + carPark.id] = null;
     //TODO delete subscription or job ???
     return this.refDatabase.update(updates);
   }
 
-  add(newCarPark: {carPark: CarParkModel, manager: UserModel}) {
+  add(newCarPark: {carPark: CarParkModel, supervisor: UserModel}) {
     // car parks are stored with singapore api id
     // newCarPark.carPark.id = this.refDatabase.child('carParks').push().key;
     return this.update(newCarPark)
       .then(() => {
-        if (!newCarPark.manager.carParks) {
-          newCarPark.manager.carParkIds = {};
+        if (!newCarPark.supervisor.carParks) {
+          newCarPark.supervisor.carParkIds = {};
         }
-        newCarPark.manager.carParkIds[newCarPark.carPark.id] = true;
-        if (!newCarPark.manager.carParks) {
-          newCarPark.manager.carParks = new Array<CarParkModel>();
+        newCarPark.supervisor.carParkIds[newCarPark.carPark.id] = true;
+        if (!newCarPark.supervisor.carParks) {
+          newCarPark.supervisor.carParks = new Array<CarParkModel>();
         }
-        newCarPark.manager.carParks.push(newCarPark.carPark);
+        newCarPark.supervisor.carParks.push(newCarPark.carPark);
       });
   }
 
-  update(updatedCarPark: {carPark: CarParkModel, manager: UserModel}) {
+  update(updatedCarPark: {carPark: CarParkModel, supervisor: UserModel}) {
     let updates = {};
-    let oldManagerUid = updatedCarPark.carPark.managerUid;
+    let oldManagerUid = updatedCarPark.carPark.supervisorUid;
     // update carPark's manager (action made by admin or manager)
-    if (updatedCarPark.manager.uid) {
-      updatedCarPark.carPark.managerUid = updatedCarPark.manager.uid;
-      updatedCarPark.carPark.managerName = updatedCarPark.manager.name;
+    if (updatedCarPark.supervisor.uid) {
+      updatedCarPark.carPark.supervisorUid = updatedCarPark.supervisor.uid;
+      updatedCarPark.carPark.supervisorName = updatedCarPark.supervisor.name;
 
       if (oldManagerUid) {
         updates['users/' + oldManagerUid + '/carParkIds' + updatedCarPark.carPark.id] = null;
       }
-      updates['users/' + updatedCarPark.manager.uid + '/carParkIds/' + updatedCarPark.carPark.id] = true;
+      updates['users/' + updatedCarPark.supervisor.uid + '/carParkIds/' + updatedCarPark.carPark.id] = true;
     }
     updates['carParks/' + updatedCarPark.carPark.id] = this.getSimpleObject(updatedCarPark.carPark);
     return this.refDatabase.update(updates)

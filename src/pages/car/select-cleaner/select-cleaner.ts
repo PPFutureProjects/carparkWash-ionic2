@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { ViewController, ToastController, MenuController, NavParams } from 'ionic-angular';
-import { UserNames } from '../../user/shared/user-names.enum';
+import { UserNamesEnum } from '../../user/shared/user-names.enum';
 import { UserModel } from '../../user/shared/user.model';
 import { UtilsPage } from '../../shared/utils.page';
 import { UserService } from '../../user/shared/user.service';
@@ -31,7 +31,7 @@ export class SelectCleanerPage extends UtilsPage {
   }
 
   ngOnInit() {
-    this.userService.getUserNames(UserNames.cleanerNames)
+    this.userService.getUserNames(UserNamesEnum.washerNames, this.carToWash.subscription.carParkId)
       .then(cleaners => this.cleaners = cleaners)
       .catch(err => {
         console.log(err);

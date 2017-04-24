@@ -8,7 +8,7 @@ import { UtilsPage } from '../../shared/utils.page';
 import { UserModel } from '../../user/shared/user.model';
 import { ProfileEnum } from '../../user/shared/profile.enum';
 import { UserService } from '../../user/shared/user.service';
-import { UserNames } from '../../user/shared/user-names.enum';
+import { UserNamesEnum } from '../../user/shared/user-names.enum';
 import { CarParkService } from '../shared/car-park.service';
 
 @Component({
@@ -22,11 +22,11 @@ export class EditCarParkPage extends UtilsPage {
   selectedCarPark: string | {car_park_no: string, address: string} = <any>{};
   selectedPicture: string;
   selectedAddress: string;
-  selectedManager = new UserModel();
+  selectedSupervisor = new UserModel();
 
   currentUser: UserModel;
   isPictureLoading = false;
-  managers: Array<UserModel>;
+  supervisors: Array<UserModel>;
 
   profileEnum = ProfileEnum;
 
@@ -36,7 +36,7 @@ export class EditCarParkPage extends UtilsPage {
               public actionSheetCtrl: ActionSheetController) {
 
     super(toastCtrl);
-    this.managers = new Array<UserModel>();
+    this.supervisors = new Array<UserModel>();
     this.carParkToEdit = params.get('carParkToEdit') ? params.get('carParkToEdit') : new CarParkModel();
 
     this.userService.getCurrent()
@@ -48,8 +48,8 @@ export class EditCarParkPage extends UtilsPage {
         console.log(err);
         this.showToast('Fail to get user info', 'toastError');
       });
-    this.userService.getUserNames(UserNames.managerNames)
-      .then(managers => this.managers = managers)
+    this.userService.getUserNames(UserNamesEnum.supervisorNames)
+      .then(supervisors => this.supervisors = supervisors)
       .catch(err => {
         console.log(err);
         this.showToast('Fail to get managers list', 'toastError');
@@ -124,16 +124,16 @@ export class EditCarParkPage extends UtilsPage {
     if (this.selectedPicture) {
       this.carParkToEdit.picture = this.selectedPicture;
     }
-    this.viewCtrl.dismiss({carPark: this.carParkToEdit, manager: this.selectedManager});
+    this.viewCtrl.dismiss({carPark: this.carParkToEdit, supervisor: this.selectedSupervisor});
   }
 
   private buildForm() {
-    if (this.currentUser.profile === ProfileEnum.admin && this.carParkToEdit.managerUid) {
-      this.selectedManager.uid = this.carParkToEdit.managerUid;
-      this.selectedManager.name = this.carParkToEdit.managerName;
-    } else if (this.currentUser.profile === ProfileEnum.manager) {
-      this.selectedManager.uid = this.currentUser.uid;
-      this.selectedManager.name = this.currentUser.name;
+    if (this.currentUser.profile === ProfileEnum.manager && this.carParkToEdit.supervisorUid) {
+      this.selectedSupervisor.uid = this.carParkToEdit.supervisorUid;
+      this.selectedSupervisor.name = this.carParkToEdit.supervisorName;
+    } else if (this.currentUser.profile === ProfileEnum.supervisor) {
+      this.selectedSupervisor.uid = this.currentUser.uid;
+      this.selectedSupervisor.name = this.currentUser.name;
     }
 
     if (this.carParkToEdit.code) {

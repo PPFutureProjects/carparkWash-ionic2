@@ -17,12 +17,10 @@ import {
   AlertController,
   ModalController
 } from 'ionic-angular';
-import { CarParkListPage } from '../../car-park/car-park-list/car-park-list';
 import { EditCarPage } from '../edit-car/edit-car';
 import { EventBus } from '../../shared/eventBus';
-import { JobStateEnum, JobState } from '../../shared/job/job-state.enum';
+import { JobStateEnum } from '../../shared/job/job-state.enum';
 import { SelectCleanerPage } from '../select-cleaner/select-cleaner';
-import { RespondToJobPage } from '../respond-to-job/respond-to-job';
 import { SubscriptionPage } from '../subscription/subscription';
 import { SubscriptionModel } from '../subscription/subscription.model';
 
@@ -40,8 +38,8 @@ export class CarItemComponent extends UtilsPage implements AfterContentInit {
 
   @Input() car: CarModel;
   @Input() carParkSubscribed: CarParkModel;
-  @Input() isEdit: boolean = false;
   @Input() isSelected: boolean;
+  @Input() isEdit: boolean = false;
   @Output() toRemove = new EventEmitter<CarModel>();
 
   jobStateEnum = JobStateEnum;
@@ -73,15 +71,12 @@ export class CarItemComponent extends UtilsPage implements AfterContentInit {
       }
     });
 
-    // this.currentUser = this.userService.getIfSet();
-    // if (!this.currentUser) {
     this.userService.getCurrent()
       .then(user => this.currentUser = user)
       .catch(err => {
         console.error(err);
         this.showToast('Fatal Error, please contact admin', 'toastError');
       });
-    // }
   }
 
   ngAfterContentInit() {
@@ -121,53 +116,45 @@ export class CarItemComponent extends UtilsPage implements AfterContentInit {
     }, 100);
   }
 
-  subscribeOrSelectToWash() {
-    let isActifSubscription = this.isActifSubscription(this.car.subscription);
-    if (!this.isSelected) {
-      if (isActifSubscription) {
-        this.selectToWash(isActifSubscription);
-      } else {
-        //TODO subscription expired do you want to re subscribe ?
-        this.subscribe(isActifSubscription);
+  selectToWash() {
+    if (this.currentUser.profile === ProfileEnum.client) {
+      let isActifSubscription = true;
+      // 30 days === 2592000000 milliseconds
+      if (new Date().getTime() - this.car.subscription.dateSubscription >= 2592000000) {
+        isActifSubscription = false;
+        // TODO alert: your subscription is expired do you want to resubscribe ?
+        console.log('alert: your subscription is expired do you want to resubscribe');
+        this.alertCtrl.create({
+          title: 'Subscription Expired',
+          message: `Do you want to renew your subscription for the car ${this.car.licencePlateNumber} ?`,
+          buttons: [{
+            text: 'Cancel'
+          }, {
+            text: 'OK', handler: () => {
+              this.subscribe();
+            }
+          }]
+        }).present();
       }
+
+      let subscriptionPage = this.modalCtrl.create(SubscriptionPage, {
+        carToSubscribe: this.car,
+        carParkSubscribed: this.carParkSubscribed,
+        isActifSubscription: isActifSubscription
+      });
+      subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
+        console.log(result.lotNumber);
+        if (result.lotNumber) {
+          this.subscriberService.selectToBeWashed(this.car.subscription, result.lotNumber)
+            .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
+            .catch(err => {
+              console.error(err);
+              this.showToast('Fatal Error, please contact admin', 'toastError');
+            });
+        }
+      });
+      subscriptionPage.present();
     }
-  }
-
-  private subscribe(isActifSubscription) {
-    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
-      {carToSubscribe: this.car, isActifSubscription: isActifSubscription});
-    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
-      console.log(result.carPark);
-      if (result.carPark) {
-        this.subscriberService.subscribe(result.carPark, this.carService.selectedCar)
-          .then(() => {
-            this.showToast(`the car ${this.carService.selectedCar.licencePlateNumber}
-                  is subscribed to the car park ${result.carPark.address}`, 'toastInfo');
-          })
-          .catch(err => {
-            console.error(err);
-            this.showToast('Fatal Error, please contact admin', 'toastError');
-          });
-      }
-    });
-    subscriptionPage.present();
-  }
-
-  selectToWash(isActifSubscription) {
-    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
-      {carToSubscribe: this.car, carParkSubscribed: this.carParkSubscribed, isActifSubscription: isActifSubscription});
-    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
-      console.log(result.lotNumber);
-      if (result.lotNumber) {
-        this.subscriberService.selectToBeWashed(this.car.subscription, result.lotNumber)
-          .then(() => this.showToast(`The car ${this.car.licencePlateNumber} is to be washed`, 'toastInfo'))
-          .catch(err => {
-            console.error(err);
-            this.showToast('Fatal Error, please contact admin', 'toastError');
-          });
-      }
-    });
-    subscriptionPage.present();
   }
 
   selectCleaner() {
@@ -183,64 +170,6 @@ export class CarItemComponent extends UtilsPage implements AfterContentInit {
       }
     });
     dialogRef.present();
-  }
-
-  selectAsWashed() {
-    this.subscriberService.setToWashed(this.car.subscription, this.currentUser)
-      .then(() => this.showToast('The selected car is washed', 'toastInfo'))
-      .catch(err => {
-        console.error(err);
-        this.showToast('Fatal Error, please contact admin', 'toastError');
-      });
-  }
-
-  respondToTheJob() {
-    let dialogRef = this.modalCtrl.create(RespondToJobPage, {
-      'carToWash': this.car,
-      'carParkSubscribed': this.carParkSubscribed
-    });
-    dialogRef.onDidDismiss((jobStateEnum: JobState) => {
-      if (jobStateEnum && jobStateEnum !== JobStateEnum.notAnswered) {
-        let loading = this.loadingCtrl.create(this.loadingOptions);
-        loading.present();
-        this.subscriberService.respondToJob(this.currentUser, this.car, this.dayIndex, jobStateEnum)
-          .then(() => {
-            loading.dismissAll();
-            this.showToast(`The job is ${jobStateEnum}`, 'toastInfo');
-          })
-          .catch(err => {
-            loading.dismissAll();
-            console.error(err);
-            this.showToast(`Fail to ${jobStateEnum} the job`, 'toastError');
-          });
-      }
-    });
-    dialogRef.present();
-  }
-
-  notifyCarNotFound() {
-    this.alertCtrl.create({
-      title: 'CONFIRMATION',
-      message: `Are you sure you didn't found the car ${this.car.licencePlateNumber} ?`,
-      buttons: [{
-        text: 'Cancel'
-      }, {
-        text: 'Yes', handler: () => {
-          let loading = this.loadingCtrl.create(this.loadingOptions);
-          loading.present();
-          this.subscriberService.notifyCarNotFound(this.car, this.dayIndex)
-            .then(() => {
-              loading.dismissAll();
-              this.showToast(`The car owner is notified`, 'toastInfo');
-            })
-            .catch(err => {
-              loading.dismissAll();
-              console.error(err);
-              this.showToast(`Fail to notify the car owner`, 'toastError');
-            });
-        }
-      }]
-    }).present();
   }
 
   edit() {
@@ -279,10 +208,32 @@ export class CarItemComponent extends UtilsPage implements AfterContentInit {
     }).present();
   }
 
+  private subscribe() {
+    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
+      {carToSubscribe: this.car, isActifSubscription: false});
+    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
+      console.log(result.carPark);
+      if (result.carPark) {
+        let loading = this.loadingCtrl.create(this.loadingOptions);
+        loading.present();
+        this.subscriberService.subscribe(result.carPark, this.car).then(() => {
+          loading.dismissAll();
+          this.showToast(`the car ${this.car.licencePlateNumber}
+                is subscribed to the car park ${result.carPark.address}`, 'toastInfo');
+        }).catch(err => {
+          loading.dismissAll();
+          console.error(err);
+          this.showToast('Fatal Error, please contact admin', 'toastError');
+        });
+      }
+    });
+    subscriptionPage.present();
+  }
+
   private isActifSubscription(subscription: SubscriptionModel) {
     if (subscription) {
       let today = new Date();
-      let priorBefaure30Days = new Date(new Date().setDate(today.getDate()-30));
+      let priorBefaure30Days = new Date(new Date().setDate(today.getDate() - 30));
       if (priorBefaure30Days < new Date(subscription.dateSubscription)) {
         return true;
       }

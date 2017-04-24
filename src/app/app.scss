@@ -19,6 +19,19 @@
   //width: 85px;
 }
 
+.menu {
+  .scroll-content {
+    background-color: #EFE8E1;
+  }
+}
+
+.ion-input-slim {
+  input {
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+}
+
 .ion-item-input {
   background-color: #ECF0F1;
   border: 0px !important;
@@ -55,6 +68,18 @@ button {
 .override-ios-menu .item-inner {
   padding: 0px !important;
   background-image: none !important;
+}
+
+.bg-transparent {
+  background-color: transparent;
+}
+
+.btn-menu-separator {
+  border-bottom: 2px ridge #dedede !important;
+  border-radius: 0px !important;
+  .item-inner {
+    border-bottom: 0px !important;
+  }
 }
 
 .menu-item {
@@ -186,4 +211,3 @@ ion-header /deep/ .toolbar-background {
   opacity: 0.4;
   visibility: visible !important;
 }
-

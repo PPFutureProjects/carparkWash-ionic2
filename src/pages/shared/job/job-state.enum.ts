@@ -1,9 +1,9 @@
 
-export type JobState = 'accepted' | 'declined' | 'notAnswered';
+export type JobState = 'accepted' | 'rejected' | 'notAnswered';
 
 export const JobStateEnum = {
   accepted: 'accepted' as JobState,
-  declined: 'declined' as JobState,
+  rejected: 'rejected' as JobState,
   notAnswered: 'notAnswered' as JobState
 };
 

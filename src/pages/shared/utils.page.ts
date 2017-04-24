@@ -4,6 +4,10 @@ import { Camera } from 'ionic-native';
 
 export abstract class UtilsPage {
 
+  /**
+   * constructor(public toastCtrl: ToastController)
+   * @param toastCtrl
+   */
   constructor(public toastCtrl: ToastController) {
     // by passing Swiper not found on angular2-useful-swiper
     new Swiper('.swip', {});

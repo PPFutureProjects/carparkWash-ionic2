@@ -1,9 +1,9 @@
 
-export type ProfileType = 'client' | 'manager' | 'cleaner' | 'admin';
+export type ProfileType = 'client' | 'supervisor' | 'washer' | 'manager';
 
 export const ProfileEnum = {
   client: 'client' as ProfileType,
-  manager: 'manager' as ProfileType,
-  cleaner: 'cleaner' as ProfileType,
-  admin: 'admin' as ProfileType
+  supervisor: 'supervisor' as ProfileType,
+  washer: 'washer' as ProfileType,
+  manager: 'manager' as ProfileType
 };

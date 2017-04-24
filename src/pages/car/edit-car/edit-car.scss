@@ -22,13 +22,12 @@ page-edit-car {
     justify-content: flex-end;
   }
 
-  .add-item-picture-size {
-    width: 50%;
+  .car-picture-max-size {
+    height: 200px;
   }
 
   .fit-picture {
     object-fit: contain;
-    height: 100%;
   }
 
   .no-padding {

@@ -35,7 +35,7 @@
     <ion-searchbar auto-complete placeholder="Select Manager" max-num-list="20" accept-user-input="false"
                    [list-formatter]="getManagerName" tabindex=-1 autocomplete="off"
                    value-property-name="uid" display-property-name="name"
-                   [(ngModel)]="selectedManager" [source]="managers"></ion-searchbar>
+                   [(ngModel)]="selectedSupervisor" [source]="supervisors"></ion-searchbar>
 
     <ion-item no-lines class="btns-dialog">
       <button ion-button clear large (tap)="cancel()">

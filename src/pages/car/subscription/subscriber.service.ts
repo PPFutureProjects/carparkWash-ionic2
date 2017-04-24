@@ -42,8 +42,8 @@ export class SubscriberService extends ServiceUtils {
       let subscription = new SubscriptionModel();
       subscription.id = this.refDatabase.child('historySubscription').child(car.userUid).push().key;
       subscription.clientUid = car.userUid;
-      if (carPark.managerUid) {
-        subscription.managerUid = carPark.managerUid;
+      if (carPark.supervisorUid) {
+        subscription.managerUid = carPark.supervisorUid;
       }
       subscription.carParkId = carPark.id;
       subscription.carParkCode = carPark.code;
@@ -98,10 +98,10 @@ export class SubscriberService extends ServiceUtils {
     return this.refDatabase.update(updates);
   }
 
-  createJob(car: CarModel, cleaner: UserModel, dayIndex: number) {
+  createJob(car: CarModel, washer: UserModel, dayIndex: number) {
     let job = new JobModel();
     job.carId = car.id;
-    job.cleanerUid = cleaner.uid;
+    job.cleanerUid = washer.uid;
     job.jobState = JobStateEnum.notAnswered;
     job.dayIndex = dayIndex;
     job.assignmentDate = new Date().getTime();
@@ -111,13 +111,19 @@ export class SubscriberService extends ServiceUtils {
       updates['users/' + car.subscription.days[dayIndex].cleanerUid + '/jobs/' + car.id] = null;
     }
 
-    car.subscription.days[dayIndex].cleanerUid = cleaner.uid;
-    car.subscription.days[dayIndex].cleanerName = cleaner.name;
+    car.subscription.days[dayIndex].cleanerUid = washer.uid;
+    car.subscription.days[dayIndex].cleanerName = washer.name;
 
-    updates['users/' + cleaner.uid + '/jobs/' + car.id] = job;
+    updates['users/' + washer.uid + '/jobs/' + car.id] = job;
     updates['cars/' + car.id + '/subscription/days/' + dayIndex] = this.getSimpleObject(car.subscription.days[dayIndex]);
     let jobHistoryPath = 'historySubscription/' + car.userUid + '/' + car.subscription.id + '/subscription/days/' + dayIndex + '/job';
     updates[jobHistoryPath] = job;
+    return this.refDatabase.update(updates);
+  }
+
+  deteleJob(carId: string, washer: UserModel) {
+    let updates = {};
+    updates['users/' + washer.uid + '/jobs/' + carId] = null;
     return this.refDatabase.update(updates);
   }
 

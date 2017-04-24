@@ -1,7 +1,7 @@
-export type UserNamesType = 'managerNames' | 'clientNames' | 'cleanerNames';
+export type UserNamesType = 'supervisorNames' | 'clientNames' | 'washerNames';
 
-export const UserNames = {
-  managerNames: 'managerNames' as UserNamesType,
+export const UserNamesEnum = {
+  supervisorNames: 'supervisorNames' as UserNamesType,
   clientNames: 'clientNames' as UserNamesType,
-  cleanerNames: 'cleanerNames' as UserNamesType
+  washerNames: 'washerNames' as UserNamesType
 };

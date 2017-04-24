@@ -7,11 +7,11 @@
     <ion-item>Address: {{carPark.address}}</ion-item>
 
     <ion-row class="btn-action-layout" *ngIf="!isSelected
-        && (currentUser?.profile === profileTypeEnum.admin
-            ||(currentUser?.profile === profileTypeEnum.manager
+        && (currentUser?.profile === profileTypeEnum.manager
+            ||(currentUser?.profile === profileTypeEnum.supervisor
             || currentUser?.profile === profileTypeEnum.client))">
       <button ion-button clear color="primary" (tap)="select()"
-              *ngIf="currentUser.profile === profileTypeEnum.cleaner">
+              *ngIf="currentUser.profile === profileTypeEnum.washer">
         Cars in
       </button>
       <!-- Client should see car park only if he clicked on subscribe of his car -->
@@ -20,12 +20,12 @@
         Subscribe
       </button>
       <button ion-button clear color="primary" (click)="getCarsSubscribed()"
-              *ngIf="currentUser.profile === profileTypeEnum.manager || currentUser.profile === profileTypeEnum.admin">
+              *ngIf="currentUser.profile === profileTypeEnum.supervisor || currentUser.profile === profileTypeEnum.manager">
         Cars Subscribed
       </button>
     </ion-row>
     <ion-row *ngIf="!isSelected
-          && (currentUser.profile === profileTypeEnum.manager || currentUser.profile === profileTypeEnum.admin)">
+          && (currentUser.profile === profileTypeEnum.supervisor || currentUser.profile === profileTypeEnum.manager)">
       <button ion-button clear color="dark" (tap)="edit()">Edit</button>
       <button ion-button clear color="dark" (tap)="remove()">Remove</button>
     </ion-row>

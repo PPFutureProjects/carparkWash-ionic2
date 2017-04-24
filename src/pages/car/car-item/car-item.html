@@ -1,67 +1,20 @@
 <ion-card class="column-center item-car-width" *ngIf="initDone">
-  <!--<ion-card-header>{{car?.licencePlateNumber}}</ion-card-header>-->
-  <div class="thumbnail" (tap)="subscribeOrSelectToWash()">
+
+  <div class="thumbnail" *ngIf="!isEdit" (tap)="selectToWash()">
     <img #carThumb [src]="car?.picture"/>
   </div>
 
+  <div class="thumbnail" *ngIf="isEdit" (tap)="edit()">
+    <img #carThumb [src]="car?.picture"/>
+  </div>
 
-  <ion-card-content *ngIf="!isSelected
-        && ((currentUser?.profile === profileEnum.cleaner
-              && car?.subscription?.days[dayIndex]?.job?.jobState === jobStateEnum.notAnswered)
-          || (currentUser?.profile === profileEnum.cleaner
-              && car?.subscription?.days[dayIndex]?.job?.jobState === jobStateEnum.accepted
-              && car.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash)
-          || (currentUser?.profile === profileEnum.cleaner
-              && car?.subscription?.days[dayIndex]?.job?.jobState === jobStateEnum.accepted
-              && car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash)
-          || (car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash
-              && (currentUser?.profile === profileEnum.manager || currentUser?.profile === profileEnum.admin)))">
-
-    <ion-col class="btn-action-layout" *ngIf="!isSelected
-        && ((currentUser?.profile === profileEnum.cleaner
-              && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.notAnswered)
-          || (currentUser?.profile === profileEnum.cleaner
-              && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.accepted
-              && car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash)
-          || (currentUser?.profile === profileEnum.cleaner
-              && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.accepted
-              && car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash)
-          || (car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash
-              && (currentUser?.profile === profileEnum.manager || currentUser?.profile === profileEnum.admin)))">
-
-      <button ion-button clear (tap)="respondToTheJob()"
-              *ngIf="currentUser?.profile === profileEnum.cleaner
-                  && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.notAnswered">
-        Respond to the Job
-      </button>
-      <button ion-button clear (tap)="notifyCarNotFound()"
-              *ngIf="currentUser?.profile === profileEnum.cleaner
-                  && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.accepted
-                  && car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
-        Notify Car not found
-      </button>
-      <button ion-button clear (tap)="selectAsWashed()"
-              *ngIf="currentUser?.profile === profileEnum.cleaner
-                  && car.subscription?.days[dayIndex].job.jobState === jobStateEnum.accepted
-                  && car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash">
-        Select as Washed
-      </button>
-      <button ion-button clear (tap)="selectCleaner()"
-              *ngIf="car.subscription?.days[dayIndex].washStatus === washStateEnum.toWash
-                && (currentUser?.profile === profileEnum.manager || currentUser?.profile === profileEnum.admin)">
-        Select Cleaner
-      </button>
-    </ion-col>
-
+  <ion-card-content *ngIf="!isSelected && car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash
+                    && (currentUser?.profile === profileEnum.supervisor || currentUser?.profile === profileEnum.manager)">
+    <button ion-button clear (tap)="selectCleaner()">Select<br>Cleaner</button>
   </ion-card-content>
 
 </ion-card>
 
 <img class="btn-delete-position" src="assets/icon/Cancel-30.png"
-     *ngIf="initDone && !isSelected && currentUser?.profile === profileEnum.client && isEdit"
+     *ngIf="initDone && !isSelected && isEdit"
      (tap)="remove()">
-
-<!--<img class="btn-delete-position" src="assets/icon/Delete-30.png"-->
-<!--*ngIf="initDone && !isSelected && currentUser?.profile === profileEnum.client && isEdit"-->
-<!--(tap)="remove()">-->
-

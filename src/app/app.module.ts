@@ -37,11 +37,12 @@ import { ConfirmSentPage } from '../pages/support/confirm-sent/confirm-sent';
 import { HistoryClientComponent } from '../pages/history/client/history-client';
 import { HistoryCarParkComponent } from '../pages/history/car-park/history-car-park';
 import { SelectCleanerPage } from '../pages/car/select-cleaner/select-cleaner';
-import { RespondToJobPage } from '../pages/car/respond-to-job/respond-to-job';
 import { PushNotificationService } from '../pages/shared/push-notification.service';
 import { AddEditCarPage } from '../pages/car/add-edit/add-edit-cars';
 import { SubscriptionPage } from '../pages/car/subscription/subscription';
 import { JobItemComponent } from '../pages/car/job/job-item';
+import { NotificationService } from '../pages/notification/notification-list/notification.service';
+import { NotificationListPage } from '../pages/notification/notification-list/notification-list';
 
 // firebase-import --database_url https://carparkwashingservice.firebaseio.com --path /allCarParks --json data.json
 
@@ -66,10 +67,10 @@ import { JobItemComponent } from '../pages/car/job/job-item';
     SupportPage,
     ConfirmSentPage,
     SelectCleanerPage,
-    RespondToJobPage,
     AddEditCarPage,
     SubscriptionPage,
     ColourSelectPage,
+    NotificationListPage,
 
     CarItemComponent,
     CarParkItemComponent,
@@ -106,10 +107,10 @@ import { JobItemComponent } from '../pages/car/job/job-item';
     SupportPage,
     ConfirmSentPage,
     SelectCleanerPage,
-    RespondToJobPage,
     AddEditCarPage,
     SubscriptionPage,
-    ColourSelectPage
+    ColourSelectPage,
+    NotificationListPage
   ],
   providers: [
     UserService,
@@ -123,6 +124,7 @@ import { JobItemComponent } from '../pages/car/job/job-item';
     SupportService,
     EventBus,
     PushNotificationService,
+    NotificationService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

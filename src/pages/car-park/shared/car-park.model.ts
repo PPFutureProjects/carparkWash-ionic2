@@ -3,8 +3,8 @@ import { SubscriptionModel } from '../../car/subscription/subscription.model';
 export class CarParkModel {
 
   id: string;
-  managerUid: string;
-  managerName: string;
+  supervisorUid: string;
+  supervisorName: string;
   code: string;
   picture: string;
   address: string;

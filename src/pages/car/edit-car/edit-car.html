@@ -15,26 +15,13 @@
 
 <ion-content padding>
 
-  <h2 class="text-center">Add an image of your vehicle</h2>
-
-  <P class="text-center">Please make sure colour and plate number are clear and visible in the picture</P>
-
-  <!--<P class="text-center">Please, no Lorries, Vans or Larger vehicles </P>-->
-
   <form [formGroup]="carForm">
 
-    <div class="center-element">
-      <ion-card class="add-item-picture-size">
-        <ion-card-content class="no-padding">
-          <ion-item (tap)="startPickPicture()">
-            <ion-label class="center-element">
-              <img class="fit-picture" [src]="selectedPicture">
-              <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
-            </ion-label>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
+    <div class="center-element car-picture-max-size">
+      <img class="fit-picture " (tap)="startPickPicture()" [src]="selectedPicture">
+      <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
     </div>
+
 
     <div>
       <ion-item class="input-border margin-top20">
@@ -88,6 +75,9 @@
       </ion-item>
     </div>
   </form>
+
+
+  <P class="text-center">Please make sure the picture of your vehicle and plate number are clear and visible.</P>
 
   <ion-item no-lines>
     <ion-label class="btns-dialog">

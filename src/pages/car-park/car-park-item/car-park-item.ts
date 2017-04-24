@@ -80,7 +80,7 @@ export class CarParkItemComponent extends UtilsPage {
 
   edit() {
     let editCarParkPage = this.modalCtrl.create(EditCarParkPage, {'carParkToEdit': this.carPark});
-    editCarParkPage.onDidDismiss((carParkToUpdate: {carPark: CarParkModel, manager: UserModel}) => {
+    editCarParkPage.onDidDismiss((carParkToUpdate: {carPark: CarParkModel, supervisor: UserModel}) => {
       if (carParkToUpdate) {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();

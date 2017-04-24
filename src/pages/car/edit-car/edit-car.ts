@@ -1,12 +1,17 @@
 import { Component } from '@angular/core';
 import {
-  ViewController, NavParams, ToastController, ModalController, ActionSheetController,
-  MenuController, LoadingController, LoadingOptions
+  ViewController,
+  NavParams,
+  ToastController,
+  ModalController,
+  ActionSheetController,
+  LoadingController,
+  LoadingOptions
 } from 'ionic-angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Camera } from 'ionic-native';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 import { CarModel } from '../shared/car.model';
-import { Camera } from 'ionic-native';
 import { UtilsPage } from '../../shared/utils.page';
 import { CarColourType } from '../shared/car-colour.enum';
 import { CarTypeEnum, CarType } from '../shared/car-silhouette.enum';
@@ -180,16 +185,9 @@ export class EditCarPage extends UtilsPage {
     this.selectedColour = carToEdit.colour;
     this.selectedType = carToEdit.type;
     this.carForm = this.formBuilder.group({
-      licencePlateNumber: [carToEdit.licencePlateNumber,
-        Validators.compose([Validators.required,
-          Validators.minLength(this.messageService.minLengthLicencePlateNumber),
-          Validators.maxLength(this.messageService.maxLengthLicencePlateNumber)])],
-      brand: [carToEdit.brand,
-        Validators.compose([Validators.required,
-          Validators.maxLength(this.messageService.maxLengthBrand)])],
-      model: [carToEdit.model,
-        Validators.compose([Validators.required,
-          Validators.maxLength(this.messageService.maxLengthModel)])],
+      licencePlateNumber: [carToEdit.licencePlateNumber, Validators.required],
+      brand: [carToEdit.brand],
+      model: [carToEdit.model],
     });
     this.carForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.carForm, this.formErrors));
