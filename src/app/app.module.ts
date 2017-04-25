@@ -26,11 +26,9 @@ import { SettingPage } from '../pages/setting/setting';
 import { HomePage } from '../pages/home/home';
 import { HistoryPage } from '../pages/history/history';
 import { HistoryService } from '../pages/history/shared/history.service';
-import { EventBus } from '../pages/shared/eventBus';
 import { WelcomPage } from '../pages/auth/welcom/welcom';
 import { SignUpPage } from '../pages/auth/sign-up/sign-up';
 import { ColourSelectPage } from '../pages/car/edit-car/colour-select/colour-select';
-import { TypeSelectPage } from '../pages/car/edit-car/type-select/type-select';
 import { SupportPage } from '../pages/support/support';
 import { SupportService } from '../pages/support/support-service';
 import { ConfirmSentPage } from '../pages/support/confirm-sent/confirm-sent';
@@ -63,7 +61,6 @@ import { NotificationListPage } from '../pages/notification/notification-list/no
     SettingPage,
     HomePage,
     HistoryPage,
-    TypeSelectPage,
     SupportPage,
     ConfirmSentPage,
     SelectCleanerPage,
@@ -103,7 +100,6 @@ import { NotificationListPage } from '../pages/notification/notification-list/no
     SettingPage,
     HomePage,
     HistoryPage,
-    TypeSelectPage,
     SupportPage,
     ConfirmSentPage,
     SelectCleanerPage,
@@ -122,7 +118,6 @@ import { NotificationListPage } from '../pages/notification/notification-list/no
     ValidationMessageService,
     HistoryService,
     SupportService,
-    EventBus,
     PushNotificationService,
     NotificationService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}

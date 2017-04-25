@@ -17,37 +17,32 @@
   <h2 class="center-element title">Tap'N'Wash</h2>
   <form [formGroup]="loginForm">
     <ion-list>
-      <ion-item class="ion-item-input">
-        <ion-label>
-          <i class="material-icons">mail_outline</i>
-        </ion-label>
-        <ion-input required type="email" placeholder="Email" formControlName="email"
-                   [(ngModel)]="userModel.email"></ion-input>
-      </ion-item>
+      <div>
+        <ion-item class="ion-item-input">
+          <ion-label>
+            <i class="material-icons">mail_outline</i>
+          </ion-label>
+          <ion-input required type="email" placeholder="Email" formControlName="email" [(ngModel)]="userModel.email"></ion-input>
+        </ion-item>
+      </div>
       <ion-item no-lines class="center-element alert alert-danger" *ngIf="loginFormErrors.email">
         {{ loginFormErrors.email }}
       </ion-item>
 
-      <ion-item class="ion-item-input margin-top20">
-        <ion-label>
-          <i class="material-icons">lock_outline</i>
-        </ion-label>
-        <ion-input required type="password" placeholder="Password" formControlName="password"
-                   [(ngModel)]="password"></ion-input>
-      </ion-item>
+      <div>
+        <ion-item class="margin-top20 ion-item-input">
+          <ion-label>
+            <i class="material-icons">lock_outline</i>
+          </ion-label>
+          <ion-input required type="password" placeholder="Password" formControlName="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+      </div>
       <ion-item no-lines class="center-element alert alert-danger" *ngIf="loginFormErrors.password">
         {{ loginFormErrors.password }}
       </ion-item>
     </ion-list>
   </form>
 
-
-  <!--<div class="center-element margin-vertical20">-->
-  <!--<button ion-button icon-only clear color="dark" class="btn-icon-style" [disabled]="loginForm.invalid"-->
-  <!--(tap)="loginForm.valid && login()">-->
-  <!--<ion-icon name="ios-exit-outline"></ion-icon>-->
-  <!--</button>-->
-  <!--</div>-->
   <button ion-button block large color="primary"
           [disabled]="loginForm.invalid"
           (tap)="loginForm.valid && login()">SIGN IN
@@ -69,10 +64,6 @@
     <div>Google</div>
     <img>
   </button>
-
-  <!--<p class="text-no-account-yet">-->
-    <!--Do not have an account yet ?-->
-  <!--</p>-->
 
   <button ion-button block large class="signup-bg-color margin-top10" (tap)="goToSignUp()">New User</button>
 

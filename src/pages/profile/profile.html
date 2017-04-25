@@ -41,10 +41,7 @@
     <div>
       <ion-item>
         <ion-label floating>Full Name</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="name"
-                   value="{{currentUser.name}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="name" value="{{currentUser.name}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.name">
@@ -54,10 +51,7 @@
     <div>
       <ion-item>
         <ion-label floating>Email</ion-label>
-        <ion-input required type="email"
-                   [disabled]="!editMode"
-                   formControlName="email"
-                   value="{{currentUser.email}}"></ion-input>
+        <ion-input required type="email" [disabled]="!editMode" formControlName="email" value="{{currentUser.email}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.email">
@@ -67,10 +61,7 @@
     <div>
       <ion-item>
         <ion-label floating>Address</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="address"
-                   value="{{currentUser.address}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="address" value="{{currentUser.address}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.address">
@@ -80,10 +71,7 @@
     <div>
       <ion-item>
         <ion-label floating>Phone Number</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="phoneNumber"
-                   value="{{currentUser.phoneNumber}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="phoneNumber" value="{{currentUser.phoneNumber}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
@@ -93,10 +81,7 @@
     <div>
       <ion-item>
         <ion-label floating>NRIC NO.</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="nricNo"
-                   value="{{currentUser.nricNo}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="nricNo" value="{{currentUser.nricNo}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.nricNo">
@@ -106,9 +91,7 @@
     <div>
       <ion-item>
         <ion-label floating>Date of Birth</ion-label>
-        <ion-datetime required displayFormat="MMM DD YYYY"
-                      [disabled]="!editMode"
-                      formControlName="dateOfBirth"></ion-datetime>
+        <ion-datetime required displayFormat="MMM DD YYYY" [disabled]="!editMode" formControlName="dateOfBirth"></ion-datetime>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.phoneNumber">
@@ -132,10 +115,7 @@
     <div>
       <ion-item>
         <ion-label floating>Race</ion-label>
-        <ion-input type="text"
-                   [disabled]="!editMode"
-                   formControlName="race"
-                   value="{{currentUser.race}}"></ion-input>
+        <ion-input type="text" [disabled]="!editMode" formControlName="race" value="{{currentUser.race}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.race">
@@ -145,20 +125,14 @@
     <div>
       <ion-item>
         <ion-label floating>AGE</ion-label>
-        <ion-input type="number"
-                   [disabled]="!editMode"
-                   formControlName="age"
-                   value="{{currentUser.age}}"></ion-input>
+        <ion-input type="number" [disabled]="!editMode" formControlName="age" value="{{currentUser.age}}"></ion-input>
       </ion-item>
     </div>
 
     <div>
       <ion-item>
         <ion-label floating>BANK ACCOUNT DETAILS</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="bankAccountDetails"
-                   value="{{currentUser.bankAccountDetails}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="bankAccountDetails" value="{{currentUser.bankAccountDetails}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.bankAccountDetails">
@@ -168,10 +142,7 @@
     <div>
       <ion-item>
         <ion-label floating>ACCOUNT NUMBER</ion-label>
-        <ion-input required type="text"
-                   [disabled]="!editMode"
-                   formControlName="accountNumber"
-                   value="{{currentUser.accountNumber}}"></ion-input>
+        <ion-input required type="text" [disabled]="!editMode" formControlName="accountNumber" value="{{currentUser.accountNumber}}"></ion-input>
       </ion-item>
     </div>
     <ion-item class="alert alert-danger" *ngIf="formErrors.accountNumber">

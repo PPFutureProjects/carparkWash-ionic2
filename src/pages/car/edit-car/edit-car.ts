@@ -8,21 +8,21 @@ import {
   LoadingController,
   LoadingOptions
 } from 'ionic-angular';
+import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Camera } from 'ionic-native';
 import { ValidationMessageService } from '../../shared/validator/validation-message.service';
 import { CarModel } from '../shared/car.model';
 import { UtilsPage } from '../../shared/utils.page';
 import { CarColourType } from '../shared/car-colour.enum';
-import { CarTypeEnum, CarType } from '../shared/car-silhouette.enum';
-import { TypeSelectPage } from './type-select/type-select';
 import { ColourSelectPage } from './colour-select/colour-select';
-import { SubscriptionPage } from '../subscription/subscription';
 import { CarParkModel } from '../../car-park/shared/car-park.model';
 import { SubscriberService } from '../subscription/subscriber.service';
 import { UserService } from '../../user/shared/user.service';
 import { UserModel } from '../../user/shared/user.model';
 import { CarService } from '../shared/car.service';
+import { CarParkSgApiModel } from '../../car-park/shared/car-park-sg-api.model';
+import { CarParkService } from '../../car-park/shared/car-park.service';
 
 @Component({
   selector: 'page-edit-car',
@@ -30,15 +30,15 @@ import { CarService } from '../shared/car.service';
 })
 export class EditCarPage extends UtilsPage {
 
-  title: string;
+  action: {title: string, button: string};
+  searchCarPark: string | CarParkSgApiModel = <any>{address: ''};
+  carParkToSubscribe: CarParkModel;
   carToEdit: CarModel;
   carToEditTemp: CarModel;
   selectedColour: CarColourType;
-  selectedType: CarType;
   selectedPicture: string;
   isPictureLoading = false;
 
-  silhouetteEnum = CarTypeEnum;
   carForm: FormGroup;
   formErrors = {
     licencePlateNumber: '',
@@ -53,7 +53,8 @@ export class EditCarPage extends UtilsPage {
               public messageService: ValidationMessageService, public params: NavParams,
               public modalCtrl: ModalController, public actionSheetCtrl: ActionSheetController,
               public subscriberService: SubscriberService, public userService: UserService,
-              public loadingCtrl: LoadingController, public carService: CarService) {
+              public loadingCtrl: LoadingController, public carService: CarService,
+              public domSanitizer: DomSanitizer, public carParkService: CarParkService) {
 
     super(toastCtrl);
     this.loadingOptions = {
@@ -65,10 +66,10 @@ export class EditCarPage extends UtilsPage {
       .catch(err => console.log(err));
     this.carToEdit = params.get('carToEdit') ? params.get('carToEdit') : new CarModel();
     if (this.carToEdit.licencePlateNumber) {
-      this.title = 'Edit Vehicle';
+      this.action = {title: 'Edit Vehicle', button: 'Update informations'};
       this.subscribeAndAdd = false;
     } else {
-      this.title = 'Add Vehicle';
+      this.action = {title: 'Add Vehicle', button: 'Subscribe'};
       this.subscribeAndAdd = true;
     }
     this.buildForm(this.carToEdit);
@@ -76,16 +77,6 @@ export class EditCarPage extends UtilsPage {
 
   ionViewWillEnter() {
     this.buildForm(this.carToEdit);
-  }
-
-  selectSilhouette() {
-    this.saveCarToEditTemp();
-    let carTypeSelectPage = this.modalCtrl.create(TypeSelectPage,
-      {'carToEdit': this.carToEditTemp});
-    carTypeSelectPage.onDidDismiss((carToEdit: CarModel) => {
-      this.buildForm(carToEdit);
-    });
-    carTypeSelectPage.present();
   }
 
   selectColour(carColour: CarColourType) {
@@ -135,35 +126,54 @@ export class EditCarPage extends UtilsPage {
   }
 
   save() {
-    this.carToEdit.licencePlateNumber = this.carForm.value.licencePlateNumber;
-    this.carToEdit.brand = this.carForm.value.brand;
-    this.carToEdit.model = this.carForm.value.model;
-    this.carToEdit.colour = this.selectedColour;
-    this.carToEdit.type = this.selectedType;
-    this.carToEdit.picture = this.selectedPicture;
-    this.carToEdit.userUid = this.user.uid;
-    if (this.subscribeAndAdd) {
-      this.subscribe();
-    } else {
-      this.viewCtrl.dismiss(this.carToEdit);
-    }
+    this.carParkService.getById(this.carParkToSubscribe.id)
+      .then(carpark => {
+        if (carpark) {
+          this.carToEdit.licencePlateNumber = this.carForm.value.licencePlateNumber;
+          this.carToEdit.brand = this.carForm.value.brand;
+          this.carToEdit.colour = this.selectedColour;
+          this.carToEdit.picture = this.selectedPicture;
+          this.carToEdit.userUid = this.user.uid;
+          if (this.subscribeAndAdd) {
+            this.subscribe();
+          } else {
+            this.viewCtrl.dismiss(this.carToEdit);
+          }
+        } else {
+          this.showToast(`The Car Park ${this.carParkToSubscribe.address} is not added yet`, 'toastError');
+        }
+      });
+  }
+
+  getCarParkAddress = (carPark: any): SafeHtml => {
+    let html = `<span>${carPark.address}</span>`;
+    return this.domSanitizer.bypassSecurityTrustHtml(html);
+  };
+
+  carParkSelected() {
+    this.carParkToSubscribe = new CarParkModel();
+    this.carParkToSubscribe.id = String((<CarParkSgApiModel>this.searchCarPark)._id);
+    this.carParkToSubscribe.code = (<CarParkSgApiModel>this.searchCarPark).car_park_no;
+    this.carParkToSubscribe.address = (<CarParkSgApiModel>this.searchCarPark).address;
+    this.carParkToSubscribe.x = (<CarParkSgApiModel>this.searchCarPark).x_coord;
+    this.carParkToSubscribe.y = (<CarParkSgApiModel>this.searchCarPark).y_coord;
+  }
+
+  getCarParks() {
+    return this.carParkService.getByAddressAutocompletion(<string>this.searchCarPark);
   }
 
   private subscribe() {
-    let subscriptionPage = this.modalCtrl.create(SubscriptionPage,
-      {carToSubscribe: this.carToEdit, isActifSubscription: false});
-    subscriptionPage.onDidDismiss((result: {carPark: CarParkModel, lotNumber: string}) => {
-      console.log(result.carPark);
-      if (result.carPark) {
+      if (this.carParkToSubscribe) {
         let loading = this.loadingCtrl.create(this.loadingOptions);
         loading.present();
         this.carService.add(this.user, this.carToEdit).then(() => {
-          this.subscriberService.subscribe(result.carPark, this.carToEdit)
+          this.subscriberService.subscribe(this.carParkToSubscribe, this.carToEdit)
             .then(() => {
               loading.dismissAll();
               this.viewCtrl.dismiss();
               this.showToast(`the car ${this.carToEdit.licencePlateNumber}
-                  is subscribed to the car park ${result.carPark.address}`, 'toastInfo');
+                  is subscribed to the car park ${this.carParkToSubscribe.address}`, 'toastInfo');
             })
             .catch(err => {
               loading.dismissAll();
@@ -176,18 +186,14 @@ export class EditCarPage extends UtilsPage {
           this.showToast(`Fail to add ${this.carToEdit.licencePlateNumber}`, 'toastError');
         });
       }
-    });
-    subscriptionPage.present();
   }
 
   private buildForm(carToEdit: CarModel) {
     this.selectedPicture = carToEdit.picture;
     this.selectedColour = carToEdit.colour;
-    this.selectedType = carToEdit.type;
     this.carForm = this.formBuilder.group({
       licencePlateNumber: [carToEdit.licencePlateNumber, Validators.required],
-      brand: [carToEdit.brand],
-      model: [carToEdit.model],
+      brand: [carToEdit.brand]
     });
     this.carForm.valueChanges
       .subscribe(data => this.messageService.onValueChanged(this.carForm, this.formErrors));
@@ -198,9 +204,7 @@ export class EditCarPage extends UtilsPage {
     this.carToEditTemp = new CarModel();
     this.carToEditTemp.licencePlateNumber = this.carForm.value.licencePlateNumber;
     this.carToEditTemp.brand = this.carForm.value.brand;
-    this.carToEditTemp.model = this.carForm.value.model;
     this.carToEditTemp.colour = this.selectedColour;
-    this.carToEditTemp.type = this.selectedType;
     this.carToEditTemp.picture = this.selectedPicture;
   }
 

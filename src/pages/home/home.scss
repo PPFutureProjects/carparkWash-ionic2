@@ -86,10 +86,13 @@ page-home {
       padding: 0px 0px 0px 35px !important;
     }
   }
+  .searchbar-clear-icon {
+    display: none !important;
+  }
   .searchbar-md .searchbar-md-cancel, .searchbar-ios .searchbar-ios-cancel {
     left: 3px;
   }
-  .searchbar-md .searchbar-search-icon , .searchbar-ios .searchbar-search-icon {
+  .searchbar-md .searchbar-search-icon, .searchbar-ios .searchbar-search-icon {
     // this path is correct for web emultion and real device
     background-image: url('../assets/icon/MarkerFilled-50.png');
     top: 5px;
@@ -97,9 +100,6 @@ page-home {
     width: 20px;
     height: 20px;
     background-size: 20px;
-  }
-  .searchbar-clear-icon {
-    display: none !important;
   }
 
   .divider {

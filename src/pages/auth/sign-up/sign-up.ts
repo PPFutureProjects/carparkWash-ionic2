@@ -30,7 +30,6 @@ export class SignUpPage extends UtilsPage {
   selectedPicture: string = 'assets/picture/cam.png';
   isPictureLoading = false;
 
-  // carTypeEnum = CarTypeEnum;
   signUpForm: FormGroup;
   signUpFormErrors = {
     email: '',
@@ -41,13 +40,6 @@ export class SignUpPage extends UtilsPage {
     phoneNumber: '',
     profile: '',
   };
-  // carForm: FormGroup;
-  // carFormErrors = {
-  //   licencePlateNumber: '',
-  //   brand: '',
-  //   model: '',
-  //   colour: ''
-  // };
 
   private loadingOptions: LoadingOptions;
 
@@ -60,7 +52,7 @@ export class SignUpPage extends UtilsPage {
     super(toastCtrl);
     this.userModel = new UserModel();
     this.userModel.profile = ProfileEnum.client;
-    this.buildForms();
+    this.buildSignUpForm();
     this.menuCtr.enable(false);
     this.loadingOptions = {
       content: 'Loading',
@@ -79,7 +71,7 @@ export class SignUpPage extends UtilsPage {
           this.menuCtr.enable(true);
           this.navCtrl.setRoot(HomePage);
         } else {
-          this.buildForms();
+          this.buildSignUpForm();
         }
       })
       .catch(err => {
@@ -186,25 +178,6 @@ export class SignUpPage extends UtilsPage {
       this.showToast(errMsg, 'toastError');
     });
   }
-
-  private buildForms() {
-    this.buildSignUpForm();
-    // this.buildCarForm();
-  }
-
-  // private buildCarForm() {
-  //   this.carForm = this.formBuilder.group({
-  //     licencePlateNumber: ['', Validators.compose([Validators.required,
-  //       Validators.minLength(this.messageService.minLengthLicencePlateNumber),
-  //       Validators.maxLength(this.messageService.maxLengthLicencePlateNumber)])],
-  //     brandModel: ['', Validators.maxLength(this.messageService.maxLengthBrandModel)],
-  //     colour: ['', Validators.maxLength(this.messageService.maxLengthCarColour)]
-  //   });
-  //   this.carForm.valueChanges.subscribe(data => {
-  //     this.messageService.onValueChanged(this.carForm, this.carFormErrors);
-  //   });
-  //   this.messageService.onValueChanged(this.carForm, this.carFormErrors);
-  // }
 
   private buildSignUpForm() {
     this.signUpForm = this.formBuilder.group({

@@ -6,7 +6,7 @@
         <img src="assets/icon/Back-32.png">
       </button>
     </ion-buttons>
-    <ion-title text-center>{{ title }}</ion-title>
+    <ion-title text-center>{{ action.title }}</ion-title>
     <ion-buttons right>
       <div class="btn-icon-style"></div>
     </ion-buttons>
@@ -15,76 +15,56 @@
 
 <ion-content padding>
 
+  <div class="center-element car-picture-max-size">
+    <img class="fit-picture " (tap)="startPickPicture()" [src]="selectedPicture">
+    <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
+  </div>
+
+  <div>
+    <ion-searchbar auto-complete class="margin-top20 autocomplete-input" type="text" showCancelButton="true"
+                   accept-user-input="false" autocomplete="off" tabindex="-1"
+                   value-property-name="_id" display-property-name="address"
+                   placeholder="Location" max-num-list="20"
+                   [list-formatter]="getCarParkAddress" (valueChanged)="carParkSelected()"
+                   [(ngModel)]="searchCarPark" [source]="getCarParks.bind(this)"></ion-searchbar>
+  </div>
+
   <form [formGroup]="carForm">
-
-    <div class="center-element car-picture-max-size">
-      <img class="fit-picture " (tap)="startPickPicture()" [src]="selectedPicture">
-      <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
-    </div>
-
-
-    <div>
-      <ion-item class="input-border margin-top20">
-        <ion-input required type="text" placeholder="Licence Plate Number"
-                   formControlName="licencePlateNumber"></ion-input>
-      </ion-item>
-    </div>
-    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.licencePlateNumber">
-      {{ formErrors.licencePlateNumber }}
-    </ion-item>
-
-    <div class="row-input margin-top20">
+    <ion-list>
       <div>
-        <ion-item class="input-border margin-right20">
-          <ion-input required type="text" placeholder="Brand"
-                     formControlName="brand"></ion-input>
+        <ion-item class="ion-item-input margin-top20">
+          <ion-label>
+            <img src="assets/icon/car-50.png">
+          </ion-label>
+          <ion-input type="text" placeholder="Brand" formControlName="brand"></ion-input>
         </ion-item>
       </div>
-      <div>
-        <ion-item class="input-border">
-          <ion-input required type="text" placeholder="Model"
-                     formControlName="model"></ion-input>
-        </ion-item>
-      </div>
-    </div>
-    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.brand">
-      {{ formErrors.brand }}
-    </ion-item>
-    <ion-item no-lines class="center-input alert alert-danger" *ngIf="formErrors.model">
-      {{ formErrors.model }}
-    </ion-item>
 
-    <div class="row-input margin-top20">
-      <ion-item class="margin-right20">
-        <ion-label class="margin0" (tap)="selectSilhouette()">
-          <img *ngIf="selectedType === silhouetteEnum.sedan" src="assets/picture/sedan.jpg">
-          <img *ngIf="selectedType === silhouetteEnum.suv" src="assets/picture/suv.jpg">
-          <div *ngIf="!selectedType">Select Car Type</div>
-        </ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-label class="margin0" (tap)="selectColour()">
-          <!--<colour-select [value]="selectedColour" (selectValueEvent)="setSelectedColour($event)"></colour-select>-->
-          <div *ngIf="selectedColour" class="color-box-size color-box-border"
+      <div class="row-space-between margin-top20">
+        <div>
+          <ion-item class="ion-item-input">
+            <ion-label>
+              <img src="assets/icon/car-50.png">
+            </ion-label>
+            <ion-input required type="text" placeholder="Plate No." formControlName="licencePlateNumber"></ion-input>
+          </ion-item>
+        </div>
+        <div class="" (tap)="selectColour()">
+          <div *ngIf="selectedColour" class="color-box-size color-box-border color-box-position"
                [ngStyle]="{backgroundColor: selectedColour}"></div>
-          <div *ngIf="!selectedColour">
+          <div class="select-color-position" *ngIf="!selectedColour">
             Select Colour
           </div>
-        </ion-label>
-      </ion-item>
-    </div>
+        </div>
+      </div>
+    </ion-list>
   </form>
 
 
-  <P class="text-center">Please make sure the picture of your vehicle and plate number are clear and visible.</P>
+  <P class="text-center" style="margin-top: 30px;">Please make sure the picture of your vehicle and plate number are clear and visible.</P>
 
-  <ion-item no-lines>
-    <ion-label class="btns-dialog">
-      <button ion-button icon-only large clear [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
-        <ion-icon name="arrow-forward"></ion-icon>
-      </button>
-    </ion-label>
-  </ion-item>
+  <button ion-button block large [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
+    {{ action.button }}
+  </button>
 
 </ion-content>

@@ -34,11 +34,6 @@ page-edit-car {
     padding: 0px;
   }
 
-  .input-border {
-    border: solid black 1px !important;
-    //border-radius: 5px !important;
-  }
-
   .margin-top20 {
     margin-top: 20px;
   }
@@ -51,9 +46,20 @@ page-edit-car {
     margin: 0px;
   }
 
-  .row-input {
+  .row-space-between {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .select-color-position {
+    margin-left: 20px;
+    margin-top: 5px;
+  }
+
+  .color-box-position {
+    margin-right: 20px;
+    margin-top: 5px;
   }
 
   .color-box-size {
@@ -63,5 +69,33 @@ page-edit-car {
 
   .color-box-border {
     border: black solid 1px;
+  }
+
+  .autocomplete-input {
+    border: 0px !important;
+    background: inherit !important;
+    border-radius: 0px !important;
+    input {
+      box-shadow: 0px 0px !important;
+      background: #ECF0F1 !important;
+      border-radius: 0px !important;
+      padding: 0px 0px 0px 35px !important;
+      height: 46px !important;
+    }
+  }
+  .searchbar-clear-icon {
+    display: none !important;
+  }
+  .searchbar-md .searchbar-md-cancel, .searchbar-ios .searchbar-ios-cancel {
+    left: 3px;
+  }
+  .searchbar-md .searchbar-search-icon, .searchbar-ios .searchbar-search-icon {
+    // this path is correct for web emultion and real device
+    background-image: url('../assets/icon/Marker-50.png');
+    top: 11px;
+    left: 8px;
+    width: 25px;
+    height: 25px;
+    background-size: 23px;
   }
 }

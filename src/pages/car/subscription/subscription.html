@@ -8,29 +8,13 @@
 
   <app-car-item [car]="car" [isSelected]="true"></app-car-item>
 
-  <ion-searchbar auto-complete class="margin-vertical" *ngIf="!isActifSubscription"
-                 placeholder="Car Park Address" max-num-list="20" accept-user-input="false"
-                 [list-formatter]="getCarParkAddress"
-                 autocomplete="off" tabindex=-1 (valueChanged)="carParkSelected()"
-                 value-property-name="_id" display-property-name="address"
-                 [(ngModel)]="searchCarPark" [source]="getCarParks.bind(this)"></ion-searchbar>
-
-  <div class="margin-vertical" *ngIf="isActifSubscription">
+  <div class="margin-vertical">
     Car park address: {{ carPark.address }}
   </div>
 
-  <div *ngIf="isActifSubscription">
-    <ion-item class="input-border">
-      <ion-input required type="text" placeholder="Car Park Lot Number" [(ngModel)]="lotNumber" ></ion-input>
-    </ion-item>
-  </div>
+  <ion-item class="input-border">
+    <ion-input required type="text" placeholder="Car Park Lot Number" [(ngModel)]="lotNumber"></ion-input>
+  </ion-item>
 
   <button ion-button margin-top class="bg-color-green" (tap)="confirm()">Done</button>
-  <!--<div class="btns-action-dialog">-->
-    <!--<img class="btn-delete-position" src="assets/icon/Delete-Black-48.png"-->
-         <!--(tap)="cancel()">-->
-
-    <!--<img class="btn-delete-position" src="assets/icon/Checkmark-Filled-48.png"-->
-         <!--(tap)="confirm()">-->
-  <!--</div>-->
 </div>
