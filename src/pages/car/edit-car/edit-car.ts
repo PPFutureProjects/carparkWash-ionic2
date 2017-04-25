@@ -66,7 +66,7 @@ export class EditCarPage extends UtilsPage {
       .catch(err => console.log(err));
     this.carToEdit = params.get('carToEdit') ? params.get('carToEdit') : new CarModel();
     if (this.carToEdit.licencePlateNumber) {
-      this.action = {title: 'Edit Vehicle', button: 'Update informations'};
+      this.action = {title: 'Edit Vehicle', button: 'Update'};
       this.subscribeAndAdd = false;
     } else {
       this.action = {title: 'Add Vehicle', button: 'Subscribe'};

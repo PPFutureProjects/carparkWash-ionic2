@@ -26,6 +26,10 @@ page-edit-car {
     height: 200px;
   }
 
+  .car-picture-bg {
+    background-color: #f1e8e1;
+  }
+
   .fit-picture {
     object-fit: contain;
   }
@@ -36,6 +40,10 @@ page-edit-car {
 
   .margin-top20 {
     margin-top: 20px;
+  }
+
+  .margin-top10 {
+    margin-top: 10px;
   }
 
   .margin-right20 {
@@ -75,6 +83,7 @@ page-edit-car {
     border: 0px !important;
     background: inherit !important;
     border-radius: 0px !important;
+    padding: 0px !important;
     input {
       box-shadow: 0px 0px !important;
       background: #ECF0F1 !important;
@@ -91,11 +100,12 @@ page-edit-car {
   }
   .searchbar-md .searchbar-search-icon, .searchbar-ios .searchbar-search-icon {
     // this path is correct for web emultion and real device
-    background-image: url('../assets/icon/Marker-50.png');
+    background-image: url('../assets/icon/MarkerGray-50.png');
     top: 11px;
     left: 8px;
     width: 25px;
     height: 25px;
     background-size: 23px;
   }
+
 }

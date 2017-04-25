@@ -13,58 +13,59 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 
-  <div class="center-element car-picture-max-size">
+  <div class="center-element car-picture-max-size car-picture-bg">
     <img class="fit-picture " (tap)="startPickPicture()" [src]="selectedPicture">
     <ion-spinner *ngIf="isPictureLoading"></ion-spinner>
   </div>
 
-  <div>
-    <ion-searchbar auto-complete class="margin-top20 autocomplete-input" type="text" showCancelButton="true"
-                   accept-user-input="false" autocomplete="off" tabindex="-1"
-                   value-property-name="_id" display-property-name="address"
-                   placeholder="Location" max-num-list="20"
-                   [list-formatter]="getCarParkAddress" (valueChanged)="carParkSelected()"
-                   [(ngModel)]="searchCarPark" [source]="getCarParks.bind(this)"></ion-searchbar>
-  </div>
+  <div padding>
+    <div>
+      <ion-searchbar auto-complete class="margin-top10 autocomplete-input" type="text" showCancelButton="true"
+                     accept-user-input="false" autocomplete="off" tabindex="-1"
+                     value-property-name="_id" display-property-name="address"
+                     placeholder="Location" max-num-list="20"
+                     [list-formatter]="getCarParkAddress" (valueChanged)="carParkSelected()"
+                     [(ngModel)]="searchCarPark" [source]="getCarParks.bind(this)"></ion-searchbar>
+    </div>
 
-  <form [formGroup]="carForm">
-    <ion-list>
-      <div>
-        <ion-item class="ion-item-input margin-top20">
-          <ion-label>
-            <img src="assets/icon/car-50.png">
-          </ion-label>
-          <ion-input type="text" placeholder="Brand" formControlName="brand"></ion-input>
-        </ion-item>
-      </div>
-
-      <div class="row-space-between margin-top20">
+    <form [formGroup]="carForm">
+      <ion-list>
         <div>
-          <ion-item class="ion-item-input">
+          <ion-item class="ion-item-input margin-top20">
             <ion-label>
-              <img src="assets/icon/car-50.png">
+              <img src="assets/icon/carGray-50.png">
             </ion-label>
-            <ion-input required type="text" placeholder="Plate No." formControlName="licencePlateNumber"></ion-input>
+            <ion-input type="text" placeholder="Brand" formControlName="brand"></ion-input>
           </ion-item>
         </div>
-        <div class="" (tap)="selectColour()">
-          <div *ngIf="selectedColour" class="color-box-size color-box-border color-box-position"
-               [ngStyle]="{backgroundColor: selectedColour}"></div>
-          <div class="select-color-position" *ngIf="!selectedColour">
-            Select Colour
+
+        <div class="row-space-between margin-top20">
+          <div>
+            <ion-item class="ion-item-input">
+              <ion-label>
+                <img src="assets/icon/CarInsuranceCardGray-50.png">
+              </ion-label>
+              <ion-input required type="text" placeholder="Plate No." formControlName="licencePlateNumber"></ion-input>
+            </ion-item>
+          </div>
+          <div class="" (tap)="selectColour()">
+            <div *ngIf="selectedColour" class="color-box-size color-box-border color-box-position"
+                 [ngStyle]="{backgroundColor: selectedColour}"></div>
+            <div class="select-color-position" *ngIf="!selectedColour">
+              Select Colour
+            </div>
           </div>
         </div>
-      </div>
-    </ion-list>
-  </form>
+      </ion-list>
+    </form>
 
+    <P class="text-center" style="margin-top: 30px;">Please make sure the picture of your vehicle and plate number are clear and visible.</P>
 
-  <P class="text-center" style="margin-top: 30px;">Please make sure the picture of your vehicle and plate number are clear and visible.</P>
-
-  <button ion-button block large [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
-    {{ action.button }}
-  </button>
+    <button ion-button block large [disabled]="carForm.invalid" (tap)="carForm.valid && save()">
+      {{ action.button }}
+    </button>
+  </div>
 
 </ion-content>

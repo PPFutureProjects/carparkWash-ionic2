@@ -12,30 +12,43 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content class="bg-color">
 
-  <ion-grid>
-    <ion-row wrap>
-      <ion-col class="item-car-width" *ngFor="let car of currentUser.cars">
+  <ion-list class="margin-top20">
+    <div *ngFor="let car of currentUser.cars">
+      <ion-item no-lines>
         <app-car-item [car]="car" isEdit="true" (toRemove)="removeCar($event)"></app-car-item>
-      </ion-col>
-      <ion-col class="item-car-width" *ngIf="currentUser.cars?.length < 4">
-        <!--<ion-icon name="ios-add" class="add-icon-style" (tap)="addCar()"></ion-icon>-->
-        <ion-card class="item-car-width">
-          <!--<ion-card-header>{{car?.licencePlateNumber}}</ion-card-header>-->
-          <div class="add-car-thumbnail" (tap)="addCar()">
-            <img src="assets/icon/AddKey-100.png">
-          </div>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      </ion-item>
+      <br>
+    </div>
+    <ion-item no-lines *ngIf="currentUser.cars?.length < 4">
+      <div class="add-car-thumbnail" (tap)="addCar()">
+        <img src="assets/icon/PlusFilledGray-50.png">
+      </div>
+    </ion-item>
+  </ion-list>
+
+  <!--<ion-grid>-->
+  <!--<ion-row wrap>-->
+  <!--<ion-col class="item-car-width" *ngFor="let car of currentUser.cars">-->
+  <!--<app-car-item [car]="car" isEdit="true" (toRemove)="removeCar($event)"></app-car-item>-->
+  <!--</ion-col>-->
+  <!--<ion-col class="item-car-width" *ngIf="currentUser.cars?.length < 4">-->
+  <!--&lt;!&ndash;<ion-icon name="ios-add" class="add-icon-style" (tap)="addCar()"></ion-icon>&ndash;&gt;-->
+  <!--<ion-card class="item-car-width">-->
+  <!--&lt;!&ndash;<ion-card-header>{{car?.licencePlateNumber}}</ion-card-header>&ndash;&gt;-->
+  <!--<div class="add-car-thumbnail" (tap)="addCar()">-->
+  <!--<img src="assets/icon/AddKey-100.png">-->
+  <!--</div>-->
+  <!--</ion-card>-->
+  <!--</ion-col>-->
+  <!--</ion-row>-->
+  <!--</ion-grid>-->
 
   <div class="text-warning-portrait">
     <p class="text-warning">Note: Removing your car will terminate your
-    subscription. Tap and Wash will not refund the balance days of your subscription.
-    <a class="read-more-warning" href="#">Read more</a>
+      subscription. Tap and Wash will not refund the balance days of your subscription.
+      <a class="read-more-warning" href="#">Read more</a>
   </div>
 
 </ion-content>
-

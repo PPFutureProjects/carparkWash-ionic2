@@ -1,20 +1,43 @@
-<ion-card class="column-center item-car-width" *ngIf="initDone">
-
-  <div class="thumbnail" *ngIf="!isEdit" (tap)="selectToWash()">
-    <img #carThumb [src]="car?.picture"/>
+<ion-card class="column-center item-car-width" *ngIf="initDone && car && !isEdit">
+  <div class="thumbnail" (tap)="selectToWash()">
+    <img #carThumb [src]="car.picture"/>
   </div>
-
-  <div class="thumbnail" *ngIf="isEdit" (tap)="edit()">
-    <img #carThumb [src]="car?.picture"/>
-  </div>
-
+  <!--<div class="thumbnail" *ngIf="isEdit" (tap)="edit()">-->
+    <!--<img #carThumb [src]="car?.picture"/>-->
+  <!--</div>-->
   <ion-card-content *ngIf="!isSelected && car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash
                     && (currentUser?.profile === profileEnum.supervisor || currentUser?.profile === profileEnum.manager)">
     <button ion-button clear (tap)="selectCleaner()">Select<br>Cleaner</button>
   </ion-card-content>
-
 </ion-card>
+<!--<img class="btn-delete-position" src="assets/icon/Cancel-30.png"-->
+     <!--*ngIf="initDone && !isSelected && isEdit"-->
+     <!--(tap)="remove()">-->
 
-<img class="btn-delete-position" src="assets/icon/Cancel-30.png"
-     *ngIf="initDone && !isSelected && isEdit"
-     (tap)="remove()">
+
+<div *ngIf="initDone && car && isEdit">
+  <ion-item-sliding #slidingItem>
+    <ion-item>
+
+      <ion-avatar item-left class="square-avatar no-padding-left">
+        <img #carThumb [src]="car.picture"/>
+      </ion-avatar>
+      <ion-label class="margin0">
+        <h2 class="margin0 flex-sb">
+          <span class="car-plate-number bold">{{ car.licencePlateNumber }}</span>
+          <span>{{ car.subscription.days[dayIndex].job?.assignmentDate | date: 'HH:mm' }}</span>
+        </h2>
+        <p class="lot-no">Lot No: <span class="bold">{{ car.subscription.days[dayIndex].carParkLotNumber }}</span></p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item-options side="right">
+      <button ion-button color="primary" (click)="slidingItem.close() || remove()">
+        Remove
+      </button>
+      <button ion-button color="secondary" (click)="slidingItem.close() || edit()">
+        Edit
+      </button>
+    </ion-item-options>
+  </ion-item-sliding>
+</div>

@@ -1,18 +1,27 @@
 page-add-edit-cars {
 
-  .item-car-width {
-    width: 129px;
-    min-width: 129px;
+  //.item-car-width {
+  //  width: 129px;
+  //  min-width: 129px;
+  //}
+
+  //.add-icon-style {
+  //  height: 129px;
+  //  width: 129px;
+  //  margin: 10px;
+  //  border: solid 2px black;
+  //  border-radius: 5px;
+  //  text-align: center;
+  //  font-size: 100px;
+  //}
+
+
+  .bg-color {
+    background-color: #f1e8e1;
   }
 
-  .add-icon-style {
-    height: 129px;
-    width: 129px;
-    margin: 10px;
-    border: solid 2px black;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 100px;
+  .margin-top20 {
+    margin-top: 20px;
   }
 
   .read-more-warning {
@@ -28,24 +37,24 @@ page-add-edit-cars {
     flex-direction: column;
   }
 
-  .add-car-thumbnail {
-    border: solid 2px #999;
-    border-radius: 5px;
-    position: relative;
-    width: 129px;
-    height: 129px;
-    overflow: hidden;
-  }
-  .add-car-thumbnail img {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    height: 70%;;
-    width: auto;
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
-  }
+  //.add-car-thumbnail {
+  //  border: solid 2px #999;
+  //  border-radius: 5px;
+  //  position: relative;
+  //  width: 129px;
+  //  height: 129px;
+  //  overflow: hidden;
+  //}
+  //.add-car-thumbnail img {
+  //  position: absolute;
+  //  left: 50%;
+  //  top: 50%;
+  //  height: 70%;;
+  //  width: auto;
+  //  -webkit-transform: translate(-50%,-50%);
+  //  -ms-transform: translate(-50%,-50%);
+  //  transform: translate(-50%,-50%);
+  //}
 
   @media all and (orientation: portrait) {
     .text-warning-portrait {
