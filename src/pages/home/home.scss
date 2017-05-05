@@ -1,12 +1,5 @@
 page-home {
 
-  .profile-avatar {
-    img {
-      width: 100px !important;
-      height: 100px !important;
-    }
-  }
-
   ion-avatar {
     //width: 72px;
     //height: 72px;
@@ -23,14 +16,6 @@ page-home {
     -o-box-shadow: 1px 1px 5px 0px #656565;
     box-shadow: 1px 1px 5px 0px #656565;
     filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=5);
-  }
-
-  .square-avatar {
-    border-radius: 0px;
-    box-shadow: inherit;
-    img {
-      border-radius: 5px;
-    }
   }
 
   .icon-lbl {
@@ -54,14 +39,6 @@ page-home {
 
   .no-car-icon {
     font-size: 50px;
-  }
-
-  .margin0 {
-    margin: 0px;
-  }
-
-  .padding1 {
-    padding: 1px;
   }
 
   .title-activities {
@@ -110,25 +87,10 @@ page-home {
     margin-right: 20px;
   }
 
-  .flex-row {
-    display: flex;
-    flex-direction: row;
-  }
-
   .flex-column-center {
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
-
-  .profile-icon {
-    height: 30px;
-    width: 30px;
-    margin-right: 20px;
-  }
-
-  .item-car-width {
-    width: 129px;
   }
 
   .bg-white {

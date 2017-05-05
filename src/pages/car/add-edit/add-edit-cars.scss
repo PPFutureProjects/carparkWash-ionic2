@@ -1,20 +1,10 @@
 page-add-edit-cars {
 
-  //.item-car-width {
-  //  width: 129px;
-  //  min-width: 129px;
-  //}
-
-  //.add-icon-style {
-  //  height: 129px;
-  //  width: 129px;
-  //  margin: 10px;
-  //  border: solid 2px black;
-  //  border-radius: 5px;
-  //  text-align: center;
-  //  font-size: 100px;
-  //}
-
+  .row-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
 
   .bg-color {
     background-color: #f1e8e1;
@@ -22,6 +12,17 @@ page-add-edit-cars {
 
   .margin-top20 {
     margin-top: 20px;
+  }
+
+  .no-padding {
+    padding: 0px !important;
+    .item-inner {
+      padding: 0px !important;
+    }
+  }
+
+  .no-margin {
+    margin: 0px !important;
   }
 
   .read-more-warning {
@@ -36,6 +37,21 @@ page-add-edit-cars {
     display: flex;
     flex-direction: column;
   }
+
+  //.item-car-width {
+  //  width: 129px;
+  //  min-width: 129px;
+  //}
+
+  //.add-icon-style {
+  //  height: 129px;
+  //  width: 129px;
+  //  margin: 10px;
+  //  border: solid 2px black;
+  //  border-radius: 5px;
+  //  text-align: center;
+  //  font-size: 100px;
+  //}
 
   //.add-car-thumbnail {
   //  border: solid 2px #999;
@@ -56,13 +72,13 @@ page-add-edit-cars {
   //  transform: translate(-50%,-50%);
   //}
 
-  @media all and (orientation: portrait) {
-    .text-warning-portrait {
-      bottom: 20px;
-      position: absolute;
-      //left: 50%;
-      //transform: translateX(-50%);
-    }
-  }
+  //@media all and (orientation: portrait) {
+  //  .text-warning-portrait {
+  //    bottom: 20px;
+  //    position: absolute;
+  //    //left: 50%;
+  //    //transform: translateX(-50%);
+  //  }
+  //}
 
 }

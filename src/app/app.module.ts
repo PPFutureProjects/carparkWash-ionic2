@@ -41,6 +41,7 @@ import { SubscriptionPage } from '../pages/car/subscription/subscription';
 import { JobItemComponent } from '../pages/car/job/job-item';
 import { NotificationService } from '../pages/notification/notification-list/notification.service';
 import { NotificationListPage } from '../pages/notification/notification-list/notification-list';
+import { InformationComponent } from '../pages/profile/information/information';
 
 // firebase-import --database_url https://carparkwashingservice.firebaseio.com --path /allCarParks --json data.json
 
@@ -75,6 +76,7 @@ import { NotificationListPage } from '../pages/notification/notification-list/no
     HistoryClientComponent,
     HistoryCarParkComponent,
     JobItemComponent,
+    InformationComponent,
 
     CamelCasePipe
   ],

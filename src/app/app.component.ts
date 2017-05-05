@@ -13,6 +13,7 @@ import { SupportPage } from '../pages/support/support';
 import { PageModel } from './page.model';
 import { PushNotificationService } from '../pages/shared/push-notification.service';
 import { AddEditCarPage } from '../pages/car/add-edit/add-edit-cars';
+import { UserModel } from '../pages/user/shared/user.model';
 
 declare var cordova: any;
 
@@ -23,13 +24,11 @@ export class MyApp {
 
   @ViewChild(Nav) nav: Nav;
 
+  currentUser: UserModel;
   rootPage: any = WelcomPage;
-
   pages: Array<PageModel>;
-
+  profileTypeEnum = ProfileEnum;
   ICON_PATH = 'assets/icon/colored/';
-
-  logOutBtn: PageModel;
 
   constructor(public platform: Platform, public firebaseService: FirebaseService,
               public pushNotificationService: PushNotificationService, public menuController: MenuController,
@@ -42,6 +41,7 @@ export class MyApp {
     this.userReady.notifySource$.subscribe(() => {
       this.userService.getCurrent().then(user => {
         if (user) {
+          this.currentUser = user;
           this.initPagesMenu(user.profile);
         }
       });
@@ -151,6 +151,5 @@ export class MyApp {
       });
     }
     this.pages.push({id: 'LogOut', icon: this.ICON_PATH + 'exit-48.png', title: 'Log out', component: WelcomPage});
-    // this.logOutBtn = {icon: this.ICON_PATH + 'Exit-32.png', title: 'Log out', component: WelcomPage, param: {}};
   }
 }

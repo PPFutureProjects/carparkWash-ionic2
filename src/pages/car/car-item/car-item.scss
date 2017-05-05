@@ -1,6 +1,39 @@
 
 app-car-item {
 
+  .square-avatar {
+    border-radius: 0px;
+    box-shadow: inherit;
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+    img {
+      border-radius: 5px;
+      width: 70px;
+      height: 70px;
+    }
+  }
+
+  ion-item-options {
+    button {
+      width: 75px !important;
+      border-radius: 0px !important;
+    }
+  }
+
+  .flex-sb {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .no-padding-margin {
+    padding: 0px;
+    margin: 0px;
+    .item-inner {
+      padding: 0px;
+      margin: 0px;
+    }
+  }
+
   ion-item {
     min-height: 25px !important;
   }
@@ -37,9 +70,9 @@ app-car-item {
     top: 50%;
     height: 100%;
     width: auto;
-    -webkit-transform: translate(-50%,-50%);
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
   }
   .thumbnail img.portrait {
     width: calc(100% - 1px);
@@ -58,3 +91,4 @@ app-car-item {
   }
 
 }
+

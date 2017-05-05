@@ -15,6 +15,12 @@
 
 
   <ion-content class="menu">
+
+    <div class="bg-white" *ngIf="currentUser?.profile === profileTypeEnum.client">
+      <profile-information [currentUser]="currentUser"></profile-information>
+      <div class="divider"></div>
+    </div>
+
     <ion-list class="margin-bottom0">
       <button ion-item class="override-ios-menu bg-transparent btn-menu-separator" *ngFor="let p of pages" (tap)="openPage(p)">
         <ion-label class="menu-item">
@@ -25,18 +31,8 @@
     </ion-list>
   </ion-content>
 
-  <!--<ion-footer>-->
-  <!--<ion-toolbar class="footer-log-out">-->
-  <!--<button menuClose ion-item class="btn-log-out" (tap)="logOut()">-->
-  <!--<ion-label class="menu-item lbl-log-out">-->
-  <!--<div class="margin-right">{{logOutBtn.title}}</div>-->
-  <!--<img src="{{ logOutBtn.icon }}">-->
-  <!--</ion-label>-->
-  <!--</button>-->
-  <!--</ion-toolbar>-->
-  <!--</ion-footer>-->
-
 </ion-menu>
 
 <!-- Disable swipe-to-go-back because it's poor UX to combine STGB with side menus -->
 <ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>
+

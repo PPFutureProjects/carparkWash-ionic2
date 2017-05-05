@@ -1,0 +1,23 @@
+<ion-item no-lines class="padding1">
+  <ion-avatar item-left class="profile-avatar square-avatar">
+    <img *ngIf="currentUser" [src]="currentUser.picture">
+  </ion-avatar>
+  <ion-label class="margin0">
+    <div class="flex-row margin0">
+      <img class="profile-icon" src="assets/icon/ContactCardFilled-50.png">
+      <span class="flex-column-center">{{currentUser.name}}</span>
+    </div>
+    <div class="flex-row margin0">
+      <img class="profile-icon" src="assets/icon/MessageFilled-50.png">
+      <span class="flex-column-center">{{currentUser.email}}</span>
+    </div>
+    <div class="flex-row margin0">
+      <img class="profile-icon" src="assets/icon/Phone-48.png">
+      <span class="flex-column-center">{{currentUser.phoneNumber}}</span>
+    </div>
+    <div class="flex-row margin0">
+      <img class="profile-icon" src="assets/icon/ZipCodeFilled-50.png">
+      <span class="flex-column-center">{{currentUser.address}}</span>
+    </div>
+  </ion-label>
+</ion-item>

@@ -218,3 +218,8 @@ ion-header /deep/ .toolbar-background {
   opacity: 0.4;
   visibility: visible !important;
 }
+
+// Override toolbar title color
+.toolbar-title {
+  color: white;
+}

@@ -16,13 +16,15 @@
 
   <ion-list class="margin-top20">
     <div *ngFor="let car of currentUser.cars">
-      <ion-item no-lines>
-        <app-car-item [car]="car" isEdit="true" (toRemove)="removeCar($event)"></app-car-item>
+      <ion-item no-lines class="no-padding">
+        <ion-label class="no-margin">
+          <app-car-item [car]="car" isEdit="true" (toRemove)="removeCar($event)"></app-car-item>
+        </ion-label>
       </ion-item>
       <br>
     </div>
     <ion-item no-lines *ngIf="currentUser.cars?.length < 4">
-      <div class="add-car-thumbnail" (tap)="addCar()">
+      <div class="row-center" (tap)="addCar()">
         <img src="assets/icon/PlusFilledGray-50.png">
       </div>
     </ion-item>

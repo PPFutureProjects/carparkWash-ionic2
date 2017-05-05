@@ -1,28 +1,26 @@
-<ion-card class="column-center item-car-width" *ngIf="initDone && car && !isEdit">
-  <div class="thumbnail" (tap)="selectToWash()">
-    <img #carThumb [src]="car.picture"/>
-  </div>
-  <!--<div class="thumbnail" *ngIf="isEdit" (tap)="edit()">-->
+<div *ngIf="initDone && car && currentUser?.profile === profileEnum.supervisor || currentUser?.profile === profileEnum.manager">
+  <ion-card class="column-center item-car-width">
+    <div class="thumbnail">
+      <img #carThumb [src]="car.picture"/>
+    </div>
+    <!--<div class="thumbnail" *ngIf="isEdit" (tap)="edit()">-->
     <!--<img #carThumb [src]="car?.picture"/>-->
-  <!--</div>-->
-  <ion-card-content *ngIf="!isSelected && car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash
-                    && (currentUser?.profile === profileEnum.supervisor || currentUser?.profile === profileEnum.manager)">
-    <button ion-button clear (tap)="selectCleaner()">Select<br>Cleaner</button>
-  </ion-card-content>
-</ion-card>
-<!--<img class="btn-delete-position" src="assets/icon/Cancel-30.png"-->
-     <!--*ngIf="initDone && !isSelected && isEdit"-->
-     <!--(tap)="remove()">-->
+    <!--</div>-->
+    <ion-card-content *ngIf="!isSelected && car?.subscription?.days[dayIndex]?.washStatus === washStateEnum.toWash">
+      <button ion-button clear (tap)="selectCleaner()">Select<br>Cleaner</button>
+    </ion-card-content>
+  </ion-card>
+  <img class="btn-delete-position" src="assets/icon/Cancel-30.png" *ngIf="initDone && !isSelected && isEdit" (tap)="remove()">
+</div>
 
 
-<div *ngIf="initDone && car && isEdit">
+<div *ngIf="initDone && car">
   <ion-item-sliding #slidingItem>
-    <ion-item>
-
-      <ion-avatar item-left class="square-avatar no-padding-left">
+    <ion-item class="no-padding-margin">
+      <ion-avatar item-left class="square-avatar">
         <img #carThumb [src]="car.picture"/>
       </ion-avatar>
-      <ion-label class="margin0">
+      <ion-label class="no-padding-margin">
         <h2 class="margin0 flex-sb">
           <span class="car-plate-number bold">{{ car.licencePlateNumber }}</span>
           <span>{{ car.subscription.days[dayIndex].job?.assignmentDate | date: 'HH:mm' }}</span>
@@ -31,7 +29,12 @@
       </ion-label>
     </ion-item>
 
-    <ion-item-options side="right">
+    <ion-item-options side="right" *ngIf="!isEdit">
+      <button ion-button color="primary" (click)="slidingItem.close() || selectToWash()">
+        Wash
+      </button>
+    </ion-item-options>
+    <ion-item-options side="right" *ngIf="isEdit">
       <button ion-button color="primary" (click)="slidingItem.close() || remove()">
         Remove
       </button>

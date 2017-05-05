@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, MenuController } from 'ionic-angular';
 import { SupportService } from './support-service';
 import { ConfirmSentPage } from './confirm-sent/confirm-sent';
 import { CallNumber } from 'ionic-native';
@@ -13,7 +13,7 @@ export class SupportPage {
   textToAdmin: string;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public supportService: SupportService,
-              public modalCtrl: ModalController) {
+              public modalCtrl: ModalController, public menuCtrl: MenuController) {
   }
 
   sendToAdmin() {
@@ -29,4 +29,7 @@ export class SupportPage {
       .catch(() => console.log('Error launching dialer'));
   }
 
+  toggleMenu() {
+    this.menuCtrl.toggle();
+  }
 }

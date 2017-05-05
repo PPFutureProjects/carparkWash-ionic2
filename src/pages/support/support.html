@@ -1,32 +1,42 @@
 <ion-header>
-  <ion-navbar>
-    <button ion-button menuToggle large>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Support</ion-title>
+  <ion-navbar hideBackButton>
+    <ion-buttons left>
+      <button ion-button clear large icon-only padding (tap)="toggleMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title text-center>Support</ion-title>
+    <ion-buttons right>
+      <div class="btn-icon-style"></div>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
+  <div padding class="bg-textarea">
+    <p class="txt-description margin-top0">Customer satisfaction is always our top priority.<br>
+      We strive to provide the very best to customers.</p>
+    <ion-item class="text-area-border">
+      <ion-label class="icon-size icon-margin">
+        <img class="icon-size" src="assets/icon/Edit-64.png">
+      </ion-label>
+      <ion-textarea rows="10" placeholder="Write to us" [(ngModel)]="textToAdmin"></ion-textarea>
+    </ion-item>
+  </div>
 
-  <ion-item class="faq-style">
-    <ion-label>
-      Frequently Asked Questions
-    </ion-label>
-  </ion-item>
+  <div padding>
+    <button block ion-button large color="secondary" class=""
+            [disabled]="!textToAdmin" (tap)="textToAdmin && sendToAdmin()">SEND
+    </button>
 
-  <ion-item>
-    <ion-label>Write to us:</ion-label>
-  </ion-item>
-  <ion-item class="text-area-border">
-    <ion-textarea rows="10" placeholder="How can we help you ?" [(ngModel)]="textToAdmin"></ion-textarea>
-  </ion-item>
+    <ion-item no-lines>
+      <ion-label class="flex-h-center">
+        OR
+      </ion-label>
+    </ion-item>
 
-  <button block ion-button large outline color="primary" class="margin-vertical"
-          [disabled]="!textToAdmin" (tap)="textToAdmin && sendToAdmin()">Send
-  </button>
-
-
-  <button block ion-button large outline class="btn-call-style" (tap)="callSupport()">Call Support</button>
+    <button block ion-button large (tap)="callSupport()">CALL SUPPORT</button>
+  </div>
 
 </ion-content>
+
